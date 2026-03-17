@@ -83,6 +83,7 @@ export const PROFILES = [
       { icon: Lightbulb, label: 'Aprendizaje', path: '/Courses' },
       { icon: Bot, label: 'Secretaria IA', path: '/Secretary' },
       { icon: FileText, label: 'Informes', path: '/Reports' },
+      { icon: CreditCard, label: 'Suscripciones', path: '/Subscription' },
     ]
   },
 ];
