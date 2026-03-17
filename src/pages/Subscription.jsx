@@ -209,14 +209,13 @@ export default function Subscription() {
     <div className="p-6 max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="space-y-1">
-        <div className="flex items-center gap-2">
-          <Zap className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-bold">Suscripciones</h1>
-        </div>
-        <p className="text-muted-foreground">
-          Cada app incluye <strong>48 horas de prueba gratuita</strong>. Activa tu suscripción mensual por{" "}
-          <strong>${MONTHLY_PRICE.toLocaleString("es-CO")} COP</strong> para acceso ilimitado.
-        </p>
+       <div className="flex items-center gap-2">
+         <Zap className="w-5 h-5 text-primary" />
+         <h1 className="text-2xl font-bold">Suscripciones</h1>
+       </div>
+       <p className="text-muted-foreground">
+         Cada app incluye <strong>48 horas de prueba gratuita</strong>. Activa tu suscripción mensual para acceso ilimitado.
+       </p>
       </div>
 
       {/* Cards */}
