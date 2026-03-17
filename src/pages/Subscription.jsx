@@ -102,7 +102,22 @@ function AppSubscriptionCard({ profile, sub, onPay, paying }) {
             <span className="text-sm font-normal text-muted-foreground"> COP/mes</span>
           </p>
         </div>
-        {!isPaid ? (
+        {paidActive ? (
+          <Button variant="outline" disabled className="text-emerald-600 border-emerald-500/30">
+            <CheckCircle className="w-4 h-4 mr-2" /> Activo
+          </Button>
+        ) : paidExpired ? (
+          <Button
+            className="gap-2"
+            onClick={() => onPay(profile.id, monthlyPrice)}
+            disabled={paying === profile.id}
+          >
+            {paying === profile.id
+              ? <Loader2 className="w-4 h-4 animate-spin" />
+              : <CreditCard className="w-4 h-4" />}
+            Renovar
+          </Button>
+        ) : (
           <Button
             className="gap-2"
             onClick={() => onPay(profile.id, monthlyPrice)}
@@ -112,10 +127,6 @@ function AppSubscriptionCard({ profile, sub, onPay, paying }) {
               ? <Loader2 className="w-4 h-4 animate-spin" />
               : <CreditCard className="w-4 h-4" />}
             Suscribirme
-          </Button>
-        ) : (
-          <Button variant="outline" disabled className="text-emerald-600 border-emerald-500/30">
-            <CheckCircle className="w-4 h-4 mr-2" /> Suscrito
           </Button>
         )}
       </div>
