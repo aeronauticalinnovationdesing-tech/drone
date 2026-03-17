@@ -8,7 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/Dashboard" },
