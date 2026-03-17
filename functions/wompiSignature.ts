@@ -6,35 +6,29 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { reference, amountInCents, currency, expirationTime } = await req.json();
+    const { reference, amountInCents, currency } = await req.json();
 
     const integritySecret = Deno.env.get('WOMPI_INTEGRITY_SECRET');
-    const publicKey = Deno.env.get('WOMPI_PUBLIC_KEY');
 
-    if (!integritySecret || !publicKey) {
-      return Response.json({ error: 'Missing WOMPI configuration' }, { status: 500 });
+    if (!integritySecret) {
+      return Response.json({ error: 'Missing WOMPI_INTEGRITY_SECRET' }, { status: 500 });
     }
 
-    // Validar que amountInCents sea string y no contenga decimales
-    const amountStr = String(amountInCents).trim();
-    if (!/^\d+$/.test(amountStr)) {
-      return Response.json({ error: 'amountInCents must be a valid integer string' }, { status: 400 });
+    // Validar que amountInCents sea número entero válido
+    const amount = parseInt(amountInCents);
+    if (isNaN(amount) || amount <= 0) {
+      return Response.json({ error: 'amountInCents must be a valid positive integer' }, { status: 400 });
     }
 
-    // Concatenación según documentación Wompi:
-    // reference + amountInCents (as string) + currency + [expirationTime] + integritySecret
-    let cadena = `${reference}${amountStr}${currency}`;
-    if (expirationTime) {
-      cadena += expirationTime;
-    }
-    cadena += integritySecret;
-
-    const encoded = new TextEncoder().encode(cadena);
+    // Fórmula exacta: reference + amountInCents + currency + integritySecret
+    const dataToSign = `${reference}${amount}${currency}${integritySecret}`;
+    
+    const encoded = new TextEncoder().encode(dataToSign);
     const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-    return Response.json({ signature, publicKey });
+    return Response.json({ signature });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
