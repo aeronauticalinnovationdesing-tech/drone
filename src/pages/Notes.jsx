@@ -316,16 +316,12 @@ export default function Notes() {
                   {aiLoading ? "Mejorando..." : "Mejorar con IA"}
                 </Button>
               </div>
-              <div className="border rounded-lg overflow-hidden">
-                <ReactQuill
-                  theme="snow"
-                  value={form.content}
-                  onChange={v => setForm({ ...form, content: v })}
-                  modules={quillModules}
-                  placeholder="Escribe tu nota aquí..."
-                  style={{ minHeight: "200px" }}
-                />
-              </div>
+              <textarea
+                value={form.content}
+                onChange={e => setForm({ ...form, content: e.target.value })}
+                placeholder="Escribe tu nota aquí..."
+                className="w-full min-h-[200px] rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-y"
+              />
             </div>
 
             <div className="flex gap-4 flex-wrap">
