@@ -67,20 +67,10 @@ export default function WompiCheckout({ open, onClose, course, userEmail, onPurc
    };
 
   const handlePay = () => {
-    if (!checkoutData) return;
-    const { publicKey, reference, amountInCents, signature, redirectUrl } = checkoutData;
-    const params = new URLSearchParams({
-      'public-key': publicKey,
-      'currency': 'COP',
-      'amount-in-cents': amountInCents,
-      'reference': reference,
-      'signature:integrity': signature,
-      'redirect-url': redirectUrl,
-    });
-    const url = `https://checkout.wompi.co/p/?${params.toString()}`;
-    window.open(url, '_blank');
-    onClose();
-  };
+     if (!checkoutData?.processingUrl) return;
+     window.open(checkoutData.processingUrl, '_blank');
+     onClose();
+   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
