@@ -1,5 +1,5 @@
 import { useProfile } from "@/lib/ProfileContext";
-import Projects from "./startup/StartupProjects";
+import Projects from "./startup/StartupProjects.jsx";
 import DroneMissions from "./drone_pilot/DroneMissions";
 import EliteHumanProjects from "./elite_human/EliteHumanProjects";
 
