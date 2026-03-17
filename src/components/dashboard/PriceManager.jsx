@@ -48,12 +48,13 @@ function ProfilePriceRow({ profile, sub, onSave }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             autoFocus
-            onKeyDown={(e) => e.key === "Enter" && handleSave()}
+            disabled={isSaving}
+            onKeyDown={(e) => e.key === "Enter" && !isSaving && handleSave()}
           />
-          <Button size="icon" className="h-8 w-8" onClick={handleSave}>
+          <Button size="icon" className="h-8 w-8" onClick={handleSave} disabled={isSaving}>
             <Save className="w-3.5 h-3.5" />
           </Button>
-          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditing(false)}>
+          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditing(false)} disabled={isSaving}>
             <X className="w-3.5 h-3.5" />
           </Button>
         </div>
