@@ -14,65 +14,65 @@ export default function WompiCheckout({ open, onClose, course, userEmail, onPurc
     }
   }, [open, course]);
 
+  useEffect(() => {
+    if (checkoutData && open) {
+      // Cargar script de Wompi cuando tengamos los datos
+      const script = document.createElement('script');
+      script.src = 'https://checkout.wompi.co/widget.js';
+      script.async = true;
+      document.head.appendChild(script);
+
+      return () => {
+        if (document.head.contains(script)) {
+          document.head.removeChild(script);
+        }
+      };
+    }
+  }, [checkoutData, open]);
+
   const prepareCheckout = async () => {
-     setLoading(true);
-     const reference = `VEXNY-${course.id}-${Date.now()}`;
-     const amountInCents = Math.round((course.price || 0) * 100);
+      setLoading(true);
+      const reference = `VEXNY-${course.id}-${Date.now()}`;
+      const amountInCents = Math.round((course.price || 0) * 100);
 
-     console.log('📋 Checkout prep:', { reference, amountInCents, price: course.price });
-     const redirectUrl = `${window.location.origin}/Courses?wompi_ref=${reference}`;
+      const redirectUrl = `${window.location.origin}/Courses?wompi_ref=${reference}`;
 
-     try {
-       // Generar firma
-       const sigRes = await base44.functions.invoke('wompiSignature', {
-         reference,
-         amountInCents,
-         currency: 'COP'
-       });
+      try {
+        // Generar firma
+        const sigRes = await base44.functions.invoke('wompiSignature', {
+          reference,
+          amountInCents,
+          currency: 'COP'
+        });
 
-       const { signature } = sigRes.data;
+        const { signature, publicKey } = sigRes.data;
 
-       // Registrar la compra como pendiente
-       await base44.entities.CoursePurchase.create({
-         course_id: course.id,
-         course_title: course.title,
-         user_email: userEmail,
-         amount: course.price,
-         wompi_reference: reference,
-         status: 'pending'
-       });
+        // Registrar la compra como pendiente
+        await base44.entities.CoursePurchase.create({
+          course_id: course.id,
+          course_title: course.title,
+          user_email: userEmail,
+          amount: course.price,
+          wompi_reference: reference,
+          status: 'pending'
+        });
 
-       onPurchaseCreated();
+        onPurchaseCreated();
 
-       // Crear transacción en Wompi API
-       const txRes = await base44.functions.invoke('createWompiTransaction', {
-         reference,
-         amountInCents,
-         currency: 'COP',
-         customerEmail: userEmail,
-         redirectUrl,
-         signature
-       });
-
-       setCheckoutData({ 
-         reference, 
-         amountInCents, 
-         signature,
-         processingUrl: txRes.data.processingUrl,
-         transaction: txRes.data.transaction
-       });
-     } catch (error) {
-       console.error('Error preparing checkout:', error);
-       alert('Error al preparar el pago. Intenta nuevamente.');
-     }
-     setLoading(false);
-   };
-
-  const handlePay = () => {
-     if (!checkoutData?.processingUrl) return;
-     window.open(checkoutData.processingUrl, '_blank');
-     onClose();
-   };
+        setCheckoutData({ 
+          reference, 
+          amountInCents, 
+          signature,
+          publicKey,
+          redirectUrl,
+          customerEmail: userEmail
+        });
+      } catch (error) {
+        console.error('Error preparing checkout:', error);
+        alert('Error al preparar el pago. Intenta nuevamente.');
+      }
+      setLoading(false);
+    };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
