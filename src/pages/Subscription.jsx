@@ -170,11 +170,11 @@ export default function Subscription() {
     }
   }, []);
 
-  const handlePay = async (profileId) => {
+  const handlePay = async (profileId, monthlyPrice) => {
     setPaying(profileId);
     try {
       const reference = `VEXNY-SUB-${profileId}-${Date.now()}`;
-      const amountInCents = MONTHLY_PRICE * 100;
+      const amountInCents = monthlyPrice * 100;
 
       const res = await base44.functions.invoke("wompiSignature", {
         reference,
