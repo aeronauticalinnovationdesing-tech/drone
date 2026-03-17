@@ -173,6 +173,8 @@ export default function Subscription() {
   const user = useCurrentUser();
   const queryClient = useQueryClient();
   const [paying, setPaying] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [checkoutData, setCheckoutData] = useState(null);
 
   const { data: allSubs = [] } = useQuery({
     queryKey: ["all-subscriptions"],
