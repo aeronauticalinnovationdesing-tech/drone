@@ -94,8 +94,7 @@ export default function Notes() {
   };
 
   const copyNote = (note) => {
-    const text = note.content?.replace(/<[^>]+>/g, "") || "";
-    navigator.clipboard.writeText(`${note.title}\n\n${text}`);
+    navigator.clipboard.writeText(`${note.title}\n\n${note.content || ""}`);
     toast.success("Nota copiada al portapapeles");
   };
 
