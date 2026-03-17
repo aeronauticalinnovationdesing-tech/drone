@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { Clock, AlertTriangle, CheckCircle, Edit3, Save, X, CreditCard, Loader2 } from "lucide-react";
+import { Clock, AlertTriangle, CheckCircle, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 function useCountdown(trialStartISO) {
   const [remaining, setRemaining] = useState(null);
@@ -42,10 +41,7 @@ const PROFILE_NAMES = {
 
 export default function TrialBanner({ profile }) {
   const user = useCurrentUser();
-  const isAdmin = user?.role === "admin";
   const queryClient = useQueryClient();
-  const [editingPrice, setEditingPrice] = useState(false);
-  const [priceInput, setPriceInput] = useState("");
   const [paying, setPaying] = useState(false);
 
   const { data: subs = [] } = useQuery({
@@ -62,11 +58,6 @@ export default function TrialBanner({ profile }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["subscription", profile] }),
   });
 
-  const updateSub = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Subscription.update(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["subscription", profile] }),
-  });
-
   // Para usuario regular: crear registro de trial si no existe
   useEffect(() => {
     if (!user || subs.length > 0) return;
@@ -77,13 +68,6 @@ export default function TrialBanner({ profile }) {
       trial_start_date: new Date().toISOString(),
     });
   }, [user, subs.length, profile]);
-
-  const handleSavePrice = () => {
-    const price = parseFloat(priceInput);
-    if (isNaN(price) || price < 0) return;
-    if (sub) updateSub.mutate({ id: sub.id, data: { monthly_price_cop: price } });
-    setEditingPrice(false);
-  };
 
   const handlePay = async () => {
     if (!sub || !sub.monthly_price_cop || sub.monthly_price_cop <= 0) return;
@@ -181,67 +165,23 @@ export default function TrialBanner({ profile }) {
           {/* Price display */}
           <div className="text-right">
             <p className="text-xs text-muted-foreground mb-0.5">Suscripción mensual</p>
-            {isAdmin && editingPrice ? (
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-muted-foreground">COP $</span>
-                <Input
-                  className="w-28 h-7 text-sm"
-                  value={priceInput}
-                  onChange={(e) => setPriceInput(e.target.value)}
-                  placeholder="0"
-                  type="number"
-                  autoFocus
-                />
-                <Button size="icon" className="h-7 w-7" onClick={handleSavePrice}>
-                  <Save className="w-3 h-3" />
-                </Button>
-                <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingPrice(false)}>
-                  <X className="w-3 h-3" />
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1.5">
-                <p className="font-bold text-base">
-                  {hasPrice ? `$${Number(sub.monthly_price_cop).toLocaleString("es-CO")} COP` : "—"}
-                </p>
-                {isAdmin && (
-                  <button
-                    onClick={() => { setPriceInput(sub?.monthly_price_cop || ""); setEditingPrice(true); }}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                    title="Editar precio"
-                  >
-                    <Edit3 className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-            )}
+            <p className="font-bold text-base">
+              {hasPrice ? `$${Number(sub.monthly_price_cop).toLocaleString("es-CO")} COP` : "—"}
+            </p>
           </div>
 
           {/* Action button */}
-          {isAdmin ? (
-            // Admin: toggle activo/inactivo manualmente
+          {!isPaid && (
             <Button
               size="sm"
-              variant={isPaid ? "outline" : "default"}
-              onClick={() => sub && updateSub.mutate({ id: sub.id, data: { is_active: !isPaid } })}
-              disabled={!sub}
+              className="gap-2"
+              onClick={handlePay}
+              disabled={paying || !hasPrice}
+              title={!hasPrice ? "El precio aún no ha sido configurado" : ""}
             >
-              {isPaid ? "Desactivar" : "Marcar activo"}
+              {paying ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CreditCard className="w-3.5 h-3.5" />}
+              Suscribirme
             </Button>
-          ) : (
-            // Usuario: botón pagar si no está activo y hay precio
-            !isPaid && (
-              <Button
-                size="sm"
-                className="gap-2"
-                onClick={handlePay}
-                disabled={paying || !hasPrice}
-                title={!hasPrice ? "El precio aún no ha sido configurado" : ""}
-              >
-                {paying ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CreditCard className="w-3.5 h-3.5" />}
-                Suscribirme
-              </Button>
-            )
           )}
         </div>
       </div>
