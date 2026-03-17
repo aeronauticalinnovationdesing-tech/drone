@@ -13,20 +13,22 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing WOMPI_PRIVATE_KEY' }, { status: 500 });
     }
 
-    // Wompi redirige directamente al checkout, no crea transacción via API
-    // El flujo es: generar firma → redirigir a checkout.wompi.co con parámetros
     const publicKey = Deno.env.get('WOMPI_PUBLIC_KEY');
     
-    const checkoutUrl = new URL('https://checkout.wompi.co/p/');
-    checkoutUrl.searchParams.append('public-key', publicKey);
-    checkoutUrl.searchParams.append('currency', currency);
-    checkoutUrl.searchParams.append('amount-in-cents', parseInt(amountInCents));
-    checkoutUrl.searchParams.append('reference', reference);
-    checkoutUrl.searchParams.append('signature:integrity', signature);
-    checkoutUrl.searchParams.append('redirect-url', redirectUrl);
+    // Construir URL con los parámetros correctos
+    const params = new URLSearchParams({
+      'public-key': publicKey,
+      'currency': currency,
+      'amount-in-cents': parseInt(amountInCents).toString(),
+      'reference': reference,
+      'redirect-url': redirectUrl,
+    });
+    
+    // Agregar signature:integrity manualmente para preservar los dos puntos
+    const checkoutUrl = `https://checkout.wompi.co/p/?${params.toString()}&signature:integrity=${encodeURIComponent(signature)}`;
 
     return Response.json({ 
-      processingUrl: checkoutUrl.toString()
+      processingUrl: checkoutUrl
     });
 
   } catch (error) {
