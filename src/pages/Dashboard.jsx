@@ -35,6 +35,11 @@ export default function Dashboard() {
     queryFn: () => base44.entities.CalendarEvent.filter({ date: format(new Date(), "yyyy-MM-dd") }),
   });
 
+  const { data: bankAccounts = [] } = useQuery({
+    queryKey: ["bankAccounts"],
+    queryFn: () => base44.entities.BankAccount.list("-created_date", 20),
+  });
+
   const activeTasks = tasks.filter(t => t.status !== "completed" && t.status !== "cancelled");
   const completedTasks = tasks.filter(t => t.status === "completed");
   const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
