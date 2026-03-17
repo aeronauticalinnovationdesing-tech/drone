@@ -78,24 +78,16 @@ function AppSubscriptionCard({ profile, sub, onPay, paying }) {
 
       {/* Status info */}
       <div className="text-sm">
-        {isPaid && sub?.paid_until && (
+        {paidActive && paidCountdown && (
           <p className="text-muted-foreground">
-            Activo hasta:{" "}
-            <span className="font-semibold text-foreground">
-              {new Date(sub.paid_until).toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" })}
+            Vence en:{" "}
+            <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+              {pad(paidCountdown.d)}d {pad(paidCountdown.h)}h {pad(paidCountdown.m)}m
             </span>
           </p>
         )}
-        {!isPaid && trialActive && countdown && (
-          <p className="text-muted-foreground">
-            Prueba vence en:{" "}
-            <span className="font-mono font-bold text-amber-600 dark:text-amber-400">
-              {pad(countdown.h)}h {pad(countdown.m)}m {pad(countdown.s)}s
-            </span>
-          </p>
-        )}
-        {!isPaid && trialExpired && (
-          <p className="text-destructive font-medium text-sm">Tu prueba ha vencido. Suscríbete para continuar.</p>
+        {paidExpired && (
+          <p className="text-destructive font-medium text-sm">Tu suscripción ha vencido. Renuévala para continuar.</p>
         )}
         {!sub && (
           <p className="text-muted-foreground text-xs">Abre esta app para iniciar tu prueba gratuita de 48h.</p>
