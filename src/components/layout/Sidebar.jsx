@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, FolderKanban, CheckSquare, 
-  Wallet, Calendar, StickyNote, Bot, FileText,
+  Wallet, Calendar, StickyNote, Bot, FileText, BookOpen,
   ChevronLeft, ChevronRight, Sword, LogOut, User, X, Menu
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ const navItems = [
   { icon: Calendar, label: "Calendario", path: "/Calendar" },
   { icon: Bot, label: "Secretaria", path: "/Secretary" },
   { icon: FileText, label: "Informes", path: "/Reports" },
+  { icon: BookOpen, label: "Cursos", path: "/Courses" },
 ];
 
 export default function Sidebar({ mobileOpen, onMobileClose }) {
