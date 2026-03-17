@@ -33,12 +33,12 @@ function useCountdown(endDateISO) {
 const pad = (n) => String(n).padStart(2, "0");
 
 function AppSubscriptionCard({ profile, sub, onPay, paying }) {
-  const countdown = useCountdown(sub?.trial_start_date || null);
-  const isPaid = sub?.is_active;
-  const trialActive = sub?.trial_start_date && countdown && !countdown.expired;
-  const trialExpired = sub?.trial_start_date && countdown?.expired;
+  const paidCountdown = useCountdown(sub?.paid_until || null);
   const Icon = profile.icon;
   const monthlyPrice = sub?.monthly_price_cop || 0;
+  const isPaid = sub?.is_active;
+  const paidExpired = isPaid && paidCountdown?.expired;
+  const paidActive = isPaid && paidCountdown && !paidCountdown.expired;
 
   return (
     <div className={`rounded-2xl border p-6 flex flex-col gap-5 transition-all ${
