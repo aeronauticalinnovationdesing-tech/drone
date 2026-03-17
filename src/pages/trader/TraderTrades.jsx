@@ -12,6 +12,9 @@ import { Plus, TrendingUp, TrendingDown, BarChart2, Trash2, Pencil, DollarSign }
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import AlertsPanel from "@/components/trader/AlertsPanel";
+import ReportExporter from "@/components/trader/ReportExporter";
+import { PerformanceMetrics, ProfitLossChart, WinRateAnalysis } from "@/components/trader/AdvancedMetrics";
 
 const PAIRS = ["BTC/USDT", "ETH/USDT", "EUR/USD", "GBP/USD", "S&P500", "NASDAQ", "ORO", "PETRÓLEO", "OTRO"];
 const DIRECTIONS = [{ value: "income", label: "LONG 📈", color: "text-emerald-600" }, { value: "expense", label: "SHORT 📉", color: "text-red-600" }];
@@ -97,14 +100,17 @@ export default function TraderTrades() {
   return (
     <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+       <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
         <div className="flex items-center gap-3">
           <BarChart2 className="w-6 h-6 text-emerald-500" />
           <h1 className="text-2xl font-bold tracking-tight">Bitácora de Trades</h1>
         </div>
-        <Button onClick={() => setShowForm(true)} className="gap-2 bg-emerald-600 hover:bg-emerald-700">
-          <Plus className="w-4 h-4" /> Registrar Trade
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <ReportExporter transactions={transactions} trades={filtered} />
+          <Button onClick={() => setShowForm(true)} className="gap-2 bg-emerald-600 hover:bg-emerald-700">
+            <Plus className="w-4 h-4" /> Registrar Trade
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -130,8 +136,25 @@ export default function TraderTrades() {
         </div>
       </div>
 
+      {/* Advanced Analytics Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 space-y-5">
+          <ProfitLossChart transactions={transactions} />
+          <WinRateAnalysis trades={transactions} />
+        </div>
+        <div>
+          <AlertsPanel transactions={transactions} />
+        </div>
+      </div>
+
+      {/* Performance Metrics */}
+      <div>
+        <h2 className="font-semibold text-lg mb-4">Análisis de Desempeño</h2>
+        <PerformanceMetrics transactions={transactions} />
+      </div>
+
       {/* Filter */}
-      <div className="flex gap-2">
+       <div className="flex gap-2">
         {[{ v: "all", l: "Todos" }, { v: "income", l: "LONG ✅" }, { v: "expense", l: "SHORT ❌" }].map(f => (
           <button key={f.v} onClick={() => setFilterType(f.v)}
             className={cn("px-4 py-1.5 rounded-lg text-sm font-medium transition-all",
