@@ -32,7 +32,7 @@ function useCountdown(endDateISO) {
 
 const pad = (n) => String(n).padStart(2, "0");
 
-function AppSubscriptionCard({ profile, sub, onPay, paying }) {
+function AppSubscriptionCard({ profile, sub, onPay, paying, onCancel }) {
   const paidCountdown = useCountdown(sub?.paid_until || null);
   const Icon = profile.icon;
   const monthlyPrice = sub?.monthly_price_cop || 0;
