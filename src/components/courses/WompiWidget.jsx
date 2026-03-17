@@ -10,20 +10,17 @@ export default function WompiWidget({
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
-    // Si el script ya está cargado
+    // Cargar el script de Wompi solo una vez
     if (window.WidgetCheckout) {
       setScriptLoaded(true);
-      initializeWidget();
       return;
     }
 
-    // Cargar el script de Wompi
     const script = document.createElement('script');
     script.src = 'https://checkout.wompi.co/widget.js';
     script.async = true;
     script.onload = () => {
       setScriptLoaded(true);
-      initializeWidget();
     };
     script.onerror = () => {
       console.error('Failed to load Wompi widget script');
@@ -35,7 +32,14 @@ export default function WompiWidget({
         document.body.removeChild(script);
       }
     };
-  }, [reference, amountInCents, customerEmail, publicKey, signature]);
+  }, []);
+
+  // Inicializar widget cuando tenemos todos los datos y el script está cargado
+  useEffect(() => {
+    if (scriptLoaded && reference && amountInCents && customerEmail && publicKey && signature) {
+      initializeWidget();
+    }
+  }, [scriptLoaded, reference, amountInCents, customerEmail, publicKey, signature]);
 
   const initializeWidget = () => {
     if (!window.WidgetCheckout) return;
