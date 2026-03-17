@@ -86,11 +86,9 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
       <div className="border-t border-sidebar-border p-3 flex-shrink-0">
         {!collapsed ? (
           <div className="flex items-center gap-3 px-2 py-2">
-            <Avatar className="w-8 h-8 flex-shrink-0">
-              <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+              <span className="text-xs font-bold text-primary">{initials}</span>
+            </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-sidebar-foreground truncate">{user?.full_name || "Usuario"}</p>
               <p className="text-xs text-sidebar-foreground/50 truncate">{user?.email || ""}</p>
@@ -105,11 +103,9 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
-            <Avatar className="w-8 h-8">
-              <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+              <span className="text-xs font-bold text-primary">{initials}</span>
+            </div>
             <button
               onClick={() => base44.auth.logout()}
               className="text-sidebar-foreground/40 hover:text-destructive transition-colors"
