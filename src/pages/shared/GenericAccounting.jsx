@@ -58,8 +58,8 @@ export default function GenericAccounting() {
 
   const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + (t.amount || 0), 0);
-  const balance = totalIncome - totalExpense;
-  const savingsRate = totalIncome > 0 ? Math.max(0, Math.round((balance / totalIncome) * 100)) : 0;
+  const balance = totalAccountBalance + totalIncome - totalExpense;
+  const savingsRate = totalIncome > 0 ? Math.max(0, Math.round(((balance - totalAccountBalance) / totalIncome) * 100)) : 0;
   const accountMap = Object.fromEntries(accounts.map(a => [a.id, a.name]));
   const totalAccountBalance = accounts.reduce((s, a) => s + (a.balance || 0), 0);
 
