@@ -51,14 +51,12 @@ export default function ProjectForm({ open, onOpenChange, onSave, project }) {
           projectDescription: form.description || "",
         });
         const data = res.data;
-        if (data.emailSent) {
-          toast.success(`📧 Invitación enviada a ${member}`);
-        }
         if (data.invited) {
-          toast.success(`✅ ${member} tiene acceso a VEXNY`);
-        }
-        if (!data.emailSent && !data.invited) {
-          toast.info(`ℹ️ ${member} ya tiene acceso o hubo un problema al invitar.`);
+          toast.success(`✅ ${member} fue invitado a VEXNY — recibirá un email de acceso.`);
+        } else if (data.errors?.some(e => e.includes("already"))) {
+          toast.info(`ℹ️ ${member} ya tiene acceso a VEXNY.`);
+        } else {
+          toast.info(`ℹ️ ${member} agregado al proyecto.`);
         }
       } catch {
         toast.error("No se pudo enviar la invitación");
