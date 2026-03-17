@@ -1,68 +1,84 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function WompiWidget({
-  publicKey,
-  reference,
-  amountInCents,
-  signature,
+export default function WompiWidget({ 
+  reference, 
+  amountInCents, 
   customerEmail,
-  redirectUrl
+  publicKey,
+  signature
 }) {
-  const containerRef = useRef(null);
-  const initAttempted = useRef(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current || !signature || initAttempted.current) return;
-    
-    initAttempted.current = true;
+    // Si el script ya está cargado
+    if (window.WidgetCheckout) {
+      setScriptLoaded(true);
+      initializeWidget();
+      return;
+    }
 
-    const initWidget = () => {
-      if (!window.WidgetCheckout) {
-        // Reintentar en 100ms si aún no está listo
-        setTimeout(initWidget, 100);
-        return;
-      }
-
-      try {
-        console.log('Initializing Wompi Widget with:', {
-          publicKey,
-          reference,
-          amountInCents,
-          signature,
-          customerEmail
-        });
-
-        new window.WidgetCheckout({
-          currency: 'COP',
-          amountInCents: String(amountInCents),
-          reference: String(reference),
-          publicKey: String(publicKey),
-          customerEmail: String(customerEmail),
-          redirectUrl: String(redirectUrl),
-          signature: String(signature)
-        });
-      } catch (error) {
-        console.error('Widget initialization error:', error);
-      }
-    };
-
-    // Crear el script de Wompi
+    // Cargar el script de Wompi
     const script = document.createElement('script');
     script.src = 'https://checkout.wompi.co/widget.js';
     script.async = true;
-    script.onload = initWidget;
+    script.onload = () => {
+      setScriptLoaded(true);
+      initializeWidget();
+    };
     script.onerror = () => {
       console.error('Failed to load Wompi widget script');
     };
-
-    containerRef.current.appendChild(script);
+    document.body.appendChild(script);
 
     return () => {
-      if (containerRef.current && containerRef.current.contains(script)) {
-        containerRef.current.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
       }
     };
-  }, [publicKey, reference, amountInCents, signature, customerEmail, redirectUrl]);
+  }, [reference, amountInCents, customerEmail, publicKey, signature]);
 
-  return <div ref={containerRef} />;
+  const initializeWidget = () => {
+    if (!window.WidgetCheckout) return;
+
+    const redirectUrl = `${window.location.origin}/Courses?wompi_ref=${reference}`;
+    
+    console.log('🔧 Wompi Widget Init:', { 
+      reference, 
+      amountInCents, 
+      customerEmail,
+      publicKey,
+      redirectUrl
+    });
+    
+    try {
+      const checkout = new window.WidgetCheckout({
+        currency: 'COP',
+        amountInCents: String(amountInCents),
+        reference: String(reference),
+        publicKey: String(publicKey),
+        customerEmail: String(customerEmail),
+        redirectUrl: String(redirectUrl),
+        signature: String(signature)
+      });
+
+      checkout.on('payment:success', (data) => {
+        console.log('✓ Payment successful:', data);
+      });
+
+      checkout.on('payment:error', (error) => {
+        console.error('✗ Payment error:', error);
+      });
+
+      console.log('📱 Rendering Wompi widget...');
+      checkout.render('#wompi-checkout');
+    } catch (error) {
+      console.error('Widget initialization error:', error);
+    }
+  };
+
+  if (!scriptLoaded) {
+    return <div className="text-center py-4 text-muted-foreground">Cargando widget de pago...</div>;
+  }
+
+  return <div id="wompi-checkout" />;
 }
