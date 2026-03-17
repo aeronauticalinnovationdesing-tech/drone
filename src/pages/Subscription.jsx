@@ -7,8 +7,6 @@ import { CheckCircle, Clock, AlertTriangle, CreditCard, Loader2, Zap } from "luc
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const MONTHLY_PRICE = 49900;
-
 function useCountdown(trialStartISO) {
   const [remaining, setRemaining] = useState(null);
   useEffect(() => {
