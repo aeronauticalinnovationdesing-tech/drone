@@ -102,12 +102,12 @@ export default function PriceManager() {
       if (sub) {
         updateSub.mutate(
           { id: sub.id, data: { monthly_price_cop: price } },
-          { onSettled: () => resolve() }
+          { onSuccess: () => resolve() }
         );
       } else {
         createSub.mutate(
           { profile: profileId, monthly_price_cop: price, is_active: false },
-          { onSettled: () => resolve() }
+          { onSuccess: () => resolve() }
         );
       }
     });
