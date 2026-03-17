@@ -44,33 +44,26 @@ export default function ProjectForm({ open, onOpenChange, onSave, project }) {
 
     if (isEmail(member)) {
       setSendingEmail(true);
-      await base44.integrations.Core.SendEmail({
-        to: member,
-        subject: `🗡️ Has sido invitado al proyecto "${form.name}" en VEXNY`,
-        body: `
-<div style="font-family: Inter, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb;">
-  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-    <div style="width: 40px; height: 40px; background: #F59E0B; border-radius: 10px; display: flex; align-items: center; justify-center: center; text-align: center; line-height: 40px; font-size: 20px;">⚔️</div>
-    <span style="font-size: 22px; font-weight: 800; color: #111;">VEXNY</span>
-  </div>
-  <h2 style="font-size: 20px; font-weight: 700; color: #111; margin: 0 0 8px;">¡Fuiste convocado al campo de batalla!</h2>
-  <p style="color: #6b7280; font-size: 15px; line-height: 1.6; margin: 0 0 20px;">
-    Has sido agregado al proyecto <strong style="color: #111;">${form.name}</strong>.
-    ${form.description ? `<br/><em>${form.description}</em>` : ""}
-  </p>
-  <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
-    <p style="margin: 0; font-size: 13px; color: #92400e;">
-      💪 <strong>Mentalidad Gladiador:</strong> "La victoria pertenece a los que perseveran."
-    </p>
-  </div>
-  <p style="color: #9ca3af; font-size: 13px; margin: 0;">
-    Ingresa a <strong>VEXNY</strong> para ver las tareas asignadas, fechas y más.
-  </p>
-</div>
-        `,
-      });
+      try {
+        const res = await base44.functions.invoke("inviteProjectMember", {
+          email: member,
+          projectName: form.name || "Nuevo Proyecto",
+          projectDescription: form.description || "",
+        });
+        const data = res.data;
+        if (data.emailSent) {
+          toast.success(`📧 Invitación enviada a ${member}`);
+        }
+        if (data.invited) {
+          toast.success(`✅ ${member} tiene acceso a VEXNY`);
+        }
+        if (!data.emailSent && !data.invited) {
+          toast.info(`ℹ️ ${member} ya tiene acceso o hubo un problema al invitar.`);
+        }
+      } catch {
+        toast.error("No se pudo enviar la invitación");
+      }
       setSendingEmail(false);
-      toast.success(`📧 Invitación enviada a ${member}`);
     }
   };
 
