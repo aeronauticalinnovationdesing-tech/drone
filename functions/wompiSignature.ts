@@ -21,17 +21,12 @@ Deno.serve(async (req) => {
     }
 
     // Fórmula exacta según Wompi: reference + amountInCents + currency + integritySecret
-    // Ejemplo de Wompi: "sk8-438k4-xmxm392-sn2m2490000COPprod_integrity_Z5mMke9x0k8gpErbDqwrJXMqsI6SFli6"
     const dataToSign = `${reference}${amount}${currency}${integritySecret}`;
     
     const encoded = new TextEncoder().encode(dataToSign);
     const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    
-    // Log para debug (remover en producción)
-    console.log('Data to sign:', dataToSign);
-    console.log('Generated signature:', signature);
 
     const publicKey = Deno.env.get('WOMPI_PUBLIC_KEY');
     return Response.json({ signature, publicKey });
