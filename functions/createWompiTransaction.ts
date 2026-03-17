@@ -28,11 +28,14 @@ Deno.serve(async (req) => {
     // Agregar signature:integrity sin URL-encoding el colon
     checkoutUrl += `&signature:integrity=${signature}`;
 
-    console.log('✅ Wompi Checkout URL generated');
-    console.log('   Public Key:', publicKey?.substring(0, 20) + '...');
-    console.log('   Reference:', reference);
-    console.log('   Amount:', amountInCents);
-    console.log('   Signature:', signature.substring(0, 20) + '...');
+    console.log('=== WOMPI CHECKOUT URL ===');
+    console.log('Reference:', reference);
+    console.log('Amount (cents):', amountInCents);
+    console.log('Currency:', currency);
+    console.log('Public Key:', publicKey?.substring(0, 20) + '...');
+    console.log('Signature:', signature);
+    console.log('Full URL:', checkoutUrl);
+    console.log('========================');
 
     return Response.json({ 
       processingUrl: checkoutUrl
