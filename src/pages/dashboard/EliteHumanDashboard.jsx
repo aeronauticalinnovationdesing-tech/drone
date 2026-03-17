@@ -76,6 +76,8 @@ export default function EliteHumanDashboard() {
         <p className="text-sm italic text-amber-600 dark:text-amber-400 font-medium">"{quote}"</p>
       </div>
 
+      <TrialBanner profile="elite_human" />
+
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Target} label="Metas Activas" value={pendingTasks} subtitle="por completar" />

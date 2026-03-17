@@ -51,6 +51,8 @@ export default function StartupDashboard() {
         </p>
       </div>
 
+      <TrialBanner profile="startup" />
+
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={FolderKanban} label="Proyectos Activos" value={activeProjects} subtitle={`${projects.length} total`} />

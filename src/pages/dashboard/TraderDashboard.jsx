@@ -58,6 +58,8 @@ export default function TraderDashboard() {
         </p>
       </div>
 
+      <TrialBanner profile="trader" />
+
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={DollarSign} label="Balance Total" value={`$${balance.toLocaleString()}`} subtitle="capital neto" className="border-emerald-500/20" />

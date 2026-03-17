@@ -49,6 +49,8 @@ export default function DronePilotDashboard() {
         </p>
       </div>
 
+      <TrialBanner profile="drone_pilot" />
+
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Wind} label="Vuelos Totales" value={totalFlights} subtitle="en bitácora" />
