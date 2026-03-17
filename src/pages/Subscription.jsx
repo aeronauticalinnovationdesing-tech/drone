@@ -37,6 +37,7 @@ function AppSubscriptionCard({ profile, sub, onPay, paying }) {
   const trialActive = sub?.trial_start_date && countdown && !countdown.expired;
   const trialExpired = sub?.trial_start_date && countdown?.expired;
   const Icon = profile.icon;
+  const monthlyPrice = sub?.monthly_price_cop || 0;
 
   return (
     <div className={`rounded-2xl border p-6 flex flex-col gap-5 transition-all ${
@@ -109,14 +110,14 @@ function AppSubscriptionCard({ profile, sub, onPay, paying }) {
       <div className="flex items-center justify-between pt-1 border-t border-border/50 gap-4">
         <div>
           <p className="text-2xl font-extrabold">
-            ${MONTHLY_PRICE.toLocaleString("es-CO")}
+            ${monthlyPrice.toLocaleString("es-CO")}
             <span className="text-sm font-normal text-muted-foreground"> COP/mes</span>
           </p>
         </div>
         {!isPaid ? (
           <Button
             className="gap-2"
-            onClick={() => onPay(profile.id)}
+            onClick={() => onPay(profile.id, monthlyPrice)}
             disabled={paying === profile.id}
           >
             {paying === profile.id
