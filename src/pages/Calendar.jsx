@@ -74,11 +74,25 @@ export default function CalendarPage() {
     setShowForm(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = { ...form };
-    // If type is meeting and no meet_link set, leave empty (user can add manually)
     createEvent.mutate(data);
+  };
+
+  const generateMeetLink = async () => {
+    if (!form.title || !form.date) return;
+    setGeneratingMeet(true);
+    const res = await base44.functions.invoke('createMeetEvent', {
+      title: form.title,
+      date: form.date,
+      time: form.time,
+      description: form.description
+    });
+    if (res.data?.meet_link) {
+      setForm(f => ({ ...f, meet_link: res.data.meet_link }));
+    }
+    setGeneratingMeet(false);
   };
 
   const openMeetLink = (evt) => {
