@@ -9,7 +9,8 @@ import { useProfile } from "@/lib/ProfileContext";
 export default function Sidebar({ mobileOpen, onMobileClose }) {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const { activeProfile, selectProfile } = useProfile();
+  const profileContext = useProfile();
+  const { activeProfile = null, selectProfile = () => {} } = profileContext || {};
 
   const { data: user } = useQuery({
     queryKey: ["me"],
