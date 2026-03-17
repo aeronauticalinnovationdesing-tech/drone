@@ -30,6 +30,7 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", date: "", time: "", type: "reminder", meet_link: "" });
+  const [generatingMeet, setGeneratingMeet] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: events = [] } = useQuery({ queryKey: ["events"], queryFn: () => base44.entities.CalendarEvent.list("-date") });
