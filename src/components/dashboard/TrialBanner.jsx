@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import WompiWidget from "./WompiWidget";
+import WompiWidget from "../courses/WompiWidget";
 
 function useCountdown(trialStartISO) {
   const [remaining, setRemaining] = useState(null);
