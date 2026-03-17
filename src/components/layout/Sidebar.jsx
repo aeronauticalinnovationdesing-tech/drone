@@ -1,37 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
-  LayoutDashboard, FolderKanban, CheckSquare, 
-  Wallet, Calendar, StickyNote, Bot, FileText, BookOpen,
-  ChevronLeft, ChevronRight, Sword, LogOut, User, X, Menu
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Sword, LogOut, X, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-
-
-const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/Dashboard" },
-  { icon: FolderKanban, label: "Proyectos", path: "/Projects" },
-  { icon: CheckSquare, label: "Tareas", path: "/Tasks" },
-  { icon: StickyNote, label: "Notas", path: "/Notes" },
-  { icon: Wallet, label: "Contabilidad", path: "/Accounting" },
-  { icon: Calendar, label: "Calendario", path: "/Calendar" },
-  { icon: Bot, label: "Secretaria", path: "/Secretary" },
-  { icon: FileText, label: "Informes", path: "/Reports" },
-  { icon: BookOpen, label: "Cursos", path: "/Courses" },
-];
+import { useProfile } from "@/lib/ProfileContext";
 
 export default function Sidebar({ mobileOpen, onMobileClose }) {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const { activeProfile, selectProfile } = useProfile();
 
   const { data: user } = useQuery({
     queryKey: ["me"],
     queryFn: () => base44.auth.me(),
   });
 
-  // Close mobile sidebar on route change
   useEffect(() => {
     if (onMobileClose) onMobileClose();
   }, [location.pathname]);
@@ -39,6 +23,9 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
   const initials = user?.full_name
     ? user.full_name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
     : "?";
+
+  const navItems = activeProfile?.nav || [];
+  const ProfileIcon = activeProfile?.icon;
 
   const SidebarContent = (
     <aside className={cn(
@@ -53,7 +40,6 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
           </div>
           {!collapsed && <span className="text-lg font-bold tracking-tight text-white">VEXNY</span>}
         </div>
-        {/* Mobile close button */}
         {onMobileClose && (
           <button onClick={onMobileClose} className="text-sidebar-foreground/50 hover:text-sidebar-foreground lg:hidden">
             <X className="w-5 h-5" />
@@ -61,18 +47,33 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
         )}
       </div>
 
+      {/* Active Profile Badge */}
+      {activeProfile && !collapsed && (
+        <div className="px-3 pt-3">
+          <div
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r ${activeProfile.color} bg-opacity-20`}
+            style={{ background: `${activeProfile.accent}18` }}
+          >
+            {ProfileIcon && <ProfileIcon className="w-4 h-4 flex-shrink-0" style={{ color: activeProfile.accent }} />}
+            <span className="text-xs font-semibold truncate" style={{ color: activeProfile.accent }}>
+              {activeProfile.label}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Nav */}
-      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
+      <nav className="flex-1 py-3 px-3 space-y-1 overflow-y-auto">
+        {navItems.map((item, idx) => {
           const isActive = location.pathname === item.path;
           return (
             <Link
-              key={item.path}
+              key={`${item.path}-${idx}`}
               to={item.path}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                isActive 
-                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                isActive
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                   : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
               )}
             >
@@ -82,6 +83,21 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
           );
         })}
       </nav>
+
+      {/* Change Profile */}
+      <div className="px-3 pb-2">
+        <button
+          onClick={() => selectProfile(null)}
+          className={cn(
+            "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent transition-colors",
+            collapsed && "justify-center"
+          )}
+          title="Cambiar perfil"
+        >
+          <RefreshCw className="w-4 h-4 flex-shrink-0" />
+          {!collapsed && <span>Cambiar perfil</span>}
+        </button>
+      </div>
 
       {/* Profile Section */}
       <div className="border-t border-sidebar-border p-3 flex-shrink-0">
@@ -118,7 +134,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
         )}
       </div>
 
-      {/* Collapse toggle — desktop only */}
+      {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
         className="hidden lg:flex items-center justify-center h-10 border-t border-sidebar-border text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors flex-shrink-0"
@@ -130,12 +146,9 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
 
   return (
     <>
-      {/* Desktop sidebar */}
       <div className="hidden lg:block h-screen sticky top-0 z-50">
         {SidebarContent}
       </div>
-
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div className="fixed inset-0 bg-black/60" onClick={onMobileClose} />
