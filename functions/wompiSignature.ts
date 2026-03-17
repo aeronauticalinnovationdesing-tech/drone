@@ -15,9 +15,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing WOMPI configuration' }, { status: 500 });
     }
 
+    // Validar que amountInCents sea string y no contenga decimales
+    const amountStr = String(amountInCents).trim();
+    if (!/^\d+$/.test(amountStr)) {
+      return Response.json({ error: 'amountInCents must be a valid integer string' }, { status: 400 });
+    }
+
     // Concatenación según documentación Wompi:
     // reference + amountInCents (as string) + currency + [expirationTime] + integritySecret
-    let cadena = `${reference}${amountInCents}${currency}`;
+    let cadena = `${reference}${amountStr}${currency}`;
     if (expirationTime) {
       cadena += expirationTime;
     }
