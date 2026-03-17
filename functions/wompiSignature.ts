@@ -28,7 +28,8 @@ Deno.serve(async (req) => {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-    return Response.json({ signature });
+    const publicKey = Deno.env.get('WOMPI_PUBLIC_KEY');
+    return Response.json({ signature, publicKey });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
