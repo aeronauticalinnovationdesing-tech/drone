@@ -31,7 +31,7 @@ function useCountdown(trialStartISO) {
 
 const pad = (n) => String(n).padStart(2, "0");
 
-function AppSubscriptionCard({ profile, sub, onPay, paying, dialogOpen, setDialogOpen, checkoutData }) {
+function AppSubscriptionCard({ profile, sub, onPay, paying }) {
   const countdown = useCountdown(sub?.trial_start_date || null);
   const isPaid = sub?.is_active;
   const trialActive = sub?.trial_start_date && countdown && !countdown.expired;
