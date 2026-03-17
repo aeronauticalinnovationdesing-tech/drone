@@ -98,12 +98,19 @@ export default function PriceManager() {
   });
 
   const handleSave = (profileId, sub, price) => {
-    console.log("Saving price:", { profileId, subId: sub?.id, price });
-    if (sub) {
-      updateSub.mutate({ id: sub.id, data: { monthly_price_cop: price } });
-    } else {
-      createSub.mutate({ profile: profileId, monthly_price_cop: price, is_active: false });
-    }
+    return new Promise((resolve) => {
+      if (sub) {
+        updateSub.mutate(
+          { id: sub.id, data: { monthly_price_cop: price } },
+          { onSettled: () => resolve() }
+        );
+      } else {
+        createSub.mutate(
+          { profile: profileId, monthly_price_cop: price, is_active: false },
+          { onSettled: () => resolve() }
+        );
+      }
+    });
   };
 
   const getSubForProfile = (profileId) => allSubs.find((s) => s.profile === profileId) || null;
