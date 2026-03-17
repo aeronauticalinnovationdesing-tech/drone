@@ -1,4 +1,5 @@
 import { useProfile } from "@/lib/ProfileContext";
+import WompiCallback from "@/components/dashboard/WompiCallback";
 import TraderDashboard from "./dashboard/TraderDashboard";
 import DronePilotDashboard from "./dashboard/DronePilotDashboard";
 import StartupDashboard from "./dashboard/StartupDashboard";
@@ -15,5 +16,9 @@ export default function Dashboard() {
   const { activeProfileId } = useProfile();
   const Component = DASHBOARD_MAP[activeProfileId];
   if (!Component) return null;
-  return <Component />;
+  return (
+    <WompiCallback>
+      <Component />
+    </WompiCallback>
+  );
 }
