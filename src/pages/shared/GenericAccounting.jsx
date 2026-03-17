@@ -39,6 +39,11 @@ export default function GenericAccounting() {
    const [showAccount, setShowAccount] = useState(false);
    const [txForm, setTxForm] = useState({ description: "", amount: 0, type: "expense", category: "other", date: format(new Date(), "yyyy-MM-dd"), bank_account_id: "", profile_id: activeProfileId });
    const [accForm, setAccForm] = useState({ name: "", bank_name: "", account_type: "checking", balance: 0, currency: "COP", profile_id: activeProfileId });
+
+   useEffect(() => {
+     setTxForm(prev => ({ ...prev, profile_id: activeProfileId }));
+     setAccForm(prev => ({ ...prev, profile_id: activeProfileId }));
+   }, [activeProfileId]);
    const queryClient = useQueryClient();
    const user = useCurrentUser();
 
