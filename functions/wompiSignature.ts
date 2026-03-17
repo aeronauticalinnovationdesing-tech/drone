@@ -24,10 +24,19 @@ Deno.serve(async (req) => {
 
     // Generar firma: referencia + monto + moneda + secreto
     const dataToSign = `${reference}${amount}${currency}${integritySecret}`;
+    
+    console.log('=== WOMPI SIGNATURE DEBUG ===');
+    console.log('Reference:', reference);
+    console.log('Amount (cents):', amount);
+    console.log('Currency:', currency);
+    console.log('Data to sign:', dataToSign);
+    
     const encoded = new TextEncoder().encode(dataToSign);
     const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
+    console.log('Generated signature:', signature);
 
     const publicKey = Deno.env.get('WOMPI_PUBLIC_KEY');
     return Response.json({ signature, publicKey });
