@@ -112,20 +112,24 @@ export default function PriceManager() {
         </div>
         <div>
           <h2 className="font-semibold text-base">Precios de suscripción</h2>
-          <p className="text-xs text-muted-foreground">Configura el costo mensual por app</p>
+          <p className="text-xs text-muted-foreground">Configura el costo mensual por perfil</p>
         </div>
       </div>
 
-      <div>
-        {PROFILES.map((profile) => (
-          <ProfilePriceRow
-            key={profile.id}
-            profile={profile}
-            sub={getSubForProfile(profile.id)}
-            onSave={handleSave}
-          />
-        ))}
-      </div>
+      {allSubs.length === 0 ? (
+        <p className="text-sm text-muted-foreground py-6 text-center">Cargando precios...</p>
+      ) : (
+        <div>
+          {PROFILES.map((profile) => (
+            <ProfilePriceRow
+              key={profile.id}
+              profile={profile}
+              sub={getSubForProfile(profile.id)}
+              onSave={handleSave}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
