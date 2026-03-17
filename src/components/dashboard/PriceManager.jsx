@@ -10,17 +10,21 @@ import { PROFILES } from "@/lib/ProfileContext";
 function ProfilePriceRow({ profile, sub, onSave }) {
   const [editing, setEditing] = useState(false);
   const [input, setInput] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleEdit = () => {
-    setInput(sub?.monthly_price_cop ?? "");
+    setInput(String(sub?.monthly_price_cop ?? ""));
     setEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const price = parseFloat(input);
     if (isNaN(price) || price < 0) return;
-    onSave(profile.id, sub, price);
+    setIsSaving(true);
+    await onSave(profile.id, sub, price);
+    setInput("");
     setEditing(false);
+    setIsSaving(false);
   };
 
   const Icon = profile.icon;
