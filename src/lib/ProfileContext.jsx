@@ -4,7 +4,7 @@ import {
   TrendingUp, Plane, Rocket, Zap,
   LayoutDashboard, FolderKanban, CheckSquare, StickyNote,
   Wallet, Calendar, Bot, FileText, BookOpen,
-  BarChart2, BookMarked, Wind, Map, Target, Users, DollarSign, Lightbulb, Activity
+  BarChart2, BookMarked, Wind, Map, Target, Users, DollarSign, Lightbulb, Activity, CreditCard
 } from 'lucide-react';
 
 export const PROFILES = [
