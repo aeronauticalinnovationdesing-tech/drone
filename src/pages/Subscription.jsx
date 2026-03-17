@@ -42,9 +42,9 @@ function AppSubscriptionCard({ profile, sub, onPay, paying }) {
 
   return (
     <div className={`rounded-2xl border p-6 flex flex-col gap-5 transition-all ${
-      isPaid
+      paidActive
         ? "border-emerald-500/30 bg-emerald-500/5"
-        : trialExpired
+        : paidExpired
         ? "border-destructive/30 bg-destructive/5"
         : "border-border bg-card"
     }`}>
