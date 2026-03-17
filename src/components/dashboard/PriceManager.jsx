@@ -93,6 +93,7 @@ export default function PriceManager() {
   });
 
   const handleSave = (profileId, sub, price) => {
+    console.log("Saving price:", { profileId, subId: sub?.id, price });
     if (sub) {
       updateSub.mutate({ id: sub.id, data: { monthly_price_cop: price } });
     } else {
