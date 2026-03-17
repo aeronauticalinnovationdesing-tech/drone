@@ -103,9 +103,19 @@ function AppSubscriptionCard({ profile, sub, onPay, paying }) {
           </p>
         </div>
         {paidActive ? (
-          <Button variant="outline" disabled className="text-emerald-600 border-emerald-500/30">
-            <CheckCircle className="w-4 h-4 mr-2" /> Activo
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" disabled className="text-emerald-600 border-emerald-500/30">
+              <CheckCircle className="w-4 h-4 mr-2" /> Activo
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onCancel(sub.id)}
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              Cancelar
+            </Button>
+          </div>
         ) : paidExpired ? (
           <Button
             className="gap-2"
