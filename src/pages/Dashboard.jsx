@@ -82,7 +82,13 @@ export default function Dashboard() {
         <ProjectProgressChart projects={projects} tasks={tasks} />
       </div>
 
-      {/* Row 3: Recent Tasks + Quick Actions */}
+      {/* Row 3: Project Progress Bars + Money Goals */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <ProjectProgressBars projects={projects} tasks={tasks} />
+        <MoneyGoalBars transactions={transactions} bankAccounts={bankAccounts} />
+      </div>
+
+      {/* Row 4: Recent Tasks + Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-card rounded-2xl border border-border p-6">
           <div className="flex items-center justify-between mb-4">
