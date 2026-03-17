@@ -77,6 +77,17 @@ export default function Profile() {
     await base44.auth.logout();
   };
 
+  const handleSaveName = async () => {
+    try {
+      await base44.auth.updateMe({ full_name: editName });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+      setEditing(false);
+    } catch (err) {
+      console.error(err);
+      alert("Error al actualizar el nombre. Intenta de nuevo.");
+    }
+  };
+
   return (
     <div className="p-6 max-w-2xl mx-auto space-y-8">
       {/* User Info */}
