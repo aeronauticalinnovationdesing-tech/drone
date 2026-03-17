@@ -20,6 +20,7 @@ import Reports from './pages/Reports';
 import Courses from './pages/Courses';
 import Subscription from './pages/Subscription';
 import Admin from './pages/Admin';
+import Profile from './pages/Profile';
 import PilotManagement from './pages/drone_pilot/PilotManagement';
 import DroneRegistry from './pages/drone_pilot/DroneRegistry';
 import SMSReporting from './pages/drone_pilot/SMSReporting';
