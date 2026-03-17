@@ -15,17 +15,17 @@ Deno.serve(async (req) => {
 
     const publicKey = Deno.env.get('WOMPI_PUBLIC_KEY');
     
-    // Construir URL con firma sin doble codificación
-    const url = new URL('https://checkout.wompi.co/p/');
-    url.searchParams.append('public-key', publicKey);
-    url.searchParams.append('currency', currency);
-    url.searchParams.append('amount-in-cents', parseInt(amountInCents).toString());
-    url.searchParams.append('reference', reference);
-    url.searchParams.append('redirect-url', redirectUrl);
+    // Construir URL como en versión anterior que funcionaba
+    const wompiCheckoutUrl = new URL('https://checkout.wompi.co/p');
+    wompiCheckoutUrl.searchParams.set('public-key', publicKey);
+    wompiCheckoutUrl.searchParams.set('currency', currency);
+    wompiCheckoutUrl.searchParams.set('amount-in-cents', amountInCents.toString());
+    wompiCheckoutUrl.searchParams.set('reference', reference);
+    wompiCheckoutUrl.searchParams.set('customer-email', customerEmail);
+    wompiCheckoutUrl.searchParams.set('redirect-url', redirectUrl);
+    wompiCheckoutUrl.searchParams.set('signature:integrity', signature);
     
-    // Agregar signature:integrity al final sin codificación adicional
-    const baseUrlStr = url.toString();
-    const checkoutUrl = `${baseUrlStr}&signature:integrity=${signature}`;
+    const checkoutUrl = wompiCheckoutUrl.toString();
 
     return Response.json({ 
       processingUrl: checkoutUrl
