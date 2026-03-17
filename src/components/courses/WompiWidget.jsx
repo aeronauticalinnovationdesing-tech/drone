@@ -42,11 +42,15 @@ export default function WompiWidget({
   }, [scriptLoaded, reference, amountInCents, customerEmail, publicKey, signature]);
 
   const initializeWidget = () => {
-    if (!window.WidgetCheckout) return;
+    if (!window.WidgetCheckout) {
+      console.warn('WidgetCheckout not available yet');
+      return;
+    }
 
     const redirectUrl = `${window.location.origin}/Courses?wompi_ref=${reference}`;
     
     try {
+      console.log('Initializing Wompi widget with:', { reference, amountInCents, publicKey });
       const checkout = new window.WidgetCheckout({
         currency: 'COP',
         amountInCents: String(amountInCents),
@@ -58,6 +62,7 @@ export default function WompiWidget({
       });
 
       checkout.render('#wompi-checkout');
+      console.log('Widget rendered successfully');
     } catch (error) {
       console.error('Widget initialization error:', error);
     }
