@@ -6,6 +6,7 @@ import { Plane, Wind, Map, Calendar, Bot, BookOpen, ArrowRight, CheckCircle, Clo
 import TrialBanner from "@/components/dashboard/TrialBanner";
 import { Link } from "react-router-dom";
 import StatCard from "@/components/dashboard/StatCard";
+import PriceManager from "@/components/dashboard/PriceManager";
 import { TaskStatusChart } from "@/components/dashboard/DashboardCharts";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";

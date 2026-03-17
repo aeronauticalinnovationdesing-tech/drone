@@ -6,6 +6,7 @@ import { Zap, Target, Activity, StickyNote, Wallet, Calendar, Lightbulb, Bot, Ar
 import TrialBanner from "@/components/dashboard/TrialBanner";
 import { Link } from "react-router-dom";
 import StatCard from "@/components/dashboard/StatCard";
+import PriceManager from "@/components/dashboard/PriceManager";
 import { TaskPriorityChart, TaskStatusChart } from "@/components/dashboard/DashboardCharts";
 import MoneyGoalBars from "@/components/dashboard/MoneyGoalBars";
 import { format } from "date-fns";

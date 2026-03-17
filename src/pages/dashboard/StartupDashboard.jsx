@@ -6,6 +6,7 @@ import { Rocket, FolderKanban, CheckSquare, DollarSign, Users, TrendingUp, Bot, 
 import TrialBanner from "@/components/dashboard/TrialBanner";
 import { Link } from "react-router-dom";
 import StatCard from "@/components/dashboard/StatCard";
+import PriceManager from "@/components/dashboard/PriceManager";
 import { IncomeExpenseChart, TaskStatusChart, ProjectProgressChart } from "@/components/dashboard/DashboardCharts";
 import ProjectProgressBars from "@/components/dashboard/ProjectProgressBars";
 import { format } from "date-fns";
