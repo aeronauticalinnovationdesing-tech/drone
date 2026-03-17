@@ -222,15 +222,16 @@ export default function TrialBanner({ profile }) {
             </Button>
           ) : (
             // Usuario: botón pagar si no está activo y hay precio
-            !isPaid && hasPrice && (
+            !isPaid && (
               <Button
                 size="sm"
                 className="gap-2"
                 onClick={handlePay}
-                disabled={paying}
+                disabled={paying || !hasPrice}
+                title={!hasPrice ? "El precio aún no ha sido configurado" : ""}
               >
                 {paying ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CreditCard className="w-3.5 h-3.5" />}
-                Pagar con Wompi
+                Suscribirme
               </Button>
             )
           )}
