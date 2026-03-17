@@ -33,6 +33,19 @@ const AuthenticatedApp = () => {
     );
   }
 
+  const { activeProfileId, loading: profileLoading } = useProfile();
+
+  if (isLoadingPublicSettings || isLoadingAuth || profileLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+          <span className="text-sm text-muted-foreground font-medium">Cargando VEXNY...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
