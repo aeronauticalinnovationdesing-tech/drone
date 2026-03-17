@@ -1,10 +1,14 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { FolderKanban, CheckSquare, Wallet, Clock, Sword, ArrowRight } from "lucide-react";
+import { FolderKanban, CheckSquare, Wallet, Clock, Sword, ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import StatCard from "../components/dashboard/StatCard";
 import RecentActivity from "../components/dashboard/RecentActivity";
+import {
+  IncomeExpenseChart, TaskPriorityChart,
+  ProjectProgressChart, CashFlowChart, TaskStatusChart
+} from "../components/dashboard/DashboardCharts";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -21,7 +25,7 @@ export default function Dashboard() {
 
   const { data: transactions = [] } = useQuery({
     queryKey: ["transactions"],
-    queryFn: () => base44.entities.Transaction.list("-created_date", 50),
+    queryFn: () => base44.entities.Transaction.list("-created_date", 100),
   });
 
   const { data: events = [] } = useQuery({
@@ -33,6 +37,7 @@ export default function Dashboard() {
   const completedTasks = tasks.filter(t => t.status === "completed");
   const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + (t.amount || 0), 0);
+  const balance = totalIncome - totalExpense;
 
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
@@ -43,23 +48,35 @@ export default function Dashboard() {
             <Sword className="w-6 h-6 text-primary" />
             <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Comando Central</h1>
           </div>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-sm capitalize">
             {format(new Date(), "EEEE, d 'de' MMMM yyyy", { locale: es })}
           </p>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={FolderKanban} label="Proyectos Activos" value={projects.filter(p => p.status === "active").length} subtitle={`${projects.length} total`} />
         <StatCard icon={CheckSquare} label="Tareas Pendientes" value={activeTasks.length} subtitle={`${completedTasks.length} completadas`} />
-        <StatCard icon={Wallet} label="Balance" value={`$${(totalIncome - totalExpense).toLocaleString()}`} subtitle={`$${totalIncome.toLocaleString()} ingresos`} />
-        <StatCard icon={Clock} label="Eventos Hoy" value={events.length} subtitle="en tu calendario" />
+        <StatCard icon={TrendingUp} label="Ingresos" value={`$${totalIncome.toLocaleString()}`} subtitle="acumulado" />
+        <StatCard icon={TrendingDown} label="Gastos" value={`$${totalExpense.toLocaleString()}`} subtitle={`Balance: $${balance.toLocaleString()}`} />
       </div>
 
-      {/* Content Grid */}
+      {/* Row 1: Cash Flow + Income vs Expense */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <CashFlowChart transactions={transactions} />
+        <IncomeExpenseChart transactions={transactions} />
+      </div>
+
+      {/* Row 2: Task Status + Task Priority + Project Progress */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <TaskStatusChart tasks={tasks} />
+        <TaskPriorityChart tasks={tasks} />
+        <ProjectProgressChart projects={projects} tasks={tasks} />
+      </div>
+
+      {/* Row 3: Recent Tasks + Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Tasks */}
         <div className="lg:col-span-2 bg-card rounded-2xl border border-border p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-lg">Tareas Recientes</h2>
@@ -70,7 +87,6 @@ export default function Dashboard() {
           <RecentActivity tasks={activeTasks} />
         </div>
 
-        {/* Quick Actions */}
         <div className="bg-card rounded-2xl border border-border p-6 space-y-4">
           <h2 className="font-semibold text-lg">Acceso Rápido</h2>
           <div className="space-y-2">
@@ -93,8 +109,7 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Motivational */}
-          <div className="mt-6 p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+          <div className="mt-4 p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
             <p className="text-sm font-semibold text-primary">💪 Mentalidad Gladiador</p>
             <p className="text-xs text-muted-foreground mt-1">
               "La victoria pertenece a los que perseveran."
