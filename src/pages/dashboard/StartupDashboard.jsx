@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Rocket, FolderKanban, CheckSquare, DollarSign, Users, TrendingUp, Bot, BookOpen, ArrowRight } from "lucide-react";
+import TrialBanner from "@/components/dashboard/TrialBanner";
 import { Link } from "react-router-dom";
 import StatCard from "@/components/dashboard/StatCard";
 import { IncomeExpenseChart, TaskStatusChart, ProjectProgressChart } from "@/components/dashboard/DashboardCharts";

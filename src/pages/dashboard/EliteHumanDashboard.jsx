@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Zap, Target, Activity, StickyNote, Wallet, Calendar, Lightbulb, Bot, ArrowRight, CheckCircle, Flame } from "lucide-react";
+import TrialBanner from "@/components/dashboard/TrialBanner";
 import { Link } from "react-router-dom";
 import StatCard from "@/components/dashboard/StatCard";
 import { TaskPriorityChart, TaskStatusChart } from "@/components/dashboard/DashboardCharts";
