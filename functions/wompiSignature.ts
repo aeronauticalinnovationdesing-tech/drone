@@ -14,20 +14,22 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing WOMPI_INTEGRITY_SECRET' }, { status: 500 });
     }
 
-    // Validar que amountInCents sea número entero válido
-    const amount = parseInt(amountInCents);
+    // Validar y normalizar amountInCents
+    const amount = typeof amountInCents === 'string' ? parseInt(amountInCents) : Math.round(amountInCents);
     if (isNaN(amount) || amount <= 0) {
       return Response.json({ error: 'amountInCents must be a valid positive integer' }, { status: 400 });
     }
 
-    // Fórmula exacta según Wompi: reference + amountInCents + currency + integritySecret
+    // Fórmula exacta según Wompi: concatenar sin separadores
     const dataToSign = `${reference}${amount}${currency}${integritySecret}`;
 
-    console.log('🔍 Wompi Signature Debug:');
-    console.log('  Reference:', reference);
-    console.log('  Amount:', amount);
+    // Debug completo
+    console.log('🔍 WOMPI SIGNATURE GENERATION:');
+    console.log('  Input - reference:', reference);
+    console.log('  Input - amountInCents:', amountInCents, '(type:', typeof amountInCents, ')');
+    console.log('  Parsed amount:', amount);
     console.log('  Currency:', currency);
-    console.log('  Secret length:', integritySecret?.length);
+    console.log('  IntegritySecret exists:', !!integritySecret);
     console.log('  Data to sign:', dataToSign);
 
     const encoded = new TextEncoder().encode(dataToSign);
@@ -35,7 +37,8 @@ Deno.serve(async (req) => {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-    console.log('  Generated signature:', signature);
+    console.log('  ✓ Generated signature:', signature);
+    console.log('  ✓ Signature length:', signature.length);
 
     const publicKey = Deno.env.get('WOMPI_PUBLIC_KEY');
     return Response.json({ signature, publicKey });
