@@ -42,14 +42,6 @@ export default function WompiWidget({
 
     const redirectUrl = `${window.location.origin}/Courses?wompi_ref=${reference}`;
     
-    console.log('🔧 Wompi Widget Init:', { 
-      reference, 
-      amountInCents, 
-      customerEmail,
-      publicKey,
-      redirectUrl
-    });
-    
     try {
       const checkout = new window.WidgetCheckout({
         currency: 'COP',
@@ -61,15 +53,6 @@ export default function WompiWidget({
         signature: String(signature)
       });
 
-      checkout.on('payment:success', (data) => {
-        console.log('✓ Payment successful:', data);
-      });
-
-      checkout.on('payment:error', (error) => {
-        console.error('✗ Payment error:', error);
-      });
-
-      console.log('📱 Rendering Wompi widget...');
       checkout.render('#wompi-checkout');
     } catch (error) {
       console.error('Widget initialization error:', error);
