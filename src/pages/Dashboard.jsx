@@ -2,7 +2,7 @@ import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { FolderKanban, CheckSquare, Wallet, Sword, ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
+import { FolderKanban, CheckSquare, Wallet, Sword, ArrowRight, TrendingUp, TrendingDown, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import StatCard from "../components/dashboard/StatCard";
 import RecentActivity from "../components/dashboard/RecentActivity";
@@ -116,6 +116,7 @@ export default function Dashboard() {
               { label: "Nueva Tarea", path: "/Tasks", icon: CheckSquare },
               { label: "Registrar Movimiento", path: "/Accounting", icon: Wallet },
               { label: "Secretaria Virtual", path: "/Secretary", icon: Sword },
+              { label: "Cursos", path: "/Courses", icon: BookOpen },
             ].map((action) => (
               <Link
                 key={action.path}
