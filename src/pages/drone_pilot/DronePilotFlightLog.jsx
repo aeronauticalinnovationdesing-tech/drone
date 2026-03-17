@@ -12,6 +12,8 @@ import { Plus, Wind, Plane, Clock, CheckCircle, AlertCircle, Trash2, Pencil, Map
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { FlightHoursChart, FlightTypeDistribution, FlightMetrics, MaintenanceReminder } from "@/components/drone_pilot/FlightAnalytics";
+import MissionPlanner from "@/components/drone_pilot/MissionPlanner";
 
 const DRONE_MODELS = ["DJI Mini 3 Pro", "DJI Mavic 3", "DJI Air 3", "DJI Phantom 4", "Autel EVO", "Parrot Anafi", "Otro"];
 const FLIGHT_TYPES = ["Fotografía aérea", "Video cinematográfico", "Inspección", "Mapeo/Fotogrametría", "Entrega", "Recreativo", "Entrenamiento", "Otro"];
@@ -44,6 +46,17 @@ export default function DronePilotFlightLog() {
     queryKey: ["tasks", user?.email],
     queryFn: () => base44.entities.Task.filter({ created_by: user.email }, "-created_date"),
     enabled: !!user,
+  });
+
+  const { data: missions = [] } = useQuery({
+    queryKey: ["projects", user?.email],
+    queryFn: () => base44.entities.Project.filter({ created_by: user.email }, "-created_date"),
+    enabled: !!user,
+  });
+
+  const createMissionMutation = useMutation({
+    mutationFn: (d) => base44.entities.Project.create(d),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["projects"] }),
   });
 
   const createMutation = useMutation({
@@ -103,28 +116,33 @@ export default function DronePilotFlightLog() {
         </Button>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="bg-card rounded-xl border border-border p-4">
-          <p className="text-xs text-muted-foreground mb-1">Total Vuelos</p>
-          <p className="text-xl font-bold">{flights.length}</p>
-        </div>
-        <div className="bg-card rounded-xl border border-border p-4">
-          <p className="text-xs text-muted-foreground mb-1">Horas de Vuelo</p>
-          <p className="text-xl font-bold text-sky-600">{totalHours.toFixed(1)}h</p>
-        </div>
-        <div className="bg-card rounded-xl border border-border p-4">
-          <p className="text-xs text-muted-foreground mb-1">Completados</p>
-          <p className="text-xl font-bold text-green-600">{completedFlights}</p>
-        </div>
-        <div className="bg-card rounded-xl border border-border p-4">
-          <p className="text-xs text-muted-foreground mb-1">Programados</p>
-          <p className="text-xl font-bold text-yellow-600">{flights.filter(f => f.status === "pending").length}</p>
-        </div>
+      {/* Metrics */}
+      <FlightMetrics flights={flights} missions={missions} />
+
+      {/* Maintenance Alert */}
+      <MaintenanceReminder flights={flights} />
+
+      {/* Analytics Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <FlightHoursChart flights={flights} />
+        <FlightTypeDistribution flights={flights} />
       </div>
 
+      {/* Mission Planner */}
+      <MissionPlanner missions={missions} onPlanMission={(mission) => {
+        createMissionMutation.mutate({
+          name: mission.name,
+          description: mission.location,
+          status: "active",
+          color: "#0ea5e9",
+        });
+      }} />
+
+      {/* Recent Flights Header */}
+      <h2 className="font-semibold text-lg">Historial de Vuelos</h2>
+
       {/* Filter */}
-      <div className="flex gap-2 flex-wrap">
+       <div className="flex gap-2 flex-wrap">
         {[
           { v: "all", l: "Todos" },
           { v: "completed", l: "Completados" },
