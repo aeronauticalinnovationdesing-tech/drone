@@ -230,40 +230,18 @@ export default function CalendarPage() {
               </Select>
             </div>
 
-            {/* Google Meet section */}
-            {form.type === "meeting" && (
-              <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <Video className="w-4 h-4 text-blue-600" />
-                  <span className="text-sm font-medium text-blue-700">Google Meet</span>
-                </div>
-                <div>
-                  <Label className="text-xs text-blue-700">Link de Meet (opcional)</Label>
-                  <Input
-                    placeholder="https://meet.google.com/xxx-xxxx-xxx"
-                    value={form.meet_link}
-                    onChange={e => setForm({ ...form, meet_link: e.target.value })}
-                    className="text-sm"
-                  />
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="w-full border-blue-300 text-blue-700 hover:bg-blue-100 gap-2"
-                  onClick={() => {
-                    if (form.title && form.date) {
-                      window.open(buildMeetUrl(form.title, form.date, form.time), "_blank");
-                    }
-                  }}
-                  disabled={!form.title || !form.date}
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  Programar en Google Calendar + Meet
-                </Button>
-                <p className="text-xs text-blue-500">Se abrirá Google Calendar con la reunión pre-llenada y video de Meet activado.</p>
-              </div>
-            )}
+            {/* Google Meet */}
+            <div>
+              <Label className="flex items-center gap-1.5">
+                <Video className="w-3.5 h-3.5 text-blue-500" />
+                Link de Google Meet <span className="text-muted-foreground font-normal">(opcional)</span>
+              </Label>
+              <Input
+                placeholder="https://meet.google.com/xxx-xxxx-xxx"
+                value={form.meet_link}
+                onChange={e => setForm({ ...form, meet_link: e.target.value })}
+              />
+            </div>
 
             <div>
               <Label>Descripción <span className="text-muted-foreground">(opcional)</span></Label>
