@@ -106,6 +106,10 @@ export default function PriceManager() {
 
   const getSubForProfile = (profileId) => allSubs.find((s) => s.profile === profileId) || null;
 
+  if (user?.role !== "admin") {
+    return null;
+  }
+
   return (
     <div className="bg-card rounded-2xl border border-border p-6">
       <div className="flex items-center gap-2 mb-4">
