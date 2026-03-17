@@ -6,7 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, Trash2, CheckCircle2, Circle } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, Circle, Mail, Loader2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
+import { useState as useLocalState } from "react";
+import { toast } from "sonner";
 
 const defaults = {
   name: "", description: "", status: "planning", priority: "medium",
