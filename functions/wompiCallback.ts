@@ -49,23 +49,38 @@ Deno.serve(async (req) => {
 
     // Si está aprobado, activar la suscripción
     if (transactionStatus === 'APPROVED') {
-      const subs = await base44.asServiceRole.entities.Subscription.filter({ profile });
-      if (subs.length > 0) {
+      const globalSubs = await base44.asServiceRole.entities.Subscription.filter({ profile });
+      if (globalSubs.length > 0) {
         const now = new Date();
         const paidUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
         
-        const updatedSub = await base44.asServiceRole.entities.Subscription.update(subs[0].id, {
-          is_active: true,
-          paid_until: paidUntil.toISOString(),
-          auto_renew: true,
-          last_renewal_date: now.toISOString(),
+        // Buscar si el usuario ya tiene una suscripción personal
+        const userSubs = await base44.entities.Subscription.filter({ 
+          profile,
+          created_by: user.email
         });
 
-        console.log(`✓ Subscription activated via callback for profile ${profile}:`, {
-          subId: subs[0].id,
-          paidUntil: paidUntil.toISOString(),
-          isActive: updatedSub.is_active
-        });
+        if (userSubs.length > 0) {
+          // Actualizar la suscripción existente del usuario
+          await base44.entities.Subscription.update(userSubs[0].id, {
+            is_active: true,
+            paid_until: paidUntil.toISOString(),
+            auto_renew: true,
+            last_renewal_date: now.toISOString(),
+          });
+          console.log(`✓ User subscription updated for ${user.email} (${profile})`);
+        } else {
+          // Crear nueva suscripción personal para el usuario
+          await base44.entities.Subscription.create({
+            profile,
+            monthly_price_cop: globalSubs[0].monthly_price_cop,
+            is_active: true,
+            paid_until: paidUntil.toISOString(),
+            auto_renew: true,
+            last_renewal_date: now.toISOString(),
+          });
+          console.log(`✓ New user subscription created for ${user.email} (${profile})`);
+        }
       } else {
         console.error(`No subscription found for profile ${profile}`);
       }
