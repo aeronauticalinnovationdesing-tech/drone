@@ -114,11 +114,11 @@ export default function TrialBanner({ profile }) {
     }
   };
 
-  if (!sub && !user) return null;
+  if (!user) return null;
 
   const isPaid = sub?.is_active;
-  const trialActive = sub?.trial_start_date && countdown && !countdown.expired;
-  const trialExpired = sub?.trial_start_date && countdown?.expired;
+  const trialActive = trialStartDate && countdown && !countdown.expired;
+  const trialExpired = trialStartDate && countdown?.expired;
   const hasPrice = sub?.monthly_price_cop > 0;
 
   // Bloqueo total al expirar (para usuarios no admin no pagados)
