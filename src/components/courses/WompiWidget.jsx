@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { base44 } from '@/api/base44Client';
 
 export default function WompiWidget({ 
   reference, 
   amountInCents, 
   customerEmail,
   publicKey,
-  signature
+  signature,
+  profile,
+  onSuccess
 }) {
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
@@ -47,8 +50,12 @@ export default function WompiWidget({
       return;
     }
 
-    const redirectUrl = `${window.location.origin}/Courses?wompi_ref=${reference}`;
-    
+    // Si es suscripción, redirige a Dashboard; si es curso, a Courses
+    const isSub = reference?.startsWith('VEXNY-SUB-');
+    const redirectUrl = isSub 
+      ? `${window.location.origin}/Dashboard?wompi_ref=${reference}`
+      : `${window.location.origin}/Courses?wompi_ref=${reference}`;
+
     try {
       console.log('Initializing Wompi widget with:', { reference, amountInCents, publicKey });
       const checkout = new window.WidgetCheckout({
@@ -60,6 +67,25 @@ export default function WompiWidget({
         redirectUrl: String(redirectUrl),
         signature: String(signature)
       });
+
+      // Listener para cuando se completa el pago
+      checkout.onError = (error) => {
+        console.error('Payment error:', error);
+      };
+
+      checkout.onSuccess = async (transaction) => {
+        console.log('Payment successful:', transaction);
+        // Si es suscripción, activarla
+        if (isSub && profile) {
+          try {
+            await base44.functions.invoke('wompiCallback', { reference, transactionId: transaction.id });
+            onSuccess && onSuccess(true);
+          } catch (e) {
+            console.error('Error activating subscription:', e);
+            onSuccess && onSuccess(false);
+          }
+        }
+      };
 
       checkout.render('#wompi-checkout');
       console.log('Widget rendered successfully');
