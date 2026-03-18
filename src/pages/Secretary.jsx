@@ -249,23 +249,41 @@ export default function Secretary() {
       {/* Main chat */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Header */}
-        <div className="px-4 md:px-5 py-3 border-b border-border flex items-center gap-3">
-          {/* Mobile menu button */}
-          <button 
-            onClick={() => setSidebarOpen(!sidebarOpen)} 
-            className="md:hidden text-muted-foreground hover:text-foreground flex-shrink-0"
-          >
-            <MessageSquare className="w-5 h-5" />
-          </button>
-          <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Bot className="w-4 h-4 text-primary" />
+        <div className="px-4 md:px-5 py-3 border-b border-border flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Mobile menu button */}
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)} 
+              className="md:hidden text-muted-foreground hover:text-foreground flex-shrink-0"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
+            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Bot className="w-4 h-4 text-primary" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-sm">{agentLabel}</p>
+              <p className="text-xs text-muted-foreground truncate">
+                {activeConv ? activeConv.metadata?.name : "Accede a tus datos y crea planes en tiempo real"}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="font-semibold text-sm">{agentLabel}</p>
-            <p className="text-xs text-muted-foreground">
-              {activeConv ? activeConv.metadata?.name : "Accede a tus datos y crea planes en tiempo real"}
-            </p>
-          </div>
+          {activeConvId && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => deleteConversation(activeConvId)}
+              disabled={deleting}
+              className="flex-shrink-0"
+              title="Eliminar sesión"
+            >
+              {deleting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4 text-destructive" />
+              )}
+            </Button>
+          )}
         </div>
 
         {/* Messages */}
