@@ -18,7 +18,7 @@ const categoryLabels = {
   otro: "Otro"
 };
 
-export default function CourseCard({ course, purchased, onBuy, onView, onEdit, showProfiles }) {
+export default function CourseCard({ course, purchased, onBuy, onView, onEdit, onDelete, showProfiles }) {
   return (
     <div className="bg-card rounded-2xl border border-border overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
       <div className="h-40 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center relative">
