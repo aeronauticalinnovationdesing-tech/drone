@@ -47,8 +47,12 @@ export default function Courses() {
   };
 
   const { data: courses = [], isLoading: loadingCourses } = useQuery({
-    queryKey: ["courses"],
+    queryKey: ["courses", activeProfileId],
     queryFn: () => base44.entities.Course.filter({ is_published: true }),
+    select: (data) => data.filter(c =>
+      !c.target_profiles?.length || c.target_profiles.includes(activeProfileId)
+    ),
+    enabled: !!activeProfileId,
   });
 
   const { data: allCoursesAdmin = [] } = useQuery({
