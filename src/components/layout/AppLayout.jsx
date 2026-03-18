@@ -18,10 +18,11 @@ export default function AppLayout() {
         {/* Mobile top bar */}
         <header className="lg:hidden flex items-center gap-3 px-4 h-14 border-b border-border bg-card sticky top-0 z-40 pt-safe">
           <button
-            onClick={() => setMobileOpen(true)} className="bg-yellow-500 text-slate-500 text-xl opacity-90 rounded-md hover:text-foreground">
-
-            
-            ⚔️
+            onClick={() => setMobileOpen(true)}
+            className="bg-primary hover:bg-primary/80 text-primary-foreground px-3 py-2 rounded-md transition-colors shadow-sm active:scale-95"
+            title="Abrir menú"
+          >
+            ☰
           </button>
           <span className="text-base font-bold tracking-tight">VEXNY</span>
         </header>
