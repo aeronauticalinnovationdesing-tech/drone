@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import PriceManager from "@/components/dashboard/PriceManager";
 import SubscriptionsTable from "@/components/dashboard/SubscriptionsTable";
 import SubscriptionDebugger from "@/components/dashboard/SubscriptionDebugger";
+import PaymentVerifier from "@/components/dashboard/PaymentVerifier";
 
 export default function Admin() {
   const user = useCurrentUser();
@@ -106,6 +107,14 @@ export default function Admin() {
       <div className="border-t" />
 
       <SubscriptionsTable />
+
+      <div className="border-t" />
+
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Verificar pagos en Wompi</h2>
+        <p className="text-sm text-muted-foreground">Busca en Wompi si un usuario ya pagó una suscripción.</p>
+        <PaymentVerifier />
+      </div>
 
       <div className="border-t" />
 
