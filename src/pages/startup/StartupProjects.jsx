@@ -122,9 +122,15 @@ export default function StartupProjects() {
                   </div>
                   <Progress value={progress} className="h-1 w-full max-w-xs [&>div]:bg-violet-500" />
                 </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-sm font-medium">{progress}%</p>
-                  <p className="text-xs text-muted-foreground">{ct.length}/{pt.length} tareas</p>
+                <div className="text-right flex-shrink-0 flex items-center gap-3">
+                  <div>
+                    <p className="text-sm font-medium">{progress}%</p>
+                    <p className="text-xs text-muted-foreground">{ct.length}/{pt.length} tareas</p>
+                  </div>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(project.id); }}>
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
               </div>
             );
