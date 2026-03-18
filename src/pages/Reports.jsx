@@ -303,71 +303,14 @@ function GenericReport() {
     });
     y += 8;
 
-    // ─────── PROYECTOS ───────
+    // ─────── GRÁFICAS ───────
     checkY(20);
-    y = pdfSection(doc, "Análisis de Proyectos", [37,99,235], M, y, PH);
-
-    // Gráfica proyectos por estado
+    
+    // Gráfica proyectos
     if (imgBarProject) {
+      checkY(55);
       addImg(imgBarProject, CW * 0.7, 45, true);
     }
-
-    // Tabla proyectos
-    if (projects.length > 0) {
-      checkY(20);
-      const statusLabels = { planning: "Planificación", active: "Activo", paused: "Pausado", completed: "Completado" };
-      const prioLabels = { low: "Baja", medium: "Media", high: "Alta", critical: "Crítica" };
-      const prioColors = { critical: [239,68,68], high: [245,158,11], medium: [59,130,246], low: [100,116,139] };
-      const cols = [58, 28, 22, 34, 30];
-      const hdrs = ["Proyecto", "Estado", "Prioridad", "Presupuesto", "Fin"];
-
-      doc.setFillColor(20,20,30);
-      doc.rect(M, y, CW, 8, "F");
-      doc.setTextColor(255,255,255);
-      doc.setFontSize(7.5);
-      doc.setFont("helvetica", "bold");
-      let cx = M + 3;
-      hdrs.forEach((h,i) => { doc.text(h, cx, y+5.5); cx += cols[i]; });
-      y += 8;
-
-      projects.slice(0, 20).forEach((p, idx) => {
-        checkY(7.5);
-        doc.setFillColor(idx%2===0?247:255, idx%2===0?248:255, idx%2===0?251:255);
-        doc.rect(M, y, CW, 7, "F");
-        doc.setFontSize(7.5);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(40,40,40);
-        cx = M + 3;
-        const pc = prioColors[p.priority] || [100,116,139];
-        const row = [
-          doc.splitTextToSize(p.name||"", cols[0]-4)[0],
-          statusLabels[p.status] || p.status,
-          prioLabels[p.priority] || "-",
-          p.budget ? formatCOP(p.budget) : "-",
-          p.end_date ? format(new Date(p.end_date),"dd/MM/yy") : "-",
-        ];
-        row.forEach((cell, i) => {
-          if (i === 2 && p.priority) {
-            doc.setFillColor(...pc);
-            doc.roundedRect(cx-1, y+1.5, cols[i]-2, 4.5, 1,1,"F");
-            doc.setTextColor(255,255,255);
-            doc.setFontSize(6.5);
-            doc.text(String(cell), cx + (cols[i]-4)/2, y+5, { align:"center" });
-            doc.setFontSize(7.5);
-            doc.setTextColor(40,40,40);
-          } else {
-            doc.text(String(cell), cx, y+4.8);
-          }
-          cx += cols[i];
-        });
-        y += 7;
-      });
-      y += 10;
-    }
-
-    // ─────── TAREAS ───────
-    checkY(20);
-    y = pdfSection(doc, "Análisis de Tareas y Productividad", [16,185,129], M, y, PH);
 
     // 2 gráficas de tareas lado a lado
     if (imgPieTask || imgPiePriority) {
@@ -383,165 +326,18 @@ function GenericReport() {
       y += imgH + 7;
     }
 
-    // Barras de estado
-    const statuses = [
-      { label: "Completadas", count: tasks.filter(t=>t.status==="completed").length, c:[16,185,129] },
-      { label: "En Progreso", count: tasks.filter(t=>t.status==="in_progress").length, c:[245,158,11] },
-      { label: "Pendientes", count: tasks.filter(t=>t.status==="pending").length, c:[100,116,139] },
-      { label: "Revisión", count: tasks.filter(t=>t.status==="review").length, c:[139,92,246] },
-      { label: "Canceladas", count: tasks.filter(t=>t.status==="cancelled").length, c:[239,68,68] },
-    ];
-    const bW = (CW - 20) / statuses.length;
-    const maxC = Math.max(...statuses.map(s=>s.count),1);
-    const barH = 22;
-    checkY(barH + 15);
-    statuses.forEach((s,i) => {
-      const bx = M + i*(bW+4);
-      const bh = Math.max(2, (s.count/maxC)*barH);
-      doc.setFillColor(...s.c);
-      doc.roundedRect(bx, y+barH-bh, bW, bh, 1,1,"F");
-      doc.setTextColor(40,40,40);
-      doc.setFontSize(7);
-      doc.setFont("helvetica","bold");
-      doc.text(String(s.count), bx+bW/2, y+barH-bh-2, {align:"center"});
-      doc.setFont("helvetica","normal");
-      doc.text(s.label, bx+bW/2, y+barH+5, {align:"center"});
-    });
-    y += barH + 14;
-
-    // Tareas activas (tabla)
-    const activeTasks = tasks.filter(t=>["pending","in_progress","review"].includes(t.status)).slice(0,15);
-    if (activeTasks.length > 0) {
-      checkY(20);
-      doc.setFontSize(9);
-      doc.setFont("helvetica","bold");
-      doc.setTextColor(40,40,40);
-      doc.text("Tareas Activas", M, y); y += 7;
-      const prioColors2 = { critical:[239,68,68], high:[245,158,11], medium:[59,130,246], low:[100,116,139] };
-      activeTasks.forEach((t,idx) => {
-        checkY(7);
-        doc.setFillColor(idx%2===0?247:255,idx%2===0?248:255,idx%2===0?251:255);
-        doc.rect(M, y, CW, 6.5, "F");
-        doc.setFontSize(7.5);
-        doc.setFont("helvetica","normal");
-        doc.setTextColor(40,40,40);
-        doc.text(doc.splitTextToSize(t.title||"",130)[0], M+3, y+4.5);
-        const pc = prioColors2[t.priority]||[100,116,139];
-        doc.setFillColor(...pc);
-        doc.roundedRect(PW-M-22, y+1.2, 20, 4, 1,1,"F");
-        doc.setTextColor(255,255,255);
-        doc.setFontSize(6);
-        doc.text((t.priority||"media").toUpperCase(), PW-M-12, y+4.5, {align:"center"});
-        y += 6.5;
-      });
-      y += 8;
-    }
-
-    // ─────── FINANZAS ───────
-    checkY(20);
-    y = pdfSection(doc, "Análisis Financiero", [139,92,246], M, y, PH);
-
     // Gráficas financieras
     if (imgLineFinance) {
       checkY(55);
-      doc.setFontSize(8);
-      doc.setFont("helvetica","bold");
-      doc.setTextColor(60,60,60);
-      doc.text("Ingresos vs Gastos por Mes", M, y); y += 4;
       addImg(imgLineFinance, CW, 50);
     }
     if (imgAreaBalance) {
       checkY(55);
-      doc.setFontSize(8);
-      doc.setFont("helvetica","bold");
-      doc.setTextColor(60,60,60);
-      doc.text("Balance Acumulado", M, y); y += 4;
       addImg(imgAreaBalance, CW, 45);
     }
     if (imgBarExpense) {
       checkY(55);
-      doc.setFontSize(8);
-      doc.setFont("helvetica","bold");
-      doc.setTextColor(60,60,60);
-      doc.text("Gastos por Categoría", M, y); y += 4;
       addImg(imgBarExpense, CW, 48);
-    }
-
-    // Tabla de categorías
-    if (expenseData.length > 0) {
-      checkY(20);
-      doc.setFontSize(9);
-      doc.setFont("helvetica","bold");
-      doc.setTextColor(40,40,40);
-      doc.text("Desglose por Categoría", M, y); y += 7;
-      expenseData.slice(0,10).forEach((cat, idx) => {
-        checkY(8);
-        const pct = totalExpense > 0 ? (cat.value/totalExpense)*100 : 0;
-        const bMaxW = CW - 70;
-        doc.setFillColor(idx%2===0?247:255,idx%2===0?248:255,idx%2===0?251:255);
-        doc.rect(M, y, CW, 7, "F");
-        doc.setFontSize(7.5);
-        doc.setFont("helvetica","normal");
-        doc.setTextColor(50,50,50);
-        doc.text(cat.name, M+3, y+5);
-        doc.setFillColor(225,228,235);
-        doc.roundedRect(M+38, y+1.5, bMaxW, 4, 1,1,"F");
-        const barColor = COLORS[idx % COLORS.length];
-        const [r,g,b] = barColor.startsWith('#') ? [parseInt(barColor.slice(1,3),16),parseInt(barColor.slice(3,5),16),parseInt(barColor.slice(5,7),16)] : [245,158,11];
-        doc.setFillColor(r,g,b);
-        doc.roundedRect(M+38, y+1.5, Math.max(2, (pct/100)*bMaxW), 4, 1,1,"F");
-        doc.setTextColor(80,80,80);
-        doc.text(`${pct.toFixed(1)}%`, M+38+bMaxW+3, y+5);
-        doc.setFont("helvetica","bold");
-        doc.text(formatCOP(cat.value), PW-M-3, y+5, {align:"right"});
-        y += 7;
-      });
-      y += 8;
-    }
-
-    // Movimientos recientes
-    const recent = [...transactions].sort((a,b)=>new Date(b.date||0)-new Date(a.date||0)).slice(0,15);
-    if (recent.length > 0) {
-      checkY(20);
-      doc.setFontSize(9);
-      doc.setFont("helvetica","bold");
-      doc.setTextColor(40,40,40);
-      doc.text("Movimientos Recientes", M, y); y += 7;
-      const tCols = [55, 28, 28, 38, 28];
-      const tHdrs = ["Descripción","Tipo","Categoría","Monto","Fecha"];
-      doc.setFillColor(20,20,30);
-      doc.rect(M, y, CW, 7.5, "F");
-      doc.setTextColor(255,255,255);
-      doc.setFontSize(7);
-      doc.setFont("helvetica","bold");
-      let tx = M+3;
-      tHdrs.forEach((h,i) => { doc.text(h, tx, y+5); tx += tCols[i]; });
-      y += 7.5;
-      recent.forEach((t, idx) => {
-        checkY(7);
-        doc.setFillColor(idx%2===0?247:255,idx%2===0?248:255,idx%2===0?251:255);
-        doc.rect(M, y, CW, 6.5, "F");
-        doc.setFontSize(7);
-        doc.setFont("helvetica","normal");
-        doc.setTextColor(40,40,40);
-        tx = M+3;
-        const amtColor = t.type==="income"?[16,185,129]:[239,68,68];
-        const row = [
-          doc.splitTextToSize(t.description||"",50)[0],
-          t.type==="income"?"Ingreso":"Gasto",
-          t.category||"-",
-          `${t.type==="income"?"+":"-"}${formatCOP(t.amount)}`,
-          t.date ? format(new Date(t.date),"dd/MM/yy") : "-",
-        ];
-        row.forEach((cell, i) => {
-          if (i===3) doc.setTextColor(...amtColor);
-          else doc.setTextColor(40,40,40);
-          doc.text(String(cell), tx, y+4.5);
-          tx += tCols[i];
-        });
-        y += 6.5;
-      });
-      y += 8;
     }
 
     // ─────── FOOTER en todas las páginas ───────
