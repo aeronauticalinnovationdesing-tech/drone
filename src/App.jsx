@@ -25,6 +25,7 @@ import PilotManagement from './pages/drone_pilot/PilotManagement';
 import DroneRegistry from './pages/drone_pilot/DroneRegistry';
 import SMSReporting from './pages/drone_pilot/SMSReporting';
 import MaintenanceManagement from './pages/drone_pilot/MaintenanceManagement';
+import AirspaceMap from './pages/drone_pilot/AirspaceMap';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -76,6 +77,7 @@ const AuthenticatedApp = () => {
         <Route path="/DroneRegistry" element={<DroneRegistry />} />
         <Route path="/SMSReporting" element={<SMSReporting />} />
         <Route path="/MaintenanceManagement" element={<MaintenanceManagement />} />
+        <Route path="/AirspaceMap" element={<AirspaceMap />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

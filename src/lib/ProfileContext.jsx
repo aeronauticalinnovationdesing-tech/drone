@@ -44,6 +44,7 @@ export const PROFILES = [
       { icon: FileCode, label: 'Registro de Drones', path: '/DroneRegistry' },
       { icon: AlertCircle, label: 'Reportes SMS', path: '/SMSReporting' },
       { icon: Wrench, label: 'Pólizas Mantenimiento', path: '/MaintenanceManagement' },
+      { icon: Map, label: 'Mapa Espacio Aéreo', path: '/AirspaceMap' },
       { icon: Calendar, label: 'Calendario', path: '/Calendar' },
       { icon: StickyNote, label: 'Notas', path: '/Notes' },
       { icon: FileText, label: 'Informes', path: '/Reports' },
