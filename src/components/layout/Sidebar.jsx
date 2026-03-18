@@ -68,11 +68,29 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
     )}>
       {/* Logo */}
       <div className="flex items-center justify-between px-4 h-16 border-b border-sidebar-border flex-shrink-0">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
             <Sword className="w-4 h-4 text-primary-foreground" />
           </div>
-          {!collapsed && <span className="text-lg font-bold tracking-tight text-white">VEXNY</span>}
+          {!collapsed && (
+            <div className="flex items-center gap-1">
+              <span className="text-lg font-bold tracking-tight text-white">VEXNY</span>
+              {isPaidSubscribed && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center">
+                        <span className="text-xl">⚔️</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      ¡Premium activo!
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
+          )}
         </div>
         {onMobileClose && (
           <button onClick={onMobileClose} className="text-sidebar-foreground/50 hover:text-sidebar-foreground lg:hidden">
