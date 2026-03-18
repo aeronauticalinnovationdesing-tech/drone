@@ -154,22 +154,22 @@ export default function CompanyManagement() {
       </div>
 
       {/* Stats globales */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-           { label: "Empresas", val: companies.length, icon: Building2, color: "text-sky-500", bg: "bg-sky-50" },
-           { label: "Pilotos Activos", val: `${activePilots}/${totalPilots}`, icon: Users, color: "text-emerald-600", bg: "bg-emerald-50" },
-           { label: "Drones Operativos", val: `${operativeDrones}/${totalDrones}`, icon: Shield, color: "text-blue-600", bg: "bg-blue-50" },
-         ].map(s => (
-           <div key={s.label} className={`rounded-xl p-4 ${s.bg}`}>
-             <div className="flex items-center gap-3">
-               <s.icon className={`w-5 h-5 ${s.color}`} />
-               <div>
-                 <div className="text-xs text-muted-foreground font-medium">{s.label}</div>
-                 <div className="text-2xl font-bold">{s.val}</div>
-               </div>
-             </div>
-           </div>
-         ))}
+       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+         {[
+            { label: "Empresas", val: companies.length, icon: Building2, color: "text-sky-500", bg: "bg-sky-50" },
+            ...(totalPilots > 0 ? [{ label: "Pilotos Activos", val: `${activePilots}/${totalPilots}`, icon: Users, color: "text-emerald-600", bg: "bg-emerald-50" }] : []),
+            ...(totalDrones > 0 ? [{ label: "Drones Operativos", val: `${operativeDrones}/${totalDrones}`, icon: Shield, color: "text-blue-600", bg: "bg-blue-50" }] : []),
+          ].map(s => (
+            <div key={s.label} className={`rounded-xl p-4 ${s.bg}`}>
+              <div className="flex items-center gap-3">
+                <s.icon className={`w-5 h-5 ${s.color}`} />
+                <div>
+                  <div className="text-xs text-muted-foreground font-medium">{s.label}</div>
+                  <div className="text-2xl font-bold">{s.val}</div>
+                </div>
+              </div>
+            </div>
+          ))}
       </div>
 
       {/* Lista de Empresas */}
