@@ -269,6 +269,16 @@ export default function Courses() {
         onSaved={() => queryClient.invalidateQueries(['courses', 'courses-admin'])}
       />
 
+      <CourseEditForm
+        course={editingCourse}
+        open={!!editingCourse}
+        onClose={() => setEditingCourse(null)}
+        onSaved={() => {
+          queryClient.invalidateQueries(['courses', 'courses-admin']);
+          setEditingCourse(null);
+        }}
+      />
+
       {selectedCourse && (
         <WompiCheckout
           open={!!selectedCourse}
