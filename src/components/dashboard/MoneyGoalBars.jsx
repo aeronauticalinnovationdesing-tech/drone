@@ -33,6 +33,8 @@ export default function MoneyGoalBars({ transactions, bankAccounts = [] }) {
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + (t.amount || 0), 0);
   const balance = totalIncome - totalExpense;
 
+  if (transactions.length === 0 && bankAccounts.length === 0) return null;
+
   // Monthly view
   const now = new Date();
   const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
