@@ -37,7 +37,7 @@ export default function DroneRegistry() {
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Drone.create({ ...data, weight_grams: Number(data.weight_grams) }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["drones"] });
+      queryClient.invalidateQueries({ queryKey: ["drones", user?.email] });
       closeForm();
     },
   });
@@ -45,14 +45,14 @@ export default function DroneRegistry() {
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Drone.update(id, { ...data, weight_grams: Number(data.weight_grams) }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["drones"] });
+      queryClient.invalidateQueries({ queryKey: ["drones", user?.email] });
       closeForm();
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Drone.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["drones"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["drones", user?.email] }),
   });
 
   const closeForm = () => {
