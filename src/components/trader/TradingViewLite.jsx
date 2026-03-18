@@ -23,13 +23,20 @@ const SYMBOLS = [
 // Función para obtener datos OHLC reales de Alpha Vantage
 async function fetchCandleData(symbol) {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
     const response = await fetch(
-      `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=demo&outputsize=full`
+      `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=demo&outputsize=compact`,
+      { signal: controller.signal }
     );
+    clearTimeout(timeoutId);
+
+    if (!response.ok) throw new Error('API error');
     const data = await response.json();
 
-    if (data['Error Message'] || data['Note']) {
-      console.warn('API limitada, usando datos simulados');
+    if (data['Error Message'] || data['Note'] || !data['Time Series (Daily)']) {
+      console.warn('API limitada, usando datos simulados para', symbol);
       return generateRealisticCandles(symbol);
     }
 
@@ -40,16 +47,18 @@ async function fetchCandleData(symbol) {
       return generateRealisticCandles(symbol);
     }
 
-    return entries.map(([date, values]) => ({
+    const result = entries.map(([date, values]) => ({
       date: new Date(date).toLocaleDateString('es-CO', { month: 'short', day: 'numeric' }),
-      open: parseFloat(values['1. open']),
-      high: parseFloat(values['2. high']),
-      low: parseFloat(values['3. low']),
-      close: parseFloat(values['4. close']),
-      volume: parseInt(values['6. volume']),
+      open: parseFloat(values['1. open']) || 100,
+      high: parseFloat(values['2. high']) || 100,
+      low: parseFloat(values['3. low']) || 100,
+      close: parseFloat(values['4. close']) || 100,
+      volume: parseInt(values['6. volume']) || 0,
     }));
+
+    return result.length > 0 ? result : generateRealisticCandles(symbol);
   } catch (err) {
-    console.error('Error fetching data:', err);
+    console.warn('Error fetching data, usando datos simulados:', err.message);
     return generateRealisticCandles(symbol);
   }
 }
@@ -95,9 +104,10 @@ export default function TradingViewLite() {
   const [timeframe, setTimeframe] = useState('D');
 
   const { data: candleData = [], isLoading, error } = useQuery({
-    queryKey: ['candles', selectedSymbol, timeframe],
+    queryKey: ['candles', selectedSymbol],
     queryFn: () => fetchCandleData(selectedSymbol),
     staleTime: 1000 * 60 * 5,
+    retry: 2,
   });
 
   const filteredSymbols = SYMBOLS.filter(
