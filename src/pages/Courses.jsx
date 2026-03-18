@@ -14,6 +14,7 @@ import WompiCheckout from "@/components/courses/WompiCheckout";
 export default function Courses() {
   const user = useCurrentUser();
   const queryClient = useQueryClient();
+  const { activeProfileId } = useProfile();
   const [search, setSearch] = useState("");
   const [showUpload, setShowUpload] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
