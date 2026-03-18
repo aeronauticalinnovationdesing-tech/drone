@@ -59,7 +59,7 @@ export default function MaintenanceRecords() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.DroneMaintenanceLog.create({ ...data, company_id: company.id }),
+    mutationFn: (data) => base44.entities.DroneMaintenanceLog.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["maintenance-logs"] }); closeForm(); },
   });
 
