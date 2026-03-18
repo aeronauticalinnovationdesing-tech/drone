@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, FolderKanban, LayoutGrid, List, Search } from "lucide-react";
+import { Plus, FolderKanban, LayoutGrid, List, Search, Trash2 } from "lucide-react";
 import ProjectCard from "@/components/projects/ProjectCard";
 import ProjectForm from "@/components/projects/ProjectForm";
 import ProjectDetail from "../ProjectDetail";
