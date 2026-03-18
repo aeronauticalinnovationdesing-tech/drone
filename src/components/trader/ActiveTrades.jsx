@@ -12,10 +12,16 @@ export default function ActiveTrades() {
 
   const { data: trades = [] } = useQuery({
     queryKey: ['active-trades', user?.email],
-    queryFn: () => base44.entities.Trade.filter({
-      created_by: user?.email,
-      result: { $exists: false }, // Trades sin resultado final
-    }, '-date', 50),
+    queryFn: async () => {
+      if (!user?.email) return [];
+      try {
+        return await base44.entities.Trade.filter({
+          created_by: user.email,
+        }, '-date', 50);
+      } catch {
+        return [];
+      }
+    },
     enabled: !!user?.email,
   });
 
@@ -25,7 +31,12 @@ export default function ActiveTrades() {
     total: activeTrades.length,
     long: activeTrades.filter(t => t.direction === 'long').length,
     short: activeTrades.filter(t => t.direction === 'short').length,
-    totalRisk: activeTrades.reduce((sum, t) => sum + ((t.entry_price - t.stop_loss) * (t.lot_size || 1)), 0),
+    totalRisk: activeTrades.reduce((sum, t) => {
+      const entry = t.entry_price || 0;
+      const sl = t.stop_loss || 0;
+      const size = t.lot_size || 1;
+      return sum + Math.abs((entry - sl) * size);
+    }, 0),
   };
 
   return (
