@@ -130,6 +130,50 @@ export default function Admin() {
         <p className="text-sm text-muted-foreground">Si un usuario pagó pero su suscripción no se activó automáticamente, actívala aquí.</p>
         <SubscriptionDebugger />
       </div>
+
+      <div className="border-t" />
+
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+          <MessageSquare className="w-5 h-5" />
+          Solicitudes de Asesoría RAC 100
+        </h2>
+        <p className="text-sm text-muted-foreground">Empresas que solicitan asesoría para certificación.</p>
+        
+        {consultations.length === 0 ? (
+          <div className="text-center py-8 bg-muted/30 rounded-lg">
+            <p className="text-muted-foreground">No hay solicitudes de asesoría</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {consultations.map(consult => (
+              <div key={consult.id} className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-all">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="font-semibold text-base">{consult.company_name}</h3>
+                      <Badge className={consult.status === "nuevo" ? "bg-blue-100 text-blue-700" : consult.status === "contactado" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
+                        {consult.status === "nuevo" ? "Nuevo" : consult.status === "contactado" ? "Contactado" : "Revisado"}
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+                      {consult.nit && <p><span className="font-medium">NIT:</span> {consult.nit}</p>}
+                      {consult.city && <p><span className="font-medium">Ciudad:</span> {consult.city}</p>}
+                      {consult.phone && <p><span className="font-medium">Teléfono:</span> {consult.phone}</p>}
+                      {consult.email && <p><span className="font-medium">Email:</span> {consult.email}</p>}
+                      {consult.activity_type && <p><span className="font-medium">Actividad:</span> {consult.activity_type}</p>}
+                      {consult.sms_manager_name && <p><span className="font-medium">Gerente SMS:</span> {consult.sms_manager_name}</p>}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-2">
+                      Creado: {new Date(consult.created_date).toLocaleDateString('es-CO')}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
