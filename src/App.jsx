@@ -28,7 +28,7 @@ import MaintenanceManagement from './pages/drone_pilot/MaintenanceManagement';
 import AirspaceMap from './pages/drone_pilot/AirspaceMap';
 import CompanyManagement from './pages/drone_pilot/CompanyManagement';
 import FlightLogBook from './pages/drone_pilot/FlightLogBook';
-import CompanySubscription from './pages/drone_pilot/CompanySubscription';
+import CompanySubscriptionPilot from './pages/drone_pilot/CompanySubscription';
 import DronePilotSubscription from './pages/drone_pilot/DronePilotSubscription';
 import PilotManagementEnterprise from './pages/drone_company/PilotManagement';
 import DroneRegistryEnterprise from './pages/drone_company/DroneRegistry';
@@ -93,7 +93,7 @@ const AuthenticatedApp = () => {
         <Route path="/AirspaceMap" element={<AirspaceMap />} />
         <Route path="/CompanyManagement" element={<CompanyManagement />} />
         <Route path="/FlightLogBook" element={<FlightLogBook />} />
-        <Route path="/CompanySubscription" element={<CompanySubscription />} />
+        <Route path="/CompanySubscription" element={<CompanySubscriptionPilot />} />
         <Route path="/DronePilotSubscription" element={<DronePilotSubscription />} />
         <Route path="/CompanySubscriptionEnterprise" element={<CompanySubscriptionEnterprise />} />
         <Route path="/PilotManagementEnterprise" element={<PilotManagementEnterprise />} />
