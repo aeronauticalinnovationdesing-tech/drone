@@ -83,13 +83,14 @@ export default function TrialBanner({ profile }) {
   const [canceling, setCanceling] = useState(false);
 
   // Buscar suscripción del usuario + global como fallback para precio
-  const { data: userSubs = [] } = useQuery({
+  const { data: userSubs = [], refetch: refetchUserSub } = useQuery({
     queryKey: ["subscription", profile, user?.email],
     queryFn: () => {
       if (!user?.email) return [];
       return base44.entities.Subscription.filter({ profile, created_by: user.email });
     },
     enabled: !!profile && !!user?.email,
+    refetchInterval: dialogOpen ? 1000 : false, // Refetch cada 1s si el diálogo está abierto
   });
 
   // Precio global (creado por admin)
@@ -307,7 +308,10 @@ export default function TrialBanner({ profile }) {
                 profile={profile}
                 onSuccess={(success) => {
                   if (success) {
+                    // Refetch inmediatamente después del pago
+                    refetchUserSub();
                     queryClient.invalidateQueries({ queryKey: ["subscription", profile] });
+                    queryClient.invalidateQueries({ queryKey: ["subscription", profile, user?.email] });
                     setDialogOpen(false);
                   }
                 }}
