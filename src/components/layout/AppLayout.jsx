@@ -38,6 +38,6 @@ export default function AppLayout() {
 
       {/* Mobile bottom navigation */}
       <BottomNavigation />
-    </div>);
-
-}
+    </div>
+    );
+    }
