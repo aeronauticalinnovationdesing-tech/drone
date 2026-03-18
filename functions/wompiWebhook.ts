@@ -57,19 +57,41 @@ Deno.serve(async (req) => {
     
     console.log(`[wompiWebhook] Processing approved transaction for profile: ${profile}, email: ${customerEmail}`);
     
-    const subs = await base44.asServiceRole.entities.Subscription.filter({ 
+    // Buscar la suscripción del usuario
+    const userSubs = await base44.asServiceRole.entities.Subscription.filter({ 
       profile,
       created_by: customerEmail 
     });
     
-    console.log(`[wompiWebhook] Found ${subs.length} subscriptions for profile ${profile} and email ${customerEmail}`);
+    console.log(`[wompiWebhook] Found ${userSubs.length} subscriptions for profile ${profile} and email ${customerEmail}`);
     
-    if (subs.length === 0) {
-      console.error(`[wompiWebhook] No subscription found for profile ${profile} and email ${customerEmail}`);
+    if (userSubs.length === 0) {
+      // Si no existe, crear una nueva suscripción para el usuario
+      const globalSubs = await base44.asServiceRole.entities.Subscription.filter({ profile });
+      if (globalSubs.length === 0) {
+        console.error(`[wompiWebhook] No global subscription found for profile ${profile}`);
+        return Response.json({ ok: true });
+      }
+      
+      const now = new Date();
+      const paidUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+      
+      const newSub = await base44.asServiceRole.entities.Subscription.create({
+        profile,
+        monthly_price_cop: globalSubs[0].monthly_price_cop,
+        is_active: true,
+        paid_until: paidUntil.toISOString(),
+        payment_token: transaction.id || null,
+        auto_renew: true,
+        last_renewal_date: now.toISOString(),
+      });
+      
+      console.log(`✓ New subscription created for ${customerEmail} (${profile}), id: ${newSub.id}`);
       return Response.json({ ok: true });
     }
 
-    const sub = subs[0];
+    // Si existe, actualizar
+    const sub = userSubs[0];
     const now = new Date();
     const paidUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // +30 días
 
