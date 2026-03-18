@@ -18,14 +18,15 @@ export default function RealtimeChart({ pair = 'EUR/USD', candles = [], showRSI 
   useEffect(() => {
     if (!chartContainerRef.current || candles.length === 0) return;
 
-    // Crear gráfico
+    // Crear gráfico - responsive en mobile y desktop
+    const chartHeight = window.innerWidth < 768 ? 300 : 400;
     const chart = createChart(chartContainerRef.current, {
       layout: {
         textColor: '#d1d5db',
         background: { type: 'solid', color: 'transparent' },
       },
       width: chartContainerRef.current.clientWidth,
-      height: 400,
+      height: chartHeight,
       timeScale: {
         timeVisible: true,
         secondsVisible: false,
@@ -34,7 +35,7 @@ export default function RealtimeChart({ pair = 'EUR/USD', candles = [], showRSI 
         color: 'rgba(209, 213, 219, 0.1)',
         visible: true,
         text: pair,
-        fontSize: 16,
+        fontSize: window.innerWidth < 768 ? 12 : 16,
         horzAlign: 'left',
         vertAlign: 'top',
       },
@@ -125,11 +126,13 @@ export default function RealtimeChart({ pair = 'EUR/USD', candles = [], showRSI 
       setTrend(lastPrice > firstPrice ? 'ALCISTA' : 'BAJISTA');
     }
 
-    // Handle resize
+    // Handle resize - recalcular altura también en mobile
     const handleResize = () => {
       if (chartContainerRef.current && chartRef.current) {
+        const newHeight = window.innerWidth < 768 ? 300 : 400;
         chartRef.current.applyOptions({
           width: chartContainerRef.current.clientWidth,
+          height: newHeight,
         });
       }
     };
@@ -144,10 +147,10 @@ export default function RealtimeChart({ pair = 'EUR/USD', candles = [], showRSI 
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <CardTitle>{pair}</CardTitle>
+      <CardHeader className="pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
+            <CardTitle className="text-lg sm:text-xl">{pair}</CardTitle>
             {trend && (
               <Badge className={trend === 'ALCISTA' ? 'bg-emerald-500/15 text-emerald-600' : 'bg-destructive/15 text-destructive'}>
                 {trend === 'ALCISTA' ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
@@ -157,14 +160,14 @@ export default function RealtimeChart({ pair = 'EUR/USD', candles = [], showRSI 
           </div>
           {price && (
             <div className="text-right">
-              <p className="text-2xl font-bold">${price.toFixed(5)}</p>
+              <p className="text-xl sm:text-2xl font-bold">${price.toFixed(5)}</p>
               <p className="text-xs text-muted-foreground">Precio actual</p>
             </div>
           )}
         </div>
       </CardHeader>
       <CardContent>
-        <div ref={chartContainerRef} className="w-full rounded-lg overflow-hidden bg-muted/20" />
+        <div ref={chartContainerRef} className="w-full rounded-lg overflow-hidden bg-muted/20" style={{ minHeight: '300px' }} />
       </CardContent>
     </Card>
   );
