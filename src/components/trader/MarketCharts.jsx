@@ -139,6 +139,7 @@ function AssetChart({ symbol, name, icon, color, type = 'line', basePrices = {} 
                 stroke={color} 
                 dot={false} 
                 strokeWidth={2}
+              />
             </LineChart>
           )}
         </ResponsiveContainer>
