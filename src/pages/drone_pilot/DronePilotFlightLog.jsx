@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { FlightHoursChart, FlightTypeDistribution, FlightMetrics, MaintenanceReminder } from "@/components/drone_pilot/FlightAnalytics";
 import MissionPlanner from "@/components/drone_pilot/MissionPlanner";
+import { useProfile } from "@/lib/ProfileContext";
 
 const DRONE_MODELS = ["DJI Mini 3 Pro", "DJI Mavic 3", "DJI Air 3", "DJI Phantom 4", "Autel EVO", "Parrot Anafi", "Otro"];
 const FLIGHT_TYPES = ["Fotografía aérea", "Video cinematográfico", "Inspección", "Mapeo/Fotogrametría", "Entrega", "Recreativo", "Entrenamiento", "Otro"];

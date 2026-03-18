@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Activity, Trash2 } from "lucide-react";
+import { useProfile } from "@/lib/ProfileContext";
 import { cn } from "@/lib/utils";
 
 const LIFE_AREAS = [

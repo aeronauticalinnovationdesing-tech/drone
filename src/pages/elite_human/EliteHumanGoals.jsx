@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Target, CheckCircle2, Circle, Flame, Brain, Heart, Dumbbell, DollarSign, Trash2, Pencil } from "lucide-react";
+import { useProfile } from "@/lib/ProfileContext";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";

@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, CheckSquare } from "lucide-react";
 import TaskItem from "@/components/tasks/TaskItem";
 import TaskForm from "@/components/tasks/TaskForm";
+import { useProfile } from "@/lib/ProfileContext";
 
 export default function StartupTasks() {
   const [showForm, setShowForm] = useState(false);

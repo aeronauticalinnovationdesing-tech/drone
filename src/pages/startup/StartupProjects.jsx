@@ -8,6 +8,7 @@ import { Plus, FolderKanban, LayoutGrid, List, Search } from "lucide-react";
 import ProjectCard from "@/components/projects/ProjectCard";
 import ProjectForm from "@/components/projects/ProjectForm";
 import ProjectDetail from "../ProjectDetail";
+import { useProfile } from "@/lib/ProfileContext";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
