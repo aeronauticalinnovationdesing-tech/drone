@@ -6,6 +6,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { ProfileProvider, useProfile } from './lib/ProfileContext';
+import { Toaster } from '@/components/ui/sonner';
 
 import AppLayout from './components/layout/AppLayout';
 import ProfileSelect from './pages/ProfileSelect';
@@ -38,6 +39,7 @@ import SMSReportingEnterprise from './pages/drone_company/SMSReporting';
 import MaintenanceManagementEnterprise from './pages/drone_company/MaintenanceManagement';
 import AirspaceMapEnterprise from './pages/drone_company/AirspaceMap';
 import CompanySubscriptionEnterprise from './pages/drone_company/CompanySubscription';
+import ComplianceCenter from './pages/drone_company/ComplianceCenter';
 
 import TraderJournal from './pages/trader/TraderJournal';
 import AdvancedTools from './pages/trader/AdvancedTools';
@@ -105,6 +107,7 @@ const AuthenticatedApp = () => {
         <Route path="/SMSReportingEnterprise" element={<SMSReportingEnterprise />} />
         <Route path="/MaintenanceManagementEnterprise" element={<MaintenanceManagementEnterprise />} />
         <Route path="/AirspaceMapEnterprise" element={<AirspaceMapEnterprise />} />
+        <Route path="/ComplianceCenter" element={<ComplianceCenter />} />
 
         <Route path="/TraderJournal" element={<TraderJournal />} />
         <Route path="/AdvancedTools" element={<AdvancedTools />} />
