@@ -62,13 +62,13 @@ export default function TraderDashboard() {
       <TrialBanner profile="trader" />
       <PriceManager />
 
-      {/* Stats - solo si hay datos */}
-      {(transactions.length > 0 || tasks.length > 0) && (
+      {/* Stats - solo si hay transacciones */}
+      {transactions.length > 0 && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard icon={DollarSign} label="Balance Total" value={`$${balance.toLocaleString()}`} subtitle="capital neto" className="border-emerald-500/20" />
           <StatCard icon={TrendingUp} label="Ingresos" value={`$${totalIncome.toLocaleString()}`} subtitle="acumulado" />
           <StatCard icon={TrendingDown} label="Gastos" value={`$${totalExpense.toLocaleString()}`} subtitle="acumulado" />
-          <StatCard icon={BarChart2} label="Win Rate" value={`${winRate}%`} subtitle={`${winTrades}W / ${lossTrades}L`} />
+          {tasks.length > 0 && <StatCard icon={BarChart2} label="Win Rate" value={`${winRate}%`} subtitle={`${winTrades}W / ${lossTrades}L`} />}
         </div>
       )}
 
