@@ -115,9 +115,12 @@ export default function Secretary() {
     setLoadingConvs(true);
     try {
       const convs = await base44.agents.listConversations({ agent_name: agentName });
-      setConversations(convs || []);
-      if (convs?.length > 0) {
-        openConversation(convs[0].id);
+      const deleted = await base44.entities.DeletedConversation.list();
+      const deletedIds = new Set(deleted.map(d => d.conversation_id));
+      const filtered = (convs || []).filter(c => !deletedIds.has(c.id));
+      setConversations(filtered);
+      if (filtered?.length > 0) {
+        openConversation(filtered[0].id);
       } else {
         setActiveConvId(null);
         setMessages([]);
