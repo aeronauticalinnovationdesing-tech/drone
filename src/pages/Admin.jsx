@@ -156,28 +156,120 @@ export default function Admin() {
         ) : (
           <div className="space-y-3">
             {consultations.map(consult => (
-              <div key={consult.id} className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-all">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-semibold text-base">{consult.company_name}</h3>
-                      <Badge className={consult.status === "nuevo" ? "bg-blue-100 text-blue-700" : consult.status === "contactado" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
-                        {consult.status === "nuevo" ? "Nuevo" : consult.status === "contactado" ? "Contactado" : "Revisado"}
-                      </Badge>
+              <div key={consult.id} className="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-all">
+                <div className="p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-semibold text-base">{consult.company_name}</h3>
+                        <Select value={consult.status} onValueChange={(status) => updateStatusMutation.mutate({ id: consult.id, status })}>
+                          <SelectTrigger className="w-32 h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="nuevo">Nuevo</SelectItem>
+                            <SelectItem value="revisado">Revisado</SelectItem>
+                            <SelectItem value="contactado">Contactado</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-muted-foreground mb-2">
+                        {consult.nit && <p><span className="font-medium">NIT:</span> {consult.nit}</p>}
+                        {consult.phone && <p><span className="font-medium">Teléfono:</span> {consult.phone}</p>}
+                        {consult.email && <p><span className="font-medium">Email:</span> {consult.email}</p>}
+                        {consult.city && <p><span className="font-medium">Ciudad:</span> {consult.city}</p>}
+                        {consult.activity_type && <p><span className="font-medium">Actividad:</span> {consult.activity_type}</p>}
+                        {consult.operation_category_type && <p><span className="font-medium">Operación:</span> {consult.operation_category_type}</p>}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Creado: {new Date(consult.created_date).toLocaleDateString('es-CO')}
+                      </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-                      {consult.nit && <p><span className="font-medium">NIT:</span> {consult.nit}</p>}
-                      {consult.city && <p><span className="font-medium">Ciudad:</span> {consult.city}</p>}
-                      {consult.phone && <p><span className="font-medium">Teléfono:</span> {consult.phone}</p>}
-                      {consult.email && <p><span className="font-medium">Email:</span> {consult.email}</p>}
-                      {consult.activity_type && <p><span className="font-medium">Actividad:</span> {consult.activity_type}</p>}
-                      {consult.sms_manager_name && <p><span className="font-medium">Gerente SMS:</span> {consult.sms_manager_name}</p>}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-2">
-                      Creado: {new Date(consult.created_date).toLocaleDateString('es-CO')}
-                    </div>
+                    <button onClick={() => setExpandedId(expandedId === consult.id ? null : consult.id)} className="text-muted-foreground hover:text-foreground">
+                      {expandedId === consult.id ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                    </button>
                   </div>
                 </div>
+
+                {expandedId === consult.id && (
+                  <div className="border-t bg-muted/30 p-4 text-sm space-y-3">
+                    <div>
+                      <h4 className="font-semibold mb-2">Contacto</h4>
+                      <div className="space-y-1 text-muted-foreground">
+                        {consult.sms_manager_name && <p>Gerente SMS: {consult.sms_manager_name}</p>}
+                        {consult.sms_manager_email && <p>Email SMS: {consult.sms_manager_email}</p>}
+                        {consult.chief_pilot_name && <p>Jefe de Pilotos: {consult.chief_pilot_name}</p>}
+                      </div>
+                    </div>
+
+                    {consult.aac_cert_phase && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Certificación RAC 100</h4>
+                        <div className="space-y-1 text-muted-foreground">
+                          <p>Fase: {consult.aac_cert_phase}</p>
+                          {consult.operation_category_type && <p>Tipo de Operación: {consult.operation_category_type}</p>}
+                        </div>
+                      </div>
+                    )}
+
+                    {consult.special_flights && consult.special_flights.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Vuelos Especiales</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {consult.special_flights.map(flight => (
+                            <Badge key={flight} variant="secondary" className="text-xs">{flight}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {consult.tech_equipment && consult.tech_equipment.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Equipos Tecnológicos</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {consult.tech_equipment.map(equip => (
+                            <Badge key={equip} variant="secondary" className="text-xs">{equip}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {consult.other_equipment && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Otros Equipos</h4>
+                        <p className="text-muted-foreground">{consult.other_equipment}</p>
+                      </div>
+                    )}
+
+                    {consult.drone_references && consult.drone_references.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Drones</h4>
+                        <div className="space-y-1 text-muted-foreground">
+                          {consult.drone_references.map((drone, idx) => (
+                            <p key={idx}>{drone.model} (Cantidad: {drone.quantity})</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {consult.insurance_policy_number && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Seguros</h4>
+                        <div className="space-y-1 text-muted-foreground">
+                          <p>Póliza: {consult.insurance_policy_number}</p>
+                          {consult.insurance_expiry && <p>Vencimiento: {new Date(consult.insurance_expiry).toLocaleDateString('es-CO')}</p>}
+                        </div>
+                      </div>
+                    )}
+
+                    {consult.notes && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Notas</h4>
+                        <p className="text-muted-foreground">{consult.notes}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
