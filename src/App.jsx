@@ -111,6 +111,7 @@ const AuthenticatedApp = () => {
 
         <Route path="/TraderJournal" element={<TraderJournal />} />
         <Route path="/AdvancedTools" element={<AdvancedTools />} />
+        <Route path="/AgentsManagement" element={<AgentsManagement />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
