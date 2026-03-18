@@ -1,51 +1,41 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-// Verifica una transacción Wompi y activa la suscripción si fue aprobada
+// Re-activa la suscripción del usuario (cuando ya existe)
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { transactionId, reference, profile } = await req.json();
+    const { profileId } = await req.json();
 
-    const isProduction = Deno.env.get('WOMPI_PUBLIC_KEY')?.startsWith('pub_prod_');
-    const baseUrl = isProduction
-      ? 'https://production.wompi.co/v1'
-      : 'https://sandbox.wompi.co/v1';
-
-    const res = await fetch(`${baseUrl}/transactions/${transactionId}`);
-    const data = await res.json();
-    const status = data?.data?.status;
-
-    if (status === 'APPROVED') {
-      // Buscar la suscripción del usuario actual para este perfil
-      const subs = await base44.entities.Subscription.filter({ profile });
+    // Buscar la suscripción del usuario actual para este perfil
+    const subs = await base44.entities.Subscription.filter({ 
+      profile: profileId,
+      created_by: user.email 
+    });
+    
+    console.log(`[activateSubscription] User: ${user.email}, Profile: ${profileId}, Found subs: ${subs.length}`);
+    
+    if (subs.length > 0) {
+      const now = new Date();
+      const paidUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // +30 días
       
-      console.log(`[activateSubscription] User: ${user.email}, Profile: ${profile}, Found subs: ${subs.length}`);
+      await base44.entities.Subscription.update(subs[0].id, {
+        is_active: true,
+        auto_renew: true,
+        paid_until: paidUntil.toISOString(),
+        last_renewal_date: now.toISOString(),
+      });
       
-      if (subs.length > 0) {
-        const now = new Date();
-        const paidUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // +30 días
-        const paymentData = data?.data?.payment_source || {};
-        
-        await base44.entities.Subscription.update(subs[0].id, {
-          is_active: true,
-          paid_until: paidUntil.toISOString(),
-          payment_token: paymentData.id || null,
-          auto_renew: true,
-          last_renewal_date: now.toISOString(),
-        });
-        
-        console.log(`✓ Subscription activated: ${subs[0].id}, paid_until: ${paidUntil.toISOString()}`);
-      } else {
-        console.error(`No subscription found for user ${user.email} with profile ${profile}`);
-      }
-      return Response.json({ success: true, status: 'APPROVED' });
+      console.log(`✓ Subscription reactivated: ${subs[0].id}, paid_until: ${paidUntil.toISOString()}`);
+      return Response.json({ success: true });
+    } else {
+      console.error(`No subscription found for user ${user.email} with profile ${profileId}`);
+      return Response.json({ error: 'Subscription not found' }, { status: 404 });
     }
-
-    return Response.json({ success: false, status: status || 'PENDING' });
   } catch (error) {
+    console.error('[activateSubscription] Error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
