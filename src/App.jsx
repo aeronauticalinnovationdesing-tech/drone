@@ -26,6 +26,8 @@ import DroneRegistry from './pages/drone_pilot/DroneRegistry';
 import SMSReporting from './pages/drone_pilot/SMSReporting';
 import MaintenanceManagement from './pages/drone_pilot/MaintenanceManagement';
 import AirspaceMap from './pages/drone_pilot/AirspaceMap';
+import CompanyManagement from './pages/drone_pilot/CompanyManagement';
+import FlightLogBook from './pages/drone_pilot/FlightLogBook';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -78,6 +80,8 @@ const AuthenticatedApp = () => {
         <Route path="/SMSReporting" element={<SMSReporting />} />
         <Route path="/MaintenanceManagement" element={<MaintenanceManagement />} />
         <Route path="/AirspaceMap" element={<AirspaceMap />} />
+        <Route path="/CompanyManagement" element={<CompanyManagement />} />
+        <Route path="/FlightLogBook" element={<FlightLogBook />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
