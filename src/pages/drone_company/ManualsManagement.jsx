@@ -16,6 +16,8 @@ export default function ManualsManagement() {
   const { activeProfile } = useProfile();
   const [showForm, setShowForm] = useState(false);
   const [editingManual, setEditingManual] = useState(null);
+  const [showPdfPreview, setShowPdfPreview] = useState(false);
+  const [uploadingPdf, setUploadingPdf] = useState(false);
   const [form, setForm] = useState({
     type: "sms",
     title: "",
