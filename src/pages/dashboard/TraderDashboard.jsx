@@ -99,7 +99,6 @@ export default function TraderDashboard() {
       </div>
 
       <TrialBanner profile="trader" />
-      <PriceManager />
 
       {/* Stats Pro */}
       {(useNewTrades || transactions.length > 0) && (
