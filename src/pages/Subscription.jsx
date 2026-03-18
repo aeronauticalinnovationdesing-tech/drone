@@ -150,14 +150,30 @@ export default function Subscription() {
   const [paying, setPaying] = useState(null);
   const [canceling, setCanceling] = useState(null);
 
-  const { data: allSubs = [] } = useQuery({
-    queryKey: ["all-subscriptions", user?.email],
+  // Precios globales (creados por admin, uno por perfil)
+  const { data: globalPrices = [] } = useQuery({
+    queryKey: ["global-subscription-prices"],
+    queryFn: () => base44.entities.Subscription.list(),
+  });
+
+  // Suscripciones activas del usuario actual
+  const { data: userSubs = [] } = useQuery({
+    queryKey: ["user-subscriptions", user?.email],
     queryFn: () => {
       if (!user?.email) return [];
       return base44.entities.Subscription.filter({ created_by: user.email });
     },
     enabled: !!user?.email,
   });
+
+  // Combinar: usar datos del usuario si existen, sino usar precio global
+  const allSubs = PROFILES.map(profile => {
+    const userSub = userSubs.find(s => s.profile === profile.id);
+    const globalPrice = globalPrices.find(s => s.profile === profile.id);
+    if (userSub) return { ...userSub, monthly_price_cop: globalPrice?.monthly_price_cop ?? userSub.monthly_price_cop };
+    if (globalPrice) return { ...globalPrice, id: null, is_active: false, paid_until: null }; // precio global sin suscripción activa del usuario
+    return null;
+  }).filter(Boolean);
 
   // Check for Wompi redirect with transaction
   useEffect(() => {
