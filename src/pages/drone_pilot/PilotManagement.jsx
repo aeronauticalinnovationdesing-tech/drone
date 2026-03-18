@@ -304,7 +304,7 @@ export default function PilotManagement() {
               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 pb-1 border-b">Licencia RAC 100</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium">Vencimiento RAC 100 *</label>
+                  <label className="text-sm font-medium">Vencimiento Examen Medico*</label>
                   <Input type="date" value={form.rac_100_expiry_date} onChange={e => setForm({ ...form, rac_100_expiry_date: e.target.value })} required />
                 </div>
                 <div>
