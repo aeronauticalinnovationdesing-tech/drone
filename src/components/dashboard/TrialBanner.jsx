@@ -127,6 +127,28 @@ export default function TrialBanner({ profile }) {
     }
   };
 
+  const handleCancel = async () => {
+    if (!userSub?.id || !confirm("¿Cancelar la renovación automática?")) return;
+    setCanceling(true);
+    try {
+      await base44.entities.Subscription.update(userSub.id, {
+        auto_renew: false,
+        is_active: false,
+      });
+      queryClient.invalidateQueries({ queryKey: ["subscription", profile, user?.email] });
+    } catch (err) {
+      console.error("Error cancelando:", err);
+      alert("Error al cancelar.");
+    } finally {
+      setCanceling(false);
+    }
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "—";
+    return new Date(dateStr).toLocaleDateString("es-CO");
+  };
+
   if (!user) return null;
 
   const isPaid = sub?.is_active;
