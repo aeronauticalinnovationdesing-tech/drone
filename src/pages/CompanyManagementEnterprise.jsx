@@ -58,8 +58,8 @@ export default function CompanyManagementEnterprise() {
 
   const { data: drones = [] } = useQuery({
     queryKey: ["drones-enterprise", company?.id],
-    queryFn: () => base44.entities.Drone.list("-created_date"),
-    enabled: !!company?.id,
+    queryFn: () => base44.entities.Drone.filter({ created_by: user?.email }, "-created_date"),
+    enabled: !!company?.id && !!user?.email,
   });
 
   const createMutation = useMutation({
@@ -97,6 +97,7 @@ export default function CompanyManagementEnterprise() {
 
   const activePilots = pilots.filter(p => p.status === "activo").length;
   const operativeDrones = drones.filter(d => d.maintenance_status === "operativo").length;
+  const chiefsCount = pilots.filter(p => p.role === "jefe_pilotos").length;
 
   if (!company) {
     return (
@@ -248,10 +249,10 @@ export default function CompanyManagementEnterprise() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Estado", val: company.status, color: company.status === "activa" ? "text-emerald-600" : "text-red-600", bg: company.status === "activa" ? "bg-emerald-50" : "bg-red-50" },
-          { label: "Pilotos Activos", val: `${activePilots}/${pilots.length}`, color: "text-sky-600", bg: "bg-sky-50" },
+          { label: "Empresas", val: company ? 1 : 0, color: "text-sky-600", bg: "bg-sky-50" },
+          { label: "Pilotos Activos", val: `${activePilots}/${pilots.length}`, color: "text-emerald-600", bg: "bg-emerald-50" },
           { label: "Drones Operativos", val: `${operativeDrones}/${drones.length}`, color: "text-blue-600", bg: "bg-blue-50" },
-          { label: "Equipos", val: pilots.length + drones.length, color: "text-primary", bg: "bg-primary/10" },
+          { label: "Jefes de Pilotos", val: chiefsCount, color: "text-primary", bg: "bg-primary/10" },
         ].map(s => (
           <div key={s.label} className={cn("rounded-xl border border-border p-4 flex flex-col gap-1", s.bg)}>
             <div className={cn("text-2xl font-bold", s.color)}>{s.val}</div>
