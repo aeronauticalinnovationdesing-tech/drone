@@ -191,14 +191,19 @@ export default function CompanySubscriptionsManager() {
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Nombre de la Empresa</label>
-              <Input
-                value={form.company_name}
-                onChange={e => setForm({ ...form, company_name: e.target.value })}
-                placeholder="AeroOps Colombia S.A.S."
-                required
-                className="mt-1"
-              />
+              <label className="text-sm font-medium">Empresa</label>
+              <Select value={selectedCompanyId} onValueChange={handleCompanySelect}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Selecciona una empresa" />
+                </SelectTrigger>
+                <SelectContent>
+                  {companies.map(company => (
+                    <SelectItem key={company.id} value={company.id}>
+                      {company.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-sm font-medium">Precio Mensual (COP)</label>
