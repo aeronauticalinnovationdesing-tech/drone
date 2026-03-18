@@ -251,12 +251,13 @@ export default function TraderJournal() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="w-full grid grid-cols-5 sm:w-auto sm:flex gap-0 sm:gap-1 h-auto sm:h-auto p-0 sm:p-1 bg-muted/50 sm:bg-muted">
-          <TabsTrigger value="charts" className="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-none sm:rounded-md first:rounded-l-md sm:first:rounded-md last:rounded-r-md sm:last:rounded-md">📈 <span className="hidden sm:inline">Charts</span></TabsTrigger>
+        <TabsList className="w-full grid grid-cols-6 sm:w-auto sm:flex gap-0 sm:gap-1 h-auto sm:h-auto p-0 sm:p-1 bg-muted/50 sm:bg-muted">
+          <TabsTrigger value="charts" className="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-none sm:rounded-md first:rounded-l-md sm:first:rounded-md">📈 <span className="hidden sm:inline">Charts</span></TabsTrigger>
           <TabsTrigger value="journal" className="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-none sm:rounded-md">📓 <span className="hidden sm:inline">Bitácora</span></TabsTrigger>
+          <TabsTrigger value="patterns" className="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-none sm:rounded-md">📚 <span className="hidden sm:inline">Patrones</span></TabsTrigger>
           <TabsTrigger value="analytics" className="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-none sm:rounded-md">📊 <span className="hidden sm:inline">Analytics</span></TabsTrigger>
           <TabsTrigger value="strategy" className="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-none sm:rounded-md">🧠 <span className="hidden sm:inline">IA</span></TabsTrigger>
-          <TabsTrigger value="news" className="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-none sm:rounded-md first:rounded-l-md sm:first:rounded-md last:rounded-r-md sm:last:rounded-md">📰 <span className="hidden sm:inline">News</span></TabsTrigger>
+          <TabsTrigger value="news" className="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-none sm:rounded-md last:rounded-r-md sm:last:rounded-md">📰 <span className="hidden sm:inline">News</span></TabsTrigger>
         </TabsList>
 
         {/* CHARTS TAB */}
