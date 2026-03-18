@@ -30,10 +30,7 @@ export default function DroneMissions() {
 
   const { data: missions = [] } = useQuery({
     queryKey: ["projects", user?.email, activeProfileId],
-    queryFn: async () => {
-      const allProjects = await base44.entities.Project.filter({ profile_id: activeProfileId }, "-created_date", 100);
-      return allProjects;
-    },
+    queryFn: () => base44.entities.Project.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
     enabled: !!user && !!activeProfileId,
   });
   const { data: flights = [] } = useQuery({
