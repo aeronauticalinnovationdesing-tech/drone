@@ -58,8 +58,24 @@ export default function Reports() {
   });
   const expenseData = Object.entries(categoryTotals).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
 
+  const captureChart = async (ref) => {
+    if (!ref?.current) return null;
+    try {
+      const canvas = await html2canvas(ref.current, { backgroundColor: "#ffffff", scale: 2, logging: false });
+      return canvas.toDataURL("image/png");
+    } catch {
+      return null;
+    }
+  };
+
   const generatePDF = async () => {
     setGenerating(true);
+
+    // Capture charts BEFORE generating PDF (DOM must be visible)
+    const [pieImg, barImg] = await Promise.all([
+      captureChart(pieChartRef),
+      captureChart(barChartRef),
+    ]);
 
     // Get AI analysis
     const dataContext = `
