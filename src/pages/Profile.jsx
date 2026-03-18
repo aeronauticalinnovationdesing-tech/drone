@@ -53,7 +53,7 @@ export default function Profile() {
   const sub = allSubs[0] || null;
   const profile = sub ? PROFILES.find((p) => p.id === sub.profile) : null;
   const paidCountdown = useCountdown(sub?.paid_until || null);
-  const isPaid = sub?.is_active;
+  const isPaid = sub?.is_active === true;
   const paidExpired = isPaid && paidCountdown?.expired;
   const paidActive = isPaid && paidCountdown && !paidCountdown.expired;
 
