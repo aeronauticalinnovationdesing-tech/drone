@@ -83,6 +83,18 @@ export default function ManualsManagement() {
     }
   };
 
+  const handlePdfUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingPdf(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setForm({ ...form, pdf_url: file_url });
+    } finally {
+      setUploadingPdf(false);
+    }
+  };
+
   const statusColors = {
     borrador: "bg-gray-100 text-gray-700",
     vigente: "bg-green-100 text-green-700",
