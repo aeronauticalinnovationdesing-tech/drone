@@ -12,6 +12,7 @@ import MoneyGoalBars from "@/components/dashboard/MoneyGoalBars";
 import ForexFactoryWidget from "@/components/trader/ForexFactoryWidget";
 import AccountTypeBadge from "@/components/trader/AccountTypeBadge";
 import { ProfitLossChart } from "@/components/trader/AdvancedMetrics";
+import TradingHours from "@/components/trader/TradingHours";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -127,8 +128,9 @@ export default function TraderDashboard() {
         </div>
       )}
 
-      {/* Chart + Noticias */}
+      {/* Trading Hours + Noticias */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <TradingHours />
         <div className="lg:col-span-2">
           {useNewTrades ? (
             <ProfitLossChart transactions={tradesNew.map(t => ({ ...t, type: t.result === "win" ? "income" : "expense", amount: Math.abs(t.pnl || 0) }))} />
@@ -136,8 +138,10 @@ export default function TraderDashboard() {
             <CashFlowChart transactions={transactions} />
           )}
         </div>
-        <ForexFactoryWidget compact={true} />
       </div>
+
+      {/* Noticias */}
+      <ForexFactoryWidget />
 
       {/* Quick Access + Notes */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
