@@ -47,8 +47,90 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import Accounting from './pages/Accounting';
+import Admin from './pages/Admin';
+import Calendar from './pages/Calendar';
+import Courses from './pages/Courses';
+import Dashboard from './pages/Dashboard';
+import Notes from './pages/Notes';
+import Profile from './pages/Profile';
+import ProfileSelect from './pages/ProfileSelect';
+import ProjectDetail from './pages/ProjectDetail';
+import Projects from './pages/Projects';
+import Reports from './pages/Reports';
+import Secretary from './pages/Secretary';
+import Subscription from './pages/Subscription';
+import Tasks from './pages/Tasks';
+import DronePilotDashboard from './pages/DronePilotDashboard';
+import EliteHumanDashboard from './pages/EliteHumanDashboard';
+import StartupDashboard from './pages/StartupDashboard';
+import TraderDashboard from './pages/TraderDashboard';
+import AirspaceMap from './pages/AirspaceMap';
+import CompanyManagement from './pages/CompanyManagement';
+import DroneMissions from './pages/DroneMissions';
+import DronePilotFlightLog from './pages/DronePilotFlightLog';
+import DroneRegistry from './pages/DroneRegistry';
+import FlightLogBook from './pages/FlightLogBook';
+import MaintenanceManagement from './pages/MaintenanceManagement';
+import PilotManagement from './pages/PilotManagement';
+import SMSReporting from './pages/SMSReporting';
+import EliteHumanGoals from './pages/EliteHumanGoals';
+import EliteHumanProjects from './pages/EliteHumanProjects';
+import DronePilotReport from './pages/DronePilotReport';
+import GenericAccounting from './pages/GenericAccounting';
+import GenericNotes from './pages/GenericNotes';
+import StartupProjects from './pages/StartupProjects';
+import StartupTasks from './pages/StartupTasks';
+import AdvancedTools from './pages/AdvancedTools';
+import TraderAccounting from './pages/TraderAccounting';
+import TraderJournal from './pages/TraderJournal';
+import TraderNotes from './pages/TraderNotes';
+import TraderTrades from './pages/TraderTrades';
 
-export const pagesConfig = {
-	Pages: {}
+
+export const PAGES = {
+    "Accounting": Accounting,
+    "Admin": Admin,
+    "Calendar": Calendar,
+    "Courses": Courses,
+    "Dashboard": Dashboard,
+    "Notes": Notes,
+    "Profile": Profile,
+    "ProfileSelect": ProfileSelect,
+    "ProjectDetail": ProjectDetail,
+    "Projects": Projects,
+    "Reports": Reports,
+    "Secretary": Secretary,
+    "Subscription": Subscription,
+    "Tasks": Tasks,
+    "DronePilotDashboard": DronePilotDashboard,
+    "EliteHumanDashboard": EliteHumanDashboard,
+    "StartupDashboard": StartupDashboard,
+    "TraderDashboard": TraderDashboard,
+    "AirspaceMap": AirspaceMap,
+    "CompanyManagement": CompanyManagement,
+    "DroneMissions": DroneMissions,
+    "DronePilotFlightLog": DronePilotFlightLog,
+    "DroneRegistry": DroneRegistry,
+    "FlightLogBook": FlightLogBook,
+    "MaintenanceManagement": MaintenanceManagement,
+    "PilotManagement": PilotManagement,
+    "SMSReporting": SMSReporting,
+    "EliteHumanGoals": EliteHumanGoals,
+    "EliteHumanProjects": EliteHumanProjects,
+    "DronePilotReport": DronePilotReport,
+    "GenericAccounting": GenericAccounting,
+    "GenericNotes": GenericNotes,
+    "StartupProjects": StartupProjects,
+    "StartupTasks": StartupTasks,
+    "AdvancedTools": AdvancedTools,
+    "TraderAccounting": TraderAccounting,
+    "TraderJournal": TraderJournal,
+    "TraderNotes": TraderNotes,
+    "TraderTrades": TraderTrades,
 }
 
+export const pagesConfig = {
+    mainPage: "Dashboard",
+    Pages: PAGES,
+};
