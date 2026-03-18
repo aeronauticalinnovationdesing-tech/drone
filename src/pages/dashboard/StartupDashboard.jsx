@@ -64,13 +64,15 @@ export default function StartupDashboard() {
       <TrialBanner profile="startup" />
       <PriceManager />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={FolderKanban} label="Proyectos Activos" value={activeProjects} subtitle={`${projects.length} total`} />
-        <StatCard icon={CheckSquare} label="Tareas Pendientes" value={activeTasks.length} subtitle={`${completedTasks.length} completadas`} />
-        <StatCard icon={DollarSign} label="Ingresos" value={`$${totalIncome.toLocaleString()}`} subtitle={`Balance: $${netBalance.toLocaleString()}`} />
-        <StatCard icon={TrendingUp} label="Burn Rate" value={`$${Math.round(monthlyBurn).toLocaleString()}/mes`} subtitle={runway > 0 ? `~${runway} meses runway` : "Sin runway positivo"} />
-      </div>
+      {/* Stats - solo si hay datos */}
+      {(projects.length > 0 || tasks.length > 0 || transactions.length > 0) && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard icon={FolderKanban} label="Proyectos Activos" value={activeProjects} subtitle={`${projects.length} total`} />
+          <StatCard icon={CheckSquare} label="Tareas Pendientes" value={activeTasks.length} subtitle={`${completedTasks.length} completadas`} />
+          <StatCard icon={DollarSign} label="Ingresos" value={`$${totalIncome.toLocaleString()}`} subtitle={`Balance: $${netBalance.toLocaleString()}`} />
+          <StatCard icon={TrendingUp} label="Burn Rate" value={`$${Math.round(monthlyBurn).toLocaleString()}/mes`} subtitle={runway > 0 ? `~${runway} meses runway` : "Sin runway positivo"} />
+        </div>
+      )}
 
       {/* Charts row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -85,6 +87,15 @@ export default function StartupDashboard() {
         <ProjectProgressBars projects={projects} tasks={tasks} />
         <ProjectProgressChart projects={projects} tasks={tasks} />
       </div>
+
+      {/* Empty state */}
+      {projects.length === 0 && tasks.length === 0 && transactions.length === 0 && (
+        <div className="text-center py-16 bg-card rounded-2xl border border-border">
+          <Rocket className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <p className="text-lg font-semibold mb-1">¡Bienvenido a tu Startup HQ!</p>
+          <p className="text-muted-foreground text-sm">Crea tu primer proyecto o tarea para empezar a ver métricas aquí.</p>
+        </div>
+      )}
 
       {/* Recent tasks + quick access */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
