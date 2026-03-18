@@ -19,6 +19,7 @@ const formatCOP = (n) =>
   new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(n || 0);
 
 export default function TraderAccounting() {
+  const { activeProfileId } = useProfile();
   const [showTx, setShowTx] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
   const [txForm, setTxForm] = useState({ description: "", amount: 0, type: "income", category: "investment", date: format(new Date(), "yyyy-MM-dd"), bank_account_id: "" });
@@ -26,21 +27,24 @@ export default function TraderAccounting() {
   const queryClient = useQueryClient();
   const user = useCurrentUser();
 
-  const { data: transactions = [] } = useQuery({
-    queryKey: ["transactions", user?.email],
-    queryFn: () => base44.entities.Transaction.filter({ created_by: user.email }, "-created_date"),
-    enabled: !!user,
+  const { data: rawTransactions = [] } = useQuery({
+    queryKey: ["transactions", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Transaction.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
+    enabled: !!user && !!activeProfileId,
   });
-  const { data: accounts = [] } = useQuery({
-    queryKey: ["accounts", user?.email],
-    queryFn: () => base44.entities.BankAccount.filter({ created_by: user.email }),
-    enabled: !!user,
+  const { data: rawAccounts = [] } = useQuery({
+    queryKey: ["accounts", user?.email, activeProfileId],
+    queryFn: () => base44.entities.BankAccount.filter({ created_by: user.email, profile_id: activeProfileId }),
+    enabled: !!user && !!activeProfileId,
   });
 
-  const createTx = useMutation({ mutationFn: (d) => base44.entities.Transaction.create(d), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["transactions"] }); setShowTx(false); } });
-  const deleteTx = useMutation({ mutationFn: (id) => base44.entities.Transaction.delete(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["transactions"] }) });
-  const createAcc = useMutation({ mutationFn: (d) => base44.entities.BankAccount.create(d), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["accounts"] }); setShowAccount(false); } });
-  const deleteAcc = useMutation({ mutationFn: (id) => base44.entities.BankAccount.delete(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["accounts"] }) });
+  const transactions = rawTransactions.filter(t => t.profile_id === activeProfileId);
+  const accounts = rawAccounts.filter(a => a.profile_id === activeProfileId);
+
+  const createTx = useMutation({ mutationFn: (d) => base44.entities.Transaction.create({ ...d, profile_id: activeProfileId }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["transactions", user?.email, activeProfileId] }); setShowTx(false); } });
+  const deleteTx = useMutation({ mutationFn: (id) => base44.entities.Transaction.delete(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["transactions", user?.email, activeProfileId] }) });
+  const createAcc = useMutation({ mutationFn: (d) => base44.entities.BankAccount.create({ ...d, profile_id: activeProfileId }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["accounts", user?.email, activeProfileId] }); setShowAccount(false); } });
+  const deleteAcc = useMutation({ mutationFn: (id) => base44.entities.BankAccount.delete(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["accounts", user?.email, activeProfileId] }) });
 
   const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + (t.amount || 0), 0);
