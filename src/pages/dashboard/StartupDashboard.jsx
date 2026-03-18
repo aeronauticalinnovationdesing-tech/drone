@@ -38,7 +38,16 @@ export default function StartupDashboard() {
   const completedTasks = tasks.filter(t => t.status === "completed");
   const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + (t.amount || 0), 0);
-  const runway = totalIncome > 0 ? Math.round((totalIncome / (totalExpense || 1)) * 12) : 0;
+  const netBalance = totalIncome - totalExpense;
+
+  // Runway: balance neto dividido entre el gasto mensual promedio
+  const now = new Date();
+  const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+  const recentExpenses = transactions
+    .filter(t => t.type === "expense" && t.date && new Date(t.date) >= oneMonthAgo)
+    .reduce((s, t) => s + (t.amount || 0), 0);
+  const monthlyBurn = recentExpenses || (totalExpense / Math.max(1, 3)); // fallback: promedio 3 meses
+  const runway = monthlyBurn > 0 && netBalance > 0 ? Math.round(netBalance / monthlyBurn) : 0;
 
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
