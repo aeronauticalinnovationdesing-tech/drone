@@ -242,7 +242,7 @@ FINANZAS:
     doc.setTextColor(180, 180, 180);
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
-    doc.text(format(new Date(), "d 'de' MMMM yyyy", { locale: es }), PW - M, 17, { align: "right" });
+    doc.text(`${user?.full_name || "Usuario"} · ${format(new Date(), "d 'de' MMMM yyyy", { locale: es })}`, PW - M, 17, { align: "right" });
     y = 36;
 
     const kpis = [
