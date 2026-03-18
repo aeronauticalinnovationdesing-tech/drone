@@ -90,14 +90,18 @@ export default function WompiWidget({
             console.error('Callback error:', err);
           }
 
-          // Esperar más tiempo para que el webhook se procese
-          await new Promise(r => setTimeout(r, 2000));
+          // Esperar para que el webhook se procese
+          await new Promise(r => setTimeout(r, 3000));
 
-          // Invalidar todas las queries de suscripción y usuario
+          // Invalidar todas las queries de suscripción, usuario y transacciones
           queryClient.invalidateQueries({ queryKey: ['subscription'] });
+          queryClient.invalidateQueries({ queryKey: ['user-subscriptions'] });
           queryClient.invalidateQueries({ queryKey: ['me'] });
+          queryClient.invalidateQueries({ queryKey: ['trials'] });
           
-          console.log('Redirecting to:', redirectUrl);
+          console.log('Queries invalidated, redirecting to:', redirectUrl);
+          // Pequeña espera más para asegurar cache actualizado
+          await new Promise(r => setTimeout(r, 500));
           window.location.href = redirectUrl;
         } else if (onSuccess) {
           onSuccess(true);
