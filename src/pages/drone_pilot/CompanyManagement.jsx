@@ -325,8 +325,30 @@ export default function CompanyManagement() {
                   </Select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Vencimiento Certificado AAC</label>
-                  <Input type="date" value={form.aac_cert_expiry} onChange={e => setForm({ ...form, aac_cert_expiry: e.target.value })} />
+                  <label className="text-sm font-medium">Tipo de Actividad</label>
+                  <Select value={form.activity_type || ""} onValueChange={v => setForm({ ...form, activity_type: v })}>
+                    <SelectTrigger><SelectValue placeholder="Seleccionar actividad..." /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fotografia_aerea">Fotografía Aérea</SelectItem>
+                      <SelectItem value="video_cinematografico">Video Cinematográfico</SelectItem>
+                      <SelectItem value="inspeccion_infraestructura">Inspección de Infraestructura</SelectItem>
+                      <SelectItem value="mapeo_fotogrametria">Mapeo y Fotogrametría</SelectItem>
+                      <SelectItem value="agricultura_precision">Agricultura de Precisión</SelectItem>
+                      <SelectItem value="busqueda_rescate">Búsqueda y Rescate</SelectItem>
+                      <SelectItem value="vigilancia_seguridad">Vigilancia y Seguridad</SelectItem>
+                      <SelectItem value="entrega_carga">Entrega de Carga</SelectItem>
+                      <SelectItem value="topografia">Topografía</SelectItem>
+                      <SelectItem value="termografia">Termografía</SelectItem>
+                      <SelectItem value="inspeccion_torres">Inspección de Torres</SelectItem>
+                      <SelectItem value="inspeccion_lineas">Inspección de Líneas</SelectItem>
+                      <SelectItem value="eventos_publicos">Eventos Públicos</SelectItem>
+                      <SelectItem value="publicidad_marketing">Publicidad y Marketing</SelectItem>
+                      <SelectItem value="bvlos">BVLOS</SelectItem>
+                      <SelectItem value="entrenamiento">Entrenamiento</SelectItem>
+                      <SelectItem value="prueba_tecnica">Prueba Técnica</SelectItem>
+                      <SelectItem value="otro">Otro</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div className="mt-3">
