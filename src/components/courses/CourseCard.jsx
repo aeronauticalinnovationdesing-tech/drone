@@ -52,19 +52,26 @@ export default function CourseCard({ course, purchased, onBuy, onView, onEdit, s
             }
           </div>
         )}
-        <div className="mt-auto pt-3 flex items-center justify-between">
+        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
           <span className="text-lg font-bold text-primary">
             ${(course.price || 0).toLocaleString()} COP
           </span>
-          {purchased ? (
-            <Button size="sm" variant="outline" onClick={() => onView(course)} className="gap-1">
-              <Eye className="w-3 h-3" /> Ver curso
-            </Button>
-          ) : (
-            <Button size="sm" onClick={() => onBuy(course)} className="gap-1">
-              <ShoppingCart className="w-3 h-3" /> Comprar
-            </Button>
-          )}
+          <div className="flex gap-1">
+            {showProfiles && onEdit && (
+              <Button size="sm" variant="outline" onClick={() => onEdit(course)} className="gap-1">
+                <Edit2 className="w-3 h-3" />
+              </Button>
+            )}
+            {purchased ? (
+              <Button size="sm" variant="outline" onClick={() => onView(course)} className="gap-1">
+                <Eye className="w-3 h-3" /> Ver
+              </Button>
+            ) : (
+              <Button size="sm" onClick={() => onBuy(course)} className="gap-1">
+                <ShoppingCart className="w-3 h-3" /> Comprar
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
