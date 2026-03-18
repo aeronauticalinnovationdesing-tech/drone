@@ -15,9 +15,6 @@ import ForexFactoryWidget from "@/components/trader/ForexFactoryWidget";
 import AccountTypeBadge from "@/components/trader/AccountTypeBadge";
 import { ProfitLossChart } from "@/components/trader/AdvancedMetrics";
 import TradingHours from "@/components/trader/TradingHours";
-import MarketCharts from "@/components/trader/MarketCharts";
-import AdvancedTraderTools from "@/components/trader/AdvancedTraderTools";
-import ChartsWithIndicators from "@/components/trader/ChartsWithIndicators";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
