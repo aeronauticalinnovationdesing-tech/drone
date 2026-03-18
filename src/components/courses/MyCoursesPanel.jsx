@@ -90,27 +90,30 @@ export default function MyCoursesPanel({ purchases = [], courses = [], onView })
               {enrichedPurchases.find((p) => p.id === expandedPdf)?.course_title}
             </h2>
             <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-              >
-                <a
-                  href={enrichedPurchases.find((p) => p.id === expandedPdf)?.pdf_url}
-                  download
-                  title="Descargar PDF"
-                >
-                  <Download className="w-4 h-4" />
-                </a>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setExpandedPdf(null)}
-              >
-                Cerrar
-              </Button>
-            </div>
+               <Button
+                 variant="ghost"
+                 size="sm"
+                 onClick={() => {
+                   const purchase = enrichedPurchases.find((p) => p.id === expandedPdf);
+                   const link = document.createElement('a');
+                   link.href = purchase?.pdf_url;
+                   link.download = `${purchase?.course_title}.pdf`;
+                   document.body.appendChild(link);
+                   link.click();
+                   document.body.removeChild(link);
+                 }}
+                 title="Descargar PDF"
+               >
+                 <Download className="w-4 h-4" />
+               </Button>
+               <Button
+                 variant="outline"
+                 size="sm"
+                 onClick={() => setExpandedPdf(null)}
+               >
+                 Cerrar
+               </Button>
+             </div>
           </div>
           <iframe
             src={enrichedPurchases.find((p) => p.id === expandedPdf)?.pdf_url}
