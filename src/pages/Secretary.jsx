@@ -89,6 +89,7 @@ export default function Secretary() {
   const [sending, setSending] = useState(false);
   const [loadingConvs, setLoadingConvs] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Load conversations on mount
