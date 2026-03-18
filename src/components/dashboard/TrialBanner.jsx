@@ -249,7 +249,13 @@ export default function TrialBanner({ profile }) {
                 amountInCents={checkoutData.amountInCents}
                 signature={checkoutData.signature}
                 customerEmail={checkoutData.email}
-                redirectUrl={checkoutData.redirectUrl}
+                profile={profile}
+                onSuccess={(success) => {
+                  if (success) {
+                    queryClient.invalidateQueries({ queryKey: ["subscription", profile] });
+                    setDialogOpen(false);
+                  }
+                }}
               />
             )}
           </div>
