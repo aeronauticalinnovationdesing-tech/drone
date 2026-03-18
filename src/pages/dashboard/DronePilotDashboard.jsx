@@ -15,14 +15,14 @@ export default function DronePilotDashboard() {
   const user = useCurrentUser();
 
   const { data: tasks = [] } = useQuery({
-    queryKey: ["tasks", user?.email],
-    queryFn: () => base44.entities.Task.filter({ created_by: user.email }, "-created_date", 50),
+    queryKey: ["tasks", user?.email, "drone_pilot"],
+    queryFn: () => base44.entities.Task.filter({ created_by: user.email, profile_id: "drone_pilot" }, "-created_date", 50),
     enabled: !!user,
   });
 
   const { data: projects = [] } = useQuery({
-    queryKey: ["projects", user?.email],
-    queryFn: () => base44.entities.Project.filter({ created_by: user.email }, "-created_date", 20),
+    queryKey: ["projects", user?.email, "drone_pilot"],
+    queryFn: () => base44.entities.Project.filter({ created_by: user.email, profile_id: "drone_pilot" }, "-created_date", 20),
     enabled: !!user,
   });
 
