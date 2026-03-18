@@ -257,6 +257,15 @@ Proyectos activos: ${projects.filter(p => p.status === "active").map(p => p.name
       doc.text("Tareas", margin + 6, y + 5.5);
       y += 12;
 
+      // pie chart image
+      if (pieImg) {
+        checkY(70);
+        const imgW = contentW * 0.6;
+        const imgH = imgW * 0.55;
+        doc.addImage(pieImg, "PNG", margin + (contentW - imgW) / 2, y, imgW, imgH);
+        y += imgH + 6;
+      }
+
       // status bars
       const statuses = [
         { label: "Completadas", count: tasks.filter(t => t.status === "completed").length, color: [16, 185, 129] },
