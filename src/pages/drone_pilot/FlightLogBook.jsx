@@ -117,17 +117,17 @@ export default function FlightLogBook() {
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.FlightLog.create(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["flight_logs"] }); closeForm(); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["flight_logs", user?.email] }); closeForm(); },
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.FlightLog.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["flight_logs"] }); closeForm(); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["flight_logs", user?.email] }); closeForm(); },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.FlightLog.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["flight_logs"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["flight_logs", user?.email] }),
   });
 
   const closeForm = () => {
