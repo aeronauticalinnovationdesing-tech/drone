@@ -652,6 +652,129 @@ ${ctx}`,
       y += 10;
     }
 
+    // ─── BITÁCORA DE VUELO ───
+    if (flights.length > 0) {
+      checkY(20);
+      y = pdfSec(doc, "Bitácora de Vuelo (Últimos 30 Registros)", [14, 165, 233], M, y, PH);
+      const fHdrs = ["Fecha", "Piloto", "Dron", "Actividad", "Duración", "Área"];
+      const fCols = [22, 30, 25, 30, 18, 25];
+      doc.setFillColor(10, 20, 40);
+      doc.rect(M, y, CW, 7, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(7);
+      doc.setFont("helvetica", "bold");
+      let cx = M + 3;
+      fHdrs.forEach((h, i) => { doc.text(h, cx, y + 5); cx += fCols[i]; });
+      y += 7;
+
+      flights.slice(-30).reverse().forEach((f, idx) => {
+        checkY(7);
+        doc.setFillColor(idx % 2 === 0 ? 247 : 255, idx % 2 === 0 ? 249 : 255, idx % 2 === 0 ? 252 : 255);
+        doc.rect(M, y, CW, 6.5, "F");
+        cx = M + 3;
+        doc.setFontSize(7);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(40, 40, 40);
+        const rows = [
+          f.date ? format(new Date(f.date), "dd/MM/yy") : "-",
+          doc.splitTextToSize(f.pilot_name || "-", fCols[1] - 3)[0],
+          doc.splitTextToSize(f.drone_model || "-", fCols[2] - 3)[0],
+          doc.splitTextToSize(f.activity_type || "-", fCols[3] - 3)[0],
+          f.duration_minutes ? `${Math.round(f.duration_minutes / 60)}h` : "-",
+          f.area_type || "-",
+        ];
+        rows.forEach((cell, i) => {
+          doc.text(String(cell), cx, y + 4.5);
+          cx += fCols[i];
+        });
+        y += 6.5;
+      });
+      y += 10;
+    }
+
+    // ─── MANTENIMIENTO DRONES ───
+    if (maintenance.length > 0) {
+      checkY(20);
+      y = pdfSec(doc, "Histórico de Mantenimiento de Drones", [16, 185, 129], M, y, PH);
+      const mntHdrs = ["Fecha", "Dron", "Tipo", "Descripción", "Técnico", "Estado"];
+      const mntCols = [20, 25, 20, 55, 25, 25];
+      doc.setFillColor(10, 20, 40);
+      doc.rect(M, y, CW, 7, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(7);
+      doc.setFont("helvetica", "bold");
+      let cx = M + 3;
+      mntHdrs.forEach((h, i) => { doc.text(h, cx, y + 5); cx += mntCols[i]; });
+      y += 7;
+
+      const mntTypes = { preventivo: "Preventivo", correctivo: "Correctivo" };
+      const mntStatus = { completado: "Completado", pendiente: "Pendiente", en_proceso: "En Proceso" };
+      maintenance.slice(-20).reverse().forEach((m, idx) => {
+        checkY(7);
+        doc.setFillColor(idx % 2 === 0 ? 247 : 255, idx % 2 === 0 ? 249 : 255, idx % 2 === 0 ? 252 : 255);
+        doc.rect(M, y, CW, 6.5, "F");
+        cx = M + 3;
+        doc.setFontSize(7);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(40, 40, 40);
+        const rows = [
+          m.date ? format(new Date(m.date), "dd/MM/yy") : "-",
+          doc.splitTextToSize(m.drone_serial || "-", mntCols[1] - 3)[0],
+          mntTypes[m.maintenance_type] || m.maintenance_type || "-",
+          doc.splitTextToSize(m.description || "-", mntCols[3] - 3)[0],
+          doc.splitTextToSize(m.technician_name || "-", mntCols[4] - 3)[0],
+          mntStatus[m.status] || m.status || "-",
+        ];
+        rows.forEach((cell, i) => {
+          doc.text(String(cell), cx, y + 4.5);
+          cx += mntCols[i];
+        });
+        y += 6.5;
+      });
+      y += 10;
+    }
+
+    // ─── RADICADOS AEROCIVIL ───
+    if (filings.length > 0) {
+      checkY(20);
+      y = pdfSec(doc, "Radicados ante Aerocivil", [139, 92, 246], M, y, PH);
+      const radHdrs = ["Radicado", "Tipo", "Fecha", "Estado", "Resolución", "Observaciones"];
+      const radCols = [24, 28, 18, 18, 20, 42];
+      doc.setFillColor(10, 20, 40);
+      doc.rect(M, y, CW, 7, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(7);
+      doc.setFont("helvetica", "bold");
+      let cx = M + 3;
+      radHdrs.forEach((h, i) => { doc.text(h, cx, y + 5); cx += radCols[i]; });
+      y += 7;
+
+      const radStatus = { radicado: "Radicado", en_evaluacion: "Evaluación", aprobado: "Aprobado", rechazado: "Rechazado", suspendido: "Suspendido" };
+      filings.slice(-15).reverse().forEach((r, idx) => {
+        checkY(7);
+        doc.setFillColor(idx % 2 === 0 ? 247 : 255, idx % 2 === 0 ? 249 : 255, idx % 2 === 0 ? 252 : 255);
+        doc.rect(M, y, CW, 6.5, "F");
+        cx = M + 3;
+        doc.setFontSize(7);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(40, 40, 40);
+        const rows = [
+          doc.splitTextToSize(r.filing_number || "-", radCols[0] - 3)[0],
+          doc.splitTextToSize(r.filing_type || "-", radCols[1] - 3)[0],
+          r.filing_date ? format(new Date(r.filing_date), "dd/MM/yy") : "-",
+          radStatus[r.status] || r.status || "-",
+          r.resolution_date ? format(new Date(r.resolution_date), "dd/MM/yy") : "-",
+          doc.splitTextToSize(r.observations || "-", radCols[5] - 3)[0],
+        ];
+        rows.forEach((cell, i) => {
+          doc.text(String(cell), cx, y + 4.5);
+          cx += radCols[i];
+        });
+        y += 6.5;
+      });
+      y += 10;
+    }
+
     // ─── MISIONES ───
     if (missions.length > 0) {
       checkY(20);
