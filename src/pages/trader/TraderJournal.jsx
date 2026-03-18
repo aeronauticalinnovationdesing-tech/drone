@@ -139,9 +139,9 @@ export default function TraderJournal() {
   const { activeProfileId } = useProfile();
 
   const { data: trades = [] } = useQuery({
-    queryKey: ["trades", user?.email],
-    queryFn: () => base44.entities.Trade.filter({ created_by: user.email }, "-date"),
-    enabled: !!user,
+    queryKey: ["trades", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Trade.filter({ created_by: user.email, profile_id: activeProfileId }, "-date"),
+    enabled: !!user && !!activeProfileId,
   });
 
   const createMutation = useMutation({
