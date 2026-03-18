@@ -72,6 +72,7 @@ export default function Profile() {
   const isPaid = sub?.is_active === true;
   const paidExpired = isPaid && paidCountdown?.expired === true;
   const paidActive = isPaid && paidCountdown !== null && !paidCountdown.expired;
+  const noAutoRenew = isPaid && sub?.auto_renew === false && paidCountdown && !paidCountdown.expired;
 
   const handleCancel = async () => {
     if (!confirm("¿Estás seguro? Se cancelará la renovación automática.")) return;
@@ -281,7 +282,7 @@ export default function Profile() {
                   Cancelar Renovación
                 </Button>
               )}
-              {paidActive && sub?.auto_renew === false && (
+              {noAutoRenew && (
                 <Button
                   onClick={handleRenew}
                   disabled={renewing}
