@@ -142,6 +142,51 @@ export default function ProfessionalCharts() {
   const ema50 = useMemo(() => (candles.length ? calculateEMA(candles, 50) : []), [candles]);
   const rsi = useMemo(() => (candles.length ? calculateRSI(candles, 14) : []), [candles]);
 
+  // Dibujar líneas en el canvas del chart
+  const drawLines = useCallback((chart) => {
+    if (!chartContainerRef.current || lines.length === 0) return;
+
+    const canvas = chartContainerRef.current.querySelector("canvas");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    lines.forEach((line) => {
+      ctx.strokeStyle = line.color;
+      ctx.lineWidth = 2;
+      ctx.setLineDash(line.dashed ? [5, 5] : []);
+      ctx.beginPath();
+      ctx.moveTo(line.x1, line.y1);
+      ctx.lineTo(line.x2, line.y2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+  }, [lines]);
+
+  // Agregar línea manualmente
+  const addLine = useCallback((label, color, dashed = false) => {
+    const price = candles.length > 0 ? candles[candles.length - 1].close : 0;
+    setLines((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        label,
+        price,
+        color,
+        dashed,
+        x1: 0,
+        y1: 100,
+        x2: 100,
+        y2: 100,
+      },
+    ]);
+  }, [candles]);
+
+  const removeLine = useCallback((id) => {
+    setLines((prev) => prev.filter((l) => l.id !== id));
+  }, []);
+
   useEffect(() => {
     if (!containerRef.current || candles.length === 0) return;
 
@@ -160,6 +205,7 @@ export default function ProfessionalCharts() {
     });
 
     chartRef.current = chart;
+    chartContainerRef.current = containerRef.current;
 
     // Candlestick series
     const candlestickSeries = chart.addCandlestickSeries({
@@ -173,7 +219,7 @@ export default function ProfessionalCharts() {
     candlestickSeries.setData(candles);
 
     // EMA 20
-    if (showEMA20) {
+    if (showEMA20 && ema20.length > 0) {
       const ema20Series = chart.addLineSeries({
         color: "#f59e0b",
         lineWidth: 2,
@@ -183,7 +229,7 @@ export default function ProfessionalCharts() {
     }
 
     // EMA 50
-    if (showEMA50) {
+    if (showEMA50 && ema50.length > 0) {
       const ema50Series = chart.addLineSeries({
         color: "#8b5cf6",
         lineWidth: 2,
@@ -191,6 +237,18 @@ export default function ProfessionalCharts() {
       });
       ema50Series.setData(ema50);
     }
+
+    // Agregar líneas de soporte/resistencia
+    lines.forEach((line) => {
+      const lineSeries = chart.addLineSeries({
+        color: line.color,
+        lineWidth: 2,
+        lineStyle: line.dashed ? 2 : 0,
+      });
+      lineSeries.setData(
+        candles.map((c) => ({ time: c.time, value: line.price }))
+      );
+    });
 
     // Fit content
     chart.timeScale().fitContent();
@@ -208,7 +266,7 @@ export default function ProfessionalCharts() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [candles, pair, showEMA20, showEMA50]);
+  }, [candles, pair, showEMA20, showEMA50, ema20, ema50, lines]);
 
   const pairLabel = PAIRS.find((p) => p.id === pair)?.label || pair;
   const currentPrice = candles.length > 0 ? candles[candles.length - 1].close : 0;
