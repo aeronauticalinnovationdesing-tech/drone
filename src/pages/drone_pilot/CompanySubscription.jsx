@@ -13,8 +13,8 @@ import {
 import { format, differenceInHours } from "date-fns";
 
 function useCountdown(endDateISO) {
-  const [remaining, setRemaining] = React.useState(null);
-  React.useEffect(() => {
+  const [remaining, setRemaining] = useState(null);
+  useEffect(() => {
     if (!endDateISO) return;
     const endTime = new Date(endDateISO).getTime();
     const tick = () => {
