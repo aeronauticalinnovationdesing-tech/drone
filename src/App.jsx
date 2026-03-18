@@ -96,6 +96,12 @@ const AuthenticatedApp = () => {
         <Route path="/CompanySubscription" element={<CompanySubscription />} />
         <Route path="/DronePilotSubscription" element={<DronePilotSubscription />} />
         <Route path="/CompanySubscriptionEnterprise" element={<CompanySubscriptionEnterprise />} />
+        <Route path="/PilotManagementEnterprise" element={<PilotManagementEnterprise />} />
+        <Route path="/DroneRegistryEnterprise" element={<DroneRegistryEnterprise />} />
+        <Route path="/FlightLogBookEnterprise" element={<FlightLogBookEnterprise />} />
+        <Route path="/SMSReportingEnterprise" element={<SMSReportingEnterprise />} />
+        <Route path="/MaintenanceManagementEnterprise" element={<MaintenanceManagementEnterprise />} />
+        <Route path="/AirspaceMapEnterprise" element={<AirspaceMapEnterprise />} />
         <Route path="/TraderJournal" element={<TraderJournal />} />
         <Route path="/AdvancedTools" element={<AdvancedTools />} />
       </Route>
