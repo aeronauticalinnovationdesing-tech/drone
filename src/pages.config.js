@@ -74,6 +74,8 @@ import FlightLogBook from './pages/FlightLogBook';
 import MaintenanceManagement from './pages/MaintenanceManagement';
 import PilotManagement from './pages/PilotManagement';
 import SMSReporting from './pages/SMSReporting';
+import CompanySubscription from './pages/CompanySubscription';
+import DronePilotSubscription from './pages/DronePilotSubscription';
 import EliteHumanGoals from './pages/EliteHumanGoals';
 import EliteHumanProjects from './pages/EliteHumanProjects';
 import DronePilotReport from './pages/DronePilotReport';
@@ -86,6 +88,14 @@ import TraderAccounting from './pages/TraderAccounting';
 import TraderJournal from './pages/TraderJournal';
 import TraderNotes from './pages/TraderNotes';
 import TraderTrades from './pages/TraderTrades';
+import CompanySubscription from './pages/CompanySubscription';
+import PilotManagement from './pages/PilotManagement';
+import DroneRegistry from './pages/DroneRegistry';
+import FlightLogBook from './pages/FlightLogBook';
+import SMSReporting from './pages/SMSReporting';
+import MaintenanceManagement from './pages/MaintenanceManagement';
+import AirspaceMap from './pages/AirspaceMap';
+import UserManagement from './pages/UserManagement';
 
 
 export const PAGES = {
@@ -116,6 +126,8 @@ export const PAGES = {
     "MaintenanceManagement": MaintenanceManagement,
     "PilotManagement": PilotManagement,
     "SMSReporting": SMSReporting,
+    "CompanySubscription": CompanySubscription,
+    "DronePilotSubscription": DronePilotSubscription,
     "EliteHumanGoals": EliteHumanGoals,
     "EliteHumanProjects": EliteHumanProjects,
     "DronePilotReport": DronePilotReport,
@@ -128,6 +140,14 @@ export const PAGES = {
     "TraderJournal": TraderJournal,
     "TraderNotes": TraderNotes,
     "TraderTrades": TraderTrades,
+    "CompanySubscription": CompanySubscription,
+    "PilotManagement": PilotManagement,
+    "DroneRegistry": DroneRegistry,
+    "FlightLogBook": FlightLogBook,
+    "SMSReporting": SMSReporting,
+    "MaintenanceManagement": MaintenanceManagement,
+    "AirspaceMap": AirspaceMap,
+    "UserManagement": UserManagement,
 }
 
 export const pagesConfig = {
