@@ -133,7 +133,7 @@ export default function FeatureGate({ children, featureName = 'Feature' }) {
             <div className="bg-destructive/5 rounded-lg p-3 text-sm">
               <p className="text-foreground font-semibold mb-1">¿Qué pasó?</p>
               <p className="text-muted-foreground text-xs">
-                Para seguir usando todas las herramientas avanzadas, necesitas activar una suscripción.
+                Esta herramienta avanzada requiere una suscripción activa.
               </p>
             </div>
             <div className="mb-2">
@@ -152,7 +152,7 @@ export default function FeatureGate({ children, featureName = 'Feature' }) {
               Activar suscripción
             </Button>
             <p className="text-xs text-muted-foreground">
-              Contacta al administrador si tienes dudas
+              Accede a <strong>Suscripción</strong> para ver más opciones
             </p>
           </div>
         </div>
