@@ -2,13 +2,16 @@ import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { TrendingUp, TrendingDown, DollarSign, BarChart2, BookOpen, Bot, StickyNote, ArrowRight } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, BarChart2, BookOpen, Bot, StickyNote, ArrowRight, Brain, Target, Zap } from "lucide-react";
 import TrialBanner from "@/components/dashboard/TrialBanner";
 import { Link } from "react-router-dom";
 import StatCard from "@/components/dashboard/StatCard";
 import PriceManager from "@/components/dashboard/PriceManager";
 import { IncomeExpenseChart, CashFlowChart } from "@/components/dashboard/DashboardCharts";
 import MoneyGoalBars from "@/components/dashboard/MoneyGoalBars";
+import ForexFactoryWidget from "@/components/trader/ForexFactoryWidget";
+import AccountTypeBadge from "@/components/trader/AccountTypeBadge";
+import { ProfitLossChart } from "@/components/trader/AdvancedMetrics";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -27,6 +30,12 @@ export default function TraderDashboard() {
     enabled: !!user,
   });
 
+  const { data: tradesNew = [] } = useQuery({
+    queryKey: ["trades", user?.email],
+    queryFn: () => base44.entities.Trade.filter({ created_by: user.email }, "-date", 100),
+    enabled: !!user,
+  });
+
   const { data: bankAccounts = [] } = useQuery({
     queryKey: ["bankAccounts", user?.email, "trader"],
     queryFn: () => base44.entities.BankAccount.filter({ created_by: user.email, profile_id: "trader" }),
@@ -42,10 +51,26 @@ export default function TraderDashboard() {
   const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + (t.amount || 0), 0);
   const balance = totalIncome - totalExpense;
+
+  // New Trade entity metrics
+  const tradeWins = tradesNew.filter(t => t.result === "win");
+  const tradeLosses = tradesNew.filter(t => t.result === "loss");
+  const tradePnl = tradesNew.reduce((s, t) => s + (t.pnl || 0), 0);
+  const tradeWinRate = tradesNew.length > 0 ? Math.round((tradeWins.length / tradesNew.length) * 100) : 0;
+  const avgRR = tradesNew.filter(t => t.risk_reward).length > 0
+    ? (tradesNew.filter(t => t.risk_reward).reduce((s, t) => s + t.risk_reward, 0) / tradesNew.filter(t => t.risk_reward).length).toFixed(2)
+    : null;
+  const profitFactor = tradeLosses.reduce((s,t)=>s+Math.abs(t.pnl||0),0) > 0
+    ? (tradeWins.reduce((s,t)=>s+(t.pnl||0),0) / tradeLosses.reduce((s,t)=>s+Math.abs(t.pnl||0),0)).toFixed(2)
+    : null;
+
+  // Legacy
   const winTrades = tasks.filter(t => t.status === "completed").length;
   const lossTrades = tasks.filter(t => t.status === "cancelled").length;
   const totalTrades = tasks.length;
   const winRate = totalTrades > 0 ? Math.round((winTrades / totalTrades) * 100) : 0;
+
+  const useNewTrades = tradesNew.length > 0;
 
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
