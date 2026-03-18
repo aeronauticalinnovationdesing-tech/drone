@@ -21,7 +21,9 @@ const emptyForm = {
   sms_manager_name: "", sms_manager_email: "",
   operations_manual_version: "", insurance_policy_number: "", insurance_expiry: "",
   status: "activa",
-  special_flights: []
+  special_flights: [],
+  tech_equipment: [],
+  other_equipment: ""
 };
 
 const specialFlightsOptions = [
