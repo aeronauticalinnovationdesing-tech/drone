@@ -2,6 +2,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Clock, ShoppingCart, Eye } from "lucide-react";
 
+const profileLabels = {
+  trader: "Trader",
+  drone_pilot: "Drones",
+  startup: "Startup",
+  elite_human: "Elite Human",
+};
+
 const categoryLabels = {
   productividad: "Productividad",
   finanzas: "Finanzas",
@@ -11,7 +18,7 @@ const categoryLabels = {
   otro: "Otro"
 };
 
-export default function CourseCard({ course, purchased, onBuy, onView }) {
+export default function CourseCard({ course, purchased, onBuy, onView, showProfiles }) {
   return (
     <div className="bg-card rounded-2xl border border-border overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
       <div className="h-40 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center relative">
