@@ -65,6 +65,8 @@ export default function CompanyManagement() {
   const [showForm, setShowForm] = useState(false);
   const [editingCompany, setEditingCompany] = useState(null);
   const [form, setForm] = useState({ ...emptyForm });
+  const [droneInput, setDroneInput] = useState("");
+  const [quantityInput, setQuantityInput] = useState("");
   const queryClient = useQueryClient();
 
   const { data: companies = [] } = useQuery({
