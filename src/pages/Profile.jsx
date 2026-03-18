@@ -56,6 +56,7 @@ export default function Profile() {
       return subs;
     },
     enabled: !!user?.email && !!activeProfile?.id,
+    refetchInterval: 3000, // Refetch cada 3 segundos para captar cambios rápidamente
   });
 
   const { data: globalSubs = [] } = useQuery({
