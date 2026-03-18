@@ -39,11 +39,12 @@ export default function TraderTrades() {
   const [filterType, setFilterType] = useState("all");
   const queryClient = useQueryClient();
   const user = useCurrentUser();
+  const { activeProfileId } = useProfile();
 
   const { data: trades = [] } = useQuery({
-    queryKey: ["transactions", user?.email],
-    queryFn: () => base44.entities.Transaction.filter({ created_by: user.email }, "-created_date"),
-    enabled: !!user,
+    queryKey: ["transactions", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Transaction.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
+    enabled: !!user && !!activeProfileId,
   });
 
   const createMutation = useMutation({
