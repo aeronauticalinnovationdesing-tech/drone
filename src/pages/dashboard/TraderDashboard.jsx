@@ -149,15 +149,6 @@ export default function TraderDashboard() {
         </div>
       </div>
 
-      {/* Market Charts */}
-      <MarketCharts />
-
-      {/* Gráficos en Tiempo Real con Indicadores */}
-      <ChartsWithIndicators />
-
-      {/* Advanced Trader Tools */}
-      <AdvancedTraderTools />
-
       {/* Noticias */}
       <ForexFactoryWidget />
 
