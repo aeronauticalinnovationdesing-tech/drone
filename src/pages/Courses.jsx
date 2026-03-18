@@ -26,6 +26,7 @@ export default function Courses() {
   const [verifying, setVerifying] = useState(false);
   const [paymentResult, setPaymentResult] = useState(null);
   const [activeTab, setActiveTab] = useState("explore");
+  const [deletingCourse, setDeletingCourse] = useState(null);
 
   // Verificar si viene de una redirección de Wompi
   useEffect(() => {
