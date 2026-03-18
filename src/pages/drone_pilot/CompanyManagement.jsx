@@ -597,8 +597,11 @@ ${form.insurance_expiry ? `Vencimiento: ${form.insurance_expiry}` : ""}
               </div>
             </div>
 
-            <DialogFooter>
+            <DialogFooter className="flex gap-2">
               <Button type="button" variant="outline" onClick={closeForm}>Cancelar</Button>
+              <Button type="button" variant="outline" onClick={handleSendCertificationConsult}>
+                Consultar Asesoría Certificación
+              </Button>
               <Button type="submit" className="bg-sky-600 hover:bg-sky-700">
                 {editingCompany ? "Actualizar" : "Registrar Empresa"}
               </Button>
