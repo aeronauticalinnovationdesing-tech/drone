@@ -250,9 +250,14 @@ export default function Courses() {
                         <Badge variant="outline" className="text-xs">${course.price.toLocaleString("es-CO")} COP</Badge>
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => setEditingCourse(course)} className="gap-2 flex-shrink-0">
-                      <Edit2 className="w-4 h-4" /> Editar
-                    </Button>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <Button size="sm" variant="outline" onClick={() => setEditingCourse(course)} className="gap-2">
+                        <Edit2 className="w-4 h-4" /> Editar
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleDelete(course)} className="gap-2 text-destructive hover:text-destructive">
+                        Eliminar
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
