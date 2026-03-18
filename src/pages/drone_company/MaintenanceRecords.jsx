@@ -192,9 +192,13 @@ export default function MaintenanceRecords() {
                 const drone = drones.find(d => d.id === v);
                 setForm({ ...form, drone_id: v, drone_serial: drone?.serial_number || "" });
               }}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder={drones.length === 0 ? "No hay drones registrados" : "Seleccionar dron..."} /></SelectTrigger>
                 <SelectContent>
-                  {drones.map(d => <SelectItem key={d.id} value={d.id}>{d.serial_number}</SelectItem>)}
+                  {drones.length === 0 ? (
+                    <div className="p-2 text-sm text-muted-foreground">No hay drones registrados</div>
+                  ) : (
+                    drones.map(d => <SelectItem key={d.id} value={d.id}>{d.serial_number} - {d.model}</SelectItem>)
+                  )}
                 </SelectContent>
               </Select>
             </div>
