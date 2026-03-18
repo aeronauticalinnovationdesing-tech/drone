@@ -230,9 +230,14 @@ export default function Profile() {
                 </p>
               )}
               {isPaid && sub?.auto_renew !== false && (
-                <p className="text-xs text-emerald-600 dark:text-emerald-400">
-                  ✓ Renovación automática habilitada
-                </p>
+               <p className="text-xs text-emerald-600 dark:text-emerald-400">
+                 ✓ Renovación automática habilitada
+               </p>
+              )}
+              {isPaid && sub?.auto_renew === false && (
+               <p className="text-xs text-amber-600 dark:text-amber-400">
+                 ⚠ Renovación automática deshabilitada (activa hasta {new Date(sub.paid_until).toLocaleDateString("es-CO")})
+               </p>
               )}
               {paidExpired && (
                 <p className="text-destructive font-medium">Tu suscripción ha vencido. Accede a Suscripciones para renovar.</p>
@@ -247,18 +252,18 @@ export default function Profile() {
                   <span className="text-sm font-normal text-muted-foreground"> COP/mes</span>
                 </p>
               </div>
-              {paidActive && (
-                <Button
-                  variant="ghost"
-                  onClick={handleCancel}
-                  disabled={canceling}
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                >
-                  {canceling ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : null}
-                  Cancelar Suscripción
-                </Button>
+              {paidActive && sub?.auto_renew !== false && (
+               <Button
+                 variant="ghost"
+                 onClick={handleCancel}
+                 disabled={canceling}
+                 className="text-destructive hover:text-destructive hover:bg-destructive/10"
+               >
+                 {canceling ? (
+                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                 ) : null}
+                 Cancelar Renovación
+               </Button>
               )}
             </div>
           </Card>
