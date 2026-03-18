@@ -23,8 +23,8 @@ import FeatureGate from "@/components/subscription/FeatureGate";
 
 const PAIRS_FOREX = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "USD/CAD", "NZD/USD", "GBP/JPY", "EUR/JPY"];
 const PAIRS_CRIPTO = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "BNB/USDT", "XRP/USDT", "ADA/USDT"];
-const PAIRS_FUTUROS = ["ES (S&P500)", "NQ (NASDAQ)", "YM (DOW)", "GC (ORO)", "CL (PETRÓLEO)", "ZB (Bonos T)"];
-const PAIRS_OTROS = ["ORO/USD", "PLATA/USD", "DJI", "DAX", "NIKKEI"];
+const PAIRS_FUTUROS = ["ES (S&P500)", "NQ (NASDAQ)", "YM (DOW)", "GC (ORO)", "CL (PETRÓLEO)", "ZB (Bonos T)", "^GSPC (S&P 500)"];
+const PAIRS_OTROS = ["ORO/USD", "PLATA/USD", "DJI", "DAX", "NIKKEI", "S&P 500"];
 
 const SETUPS = ["Breakout", "Pullback", "Reversión", "Scalping", "Swing", "Tendencia", "S/R", "Fibonacci", "EMA Cross", "RSI Divergence", "Order Block", "FVG", "ICT/SMC", "Otro"];
 const SESSIONS = ["Asia", "Londres", "New York", "Overlap", "Otra"];
