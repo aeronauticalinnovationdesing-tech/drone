@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, BookOpen, Search, Loader2, CheckCircle2, Edit2 } from "lucide-react";
+import { Plus, BookOpen, Search, Loader2, CheckCircle2, Edit2, Download, X } from "lucide-react";
 import CourseCard from "@/components/courses/CourseCard";
 import CourseUploadForm from "@/components/courses/CourseUploadForm";
 import CourseEditForm from "@/components/courses/CourseEditForm";
@@ -270,13 +270,23 @@ export default function Courses() {
       {viewingPdf && (
         <div className="fixed inset-0 z-50 bg-black/80 flex flex-col">
           <div className="flex items-center justify-between p-4 bg-card border-b">
-            <h2 className="font-semibold">{viewingPdf.title}</h2>
-            <Button variant="outline" size="sm" onClick={() => setViewingPdf(null)}>Cerrar</Button>
+            <h2 className="font-semibold truncate flex-1">{viewingPdf.title}</h2>
+            <div className="flex gap-2">
+              <a href={viewingPdf.pdf_url} download target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Download className="w-4 h-4" /> Descargar
+                </Button>
+              </a>
+              <Button variant="outline" size="sm" onClick={() => setViewingPdf(null)}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
           <iframe
-            src={viewingPdf.pdf_url}
+            src={`${viewingPdf.pdf_url}#toolbar=1&navpanes=0&scrollbar=1`}
             className="flex-1 w-full"
             title={viewingPdf.title}
+            allow="autoplay"
           />
         </div>
       )}
