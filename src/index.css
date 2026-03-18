@@ -85,4 +85,14 @@
   body {
     @apply bg-background text-foreground font-inter;
   }
+  
+  /* Hide scrollbars for mobile */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
