@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { createChart, ColorType } from "lightweight-charts";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, TrendingUp, TrendingDown, Eye, EyeOff } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Loader2, TrendingUp, TrendingDown, Eye, EyeOff, Trash2, LineChart } from "lucide-react";
 
 const TIMEFRAMES = {
   "1": { label: "1 min", minutes: 1 },
@@ -35,7 +34,13 @@ const PAIRS = [
   { id: "GC", label: "GC (Oro)", type: "commodity" },
 ];
 
-// Genera datos de prueba realistas
+// Seeded random para datos consistentes
+const seededRandom = (seed) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
+// Genera datos estables y consistentes
 const generateMockData = (pair, days = 100) => {
   const candles = [];
   let time = Math.floor(Date.now() / 1000) - days * 24 * 60 * 60;
@@ -53,12 +58,13 @@ const generateMockData = (pair, days = 100) => {
   else close = 150;
 
   for (let i = 0; i < days; i++) {
+    const seed = Math.floor(time / 86400) + pair.charCodeAt(0);
     const open = close;
-    const variation = (Math.random() - 0.5) * 2;
+    const variation = (seededRandom(seed) - 0.5) * 1.5;
     close = open * (1 + variation / 100);
-    const high = Math.max(open, close) * (1 + Math.random() * 0.005);
-    const low = Math.min(open, close) * (1 - Math.random() * 0.005);
-    const volume = Math.floor(Math.random() * 1000000 + 500000);
+    const high = Math.max(open, close) * (1 + seededRandom(seed * 2) * 0.003);
+    const low = Math.min(open, close) * (1 - seededRandom(seed * 3) * 0.003);
+    const volume = Math.floor(seededRandom(seed * 4) * 1000000 + 500000);
 
     candles.push({ time: Math.floor(time / 86400), open, high, low, close, volume });
     time += 86400;
