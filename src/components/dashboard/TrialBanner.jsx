@@ -21,11 +21,12 @@ function useCountdown(trialStartISO, trialHours = 48) {
     const tick = () => {
       const diff = trialEnd - Date.now();
       if (diff <= 0) {
-        setRemaining({ expired: true, h: 0, m: 0, s: 0 });
+        setRemaining({ expired: true, h: 0, m: 0, s: 0, d: 0 });
       } else {
         setRemaining({
           expired: false,
-          h: Math.floor(diff / 3600000),
+          d: Math.floor(diff / 86400000),
+          h: Math.floor((diff % 86400000) / 3600000),
           m: Math.floor((diff % 3600000) / 60000),
           s: Math.floor((diff % 60000) / 1000),
         });
@@ -35,6 +36,32 @@ function useCountdown(trialStartISO, trialHours = 48) {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [trialStartISO, trialHours]);
+  return remaining;
+}
+
+function usePaidCountdown(paidUntilISO) {
+  const [remaining, setRemaining] = useState(null);
+  useEffect(() => {
+    if (!paidUntilISO) return;
+    const endTime = new Date(paidUntilISO).getTime();
+    const tick = () => {
+      const diff = endTime - Date.now();
+      if (diff <= 0) {
+        setRemaining({ expired: true, d: 0, h: 0, m: 0, s: 0 });
+      } else {
+        setRemaining({
+          expired: false,
+          d: Math.floor(diff / 86400000),
+          h: Math.floor((diff % 86400000) / 3600000),
+          m: Math.floor((diff % 3600000) / 60000),
+          s: Math.floor((diff % 60000) / 1000),
+        });
+      }
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [paidUntilISO]);
   return remaining;
 }
 
@@ -81,6 +108,7 @@ export default function TrialBanner({ profile }) {
   const trialKey = `trial_start_${profile}`;
   const trialStartDate = user?.[trialKey] || null;
   const countdown = useCountdown(trialStartDate, trialHours);
+  const paidCountdown = usePaidCountdown(userSub?.paid_until || null);
 
   // Si el usuario no tiene trial_start aún, iniciarlo en su propio registro
   useEffect(() => {
@@ -204,9 +232,12 @@ export default function TrialBanner({ profile }) {
                   Suscríbete para seguir usando {PROFILE_NAMES[profile]}
                 </p>
               )}
-              {isPaid && userSub?.paid_until && (
+              {isPaid && paidCountdown && !paidCountdown.expired && (
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Renovación: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatDate(userSub.paid_until)}</span>
+                  Vence en:{" "}
+                  <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                    {pad(paidCountdown.d)}d {pad(paidCountdown.h)}h {pad(paidCountdown.m)}m
+                  </span>
                 </p>
               )}
               {isPaid && userSub?.auto_renew && (
