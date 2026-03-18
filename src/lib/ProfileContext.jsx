@@ -6,7 +6,7 @@ import {
   LayoutDashboard, FolderKanban, CheckSquare, StickyNote,
   Wallet, Calendar, Bot, FileText, BookOpen,
   BarChart2, BookMarked, Wind, Map, Target, Users, DollarSign, Lightbulb, Activity, CreditCard,
-  Users as UsersIcon, AlertCircle, FileCode, Wrench, Building2
+  Users as UsersIcon, AlertCircle, FileCode, Wrench, Building2, Brain, Newspaper
 } from 'lucide-react';
 
 export const PROFILES = [
@@ -19,12 +19,13 @@ export const PROFILES = [
     accent: '#10b981',
     nav: [
       { icon: LayoutDashboard, label: 'Dashboard', path: '/Dashboard' },
-      { icon: BarChart2, label: 'Trades', path: '/Tasks' },
-      { icon: Wallet, label: 'Contabilidad', path: '/Accounting' },
+      { icon: BarChart2, label: 'Journal Pro', path: '/TraderJournal' },
+      { icon: Wallet, label: 'Capital & P&L', path: '/Accounting' },
+      { icon: Brain, label: 'Análisis IA', path: '/TraderJournal' },
       { icon: FileText, label: 'Informes', path: '/Reports' },
       { icon: StickyNote, label: 'Notas', path: '/Notes' },
       { icon: Calendar, label: 'Calendario', path: '/Calendar' },
-      { icon: Bot, label: 'Secretaria IA', path: '/Secretary' },
+      { icon: Bot, label: 'Asesor Trader IA', path: '/Secretary' },
       { icon: BookOpen, label: 'Cursos', path: '/Courses' },
       { icon: CreditCard, label: 'Suscripciones', path: '/Subscription' },
     ]
