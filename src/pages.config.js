@@ -96,6 +96,7 @@ import SMSReporting from './pages/SMSReporting';
 import MaintenanceManagement from './pages/MaintenanceManagement';
 import AirspaceMap from './pages/AirspaceMap';
 import UserManagement from './pages/UserManagement';
+import DroneCoDashboard from './pages/DroneCoDashboard';
 
 
 export const PAGES = {
@@ -148,6 +149,7 @@ export const PAGES = {
     "MaintenanceManagement": MaintenanceManagement,
     "AirspaceMap": AirspaceMap,
     "UserManagement": UserManagement,
+    "DroneCoDashboard": DroneCoDashboard,
 }
 
 export const pagesConfig = {
