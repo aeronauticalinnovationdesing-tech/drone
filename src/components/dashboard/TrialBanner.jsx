@@ -126,6 +126,41 @@ export default function TrialBanner({ profile }) {
   const trialExpired = sub?.trial_start_date && countdown?.expired;
   const hasPrice = sub?.monthly_price_cop > 0;
 
+  // Bloqueo total al expirar (para usuarios no admin no pagados)
+  if (trialExpired && !isPaid && user?.role !== "admin") {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+        <div className="max-w-md w-full mx-4 bg-card border border-destructive/30 rounded-2xl p-8 text-center shadow-2xl">
+          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-8 h-8 text-destructive" />
+          </div>
+          <h2 className="text-xl font-bold mb-2">Prueba gratuita terminada</h2>
+          <p className="text-muted-foreground text-sm mb-6">
+            Tu período de prueba ha finalizado. Suscríbete para seguir usando {PROFILE_NAMES[profile]}.
+          </p>
+          <div className="mb-6">
+            <p className="text-xs text-muted-foreground mb-1">Suscripción mensual</p>
+            <p className="text-2xl font-bold">
+              {hasPrice ? `$${Number(sub.monthly_price_cop).toLocaleString("es-CO")} COP` : "—"}
+            </p>
+          </div>
+          <Button
+            className="w-full gap-2"
+            onClick={handlePay}
+            disabled={paying || !hasPrice}
+            title={!hasPrice ? "El precio aún no ha sido configurado" : ""}
+          >
+            {paying ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
+            Activar suscripción
+          </Button>
+          {!hasPrice && (
+            <p className="text-xs text-muted-foreground mt-3">El administrador aún no ha configurado el precio.</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className={`rounded-2xl border p-5 ${
@@ -157,7 +192,7 @@ export default function TrialBanner({ profile }) {
               }`}>
                 {isPaid ? `✓ ${PROFILE_NAMES[profile]} — Activo`
                  : trialExpired ? "Prueba vencida — activa tu plan"
-                 : "Prueba gratuita de 48 horas"}
+                 : `Prueba gratuita de ${trialHours}h`}
               </p>
               {!isPaid && trialActive && countdown && (
                 <p className="text-xs text-muted-foreground mt-0.5">
