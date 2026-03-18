@@ -326,7 +326,7 @@ export default function CompanyManagement() {
                 </div>
                 <div>
                   <label className="text-sm font-medium">Tipo de Actividad</label>
-                  <Select value={form.activity_type || ""} onValueChange={v => setForm({ ...form, activity_type: v })}>
+                  <Select value={form.activity_type || ""} onValueChange={v => setForm({ ...form, activity_type: v, custom_activity: "" })}>
                     <SelectTrigger><SelectValue placeholder="Seleccionar actividad..." /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="fotografia_aerea">Fotografía Aérea</SelectItem>
@@ -349,6 +349,15 @@ export default function CompanyManagement() {
                       <SelectItem value="otro">Otro</SelectItem>
                     </SelectContent>
                   </Select>
+                  {form.activity_type === "otro" && (
+                    <Input 
+                      type="text" 
+                      placeholder="Especificar actividad..." 
+                      value={form.custom_activity || ""} 
+                      onChange={e => setForm({ ...form, custom_activity: e.target.value })}
+                      className="mt-2"
+                    />
+                  )}
                 </div>
               </div>
               <div className="mt-3">
