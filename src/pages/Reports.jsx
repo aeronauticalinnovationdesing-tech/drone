@@ -206,23 +206,28 @@ FINANZAS:
     doc.setTextColor(245, 158, 11);
     doc.setFontSize(36);
     doc.setFont("helvetica", "bold");
-    doc.text("VEXNY", PW / 2, PH * 0.38, { align: "center" });
+    doc.text("VEXNY", PW / 2, PH * 0.35, { align: "center" });
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(16);
     doc.setFont("helvetica", "normal");
-    doc.text("Informe Ejecutivo Completo", PW / 2, PH * 0.38 + 14, { align: "center" });
+    doc.text("Informe Ejecutivo Personalizado", PW / 2, PH * 0.35 + 14, { align: "center" });
 
     doc.setTextColor(180, 180, 180);
     doc.setFontSize(11);
-    doc.text(activeProfile?.label || "Perfil General", PW / 2, PH * 0.38 + 26, { align: "center" });
-    doc.text(format(new Date(), "d 'de' MMMM yyyy", { locale: es }), PW / 2, PH * 0.38 + 35, { align: "center" });
+    doc.text(user?.full_name || "Usuario", PW / 2, PH * 0.35 + 30, { align: "center" });
+    doc.setFontSize(9);
+    doc.text(activeProfile?.label || "Perfil General", PW / 2, PH * 0.35 + 38, { align: "center" });
+    doc.setFontSize(8);
+    doc.text(format(new Date(), "d 'de' MMMM yyyy", { locale: es }), PW / 2, PH * 0.35 + 45, { align: "center" });
 
     doc.setTextColor(245, 158, 11);
-    doc.setFontSize(8);
-    doc.text("CONFIDENCIAL · Generado automáticamente por VEXNY IA", PW / 2, PH - 20, { align: "center" });
+    doc.setFontSize(7);
+    doc.text("INFORME CONFIDENCIAL", PW / 2, PH - 22, { align: "center" });
     doc.setTextColor(120, 120, 120);
-    doc.text(user?.email || "", PW / 2, PH - 14, { align: "center" });
+    doc.setFontSize(8);
+    doc.text(user?.email || "email@example.com", PW / 2, PH - 15, { align: "center" });
+    doc.text(format(new Date(), "HH:mm", { locale: es }), PW / 2, PH - 8, { align: "center" });
 
     // ─────── PÁGINA 2: KPIs ───────
     newPage();
