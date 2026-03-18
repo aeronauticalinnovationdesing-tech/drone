@@ -21,6 +21,8 @@ export default function Reports() {
   const [generating, setGenerating] = useState(false);
   const user = useCurrentUser();
   const { activeProfileId, activeProfile } = useProfile();
+  const pieChartRef = useRef(null);
+  const barChartRef = useRef(null);
 
   const { data: projects = [] } = useQuery({
     queryKey: ["projects", user?.email, activeProfileId],
