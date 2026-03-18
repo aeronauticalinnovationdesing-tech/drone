@@ -570,21 +570,7 @@ FINANZAS:
         </Button>
       </div>
 
-      {/* KPIs - Perfil específico */}
-       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
-         {[
-           { label:"Proyectos", val: projects.length, sub:`${projects.filter(p=>p.status==="active").length} activos`, icon: FolderKanban, color:"text-blue-500" },
-           { label:"Tareas", val: tasks.length, sub:`${completionRate}% completadas`, icon: CheckSquare, color:"text-green-500" },
-           { label:"Productividad", val:`${completionRate}%`, sub:"tareas hechas", icon: Activity, color:"text-purple-500" },
-         ].map(k => (
-          <div key={k.label} className="bg-card border border-border rounded-2xl p-4 flex flex-col gap-1">
-            <k.icon className={`w-5 h-5 ${k.color}`} />
-            <div className="text-lg font-bold leading-tight">{k.val}</div>
-            <div className="text-xs text-muted-foreground">{k.label}</div>
-            <div className="text-xs text-muted-foreground">{k.sub}</div>
-          </div>
-        ))}
-      </div>
+
 
 
 
