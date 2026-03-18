@@ -41,16 +41,18 @@ export default function Profile() {
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState(user?.full_name || "");
 
-  const { data: allSubs = [] } = useQuery({
-    queryKey: ["all-subscriptions", user?.email],
-    queryFn: () => {
+  const { data: userSubs = [] } = useQuery({
+    queryKey: ["user-subscriptions", user?.email],
+    queryFn: async () => {
       if (!user?.email) return [];
-      return base44.entities.Subscription.filter({ created_by: user.email });
+      const subs = await base44.entities.Subscription.filter({ created_by: user.email });
+      console.log("User subs fetched:", subs);
+      return subs;
     },
     enabled: !!user?.email,
   });
 
-  const sub = allSubs[0] || null;
+  const sub = userSubs.length > 0 ? userSubs[0] : null;
   const profile = sub ? PROFILES.find((p) => p.id === sub.profile) : null;
   const paidCountdown = useCountdown(sub?.paid_until || null);
   const isPaid = sub?.is_active === true;
