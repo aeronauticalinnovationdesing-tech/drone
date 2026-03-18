@@ -81,7 +81,7 @@ export default function MyCoursesPanel({ purchases = [], courses = [], onView })
         <div className="fixed inset-0 z-50 bg-black/80 flex flex-col animate-in fade-in">
           <div className="flex items-center justify-between p-4 bg-card border-b sticky top-0">
             <h2 className="font-semibold text-sm sm:text-base">
-              {purchases.find((p) => p.id === expandedPdf)?.course_title}
+              {enrichedPurchases.find((p) => p.id === expandedPdf)?.course_title}
             </h2>
             <div className="flex gap-2">
               <Button
@@ -90,7 +90,7 @@ export default function MyCoursesPanel({ purchases = [], courses = [], onView })
                 asChild
               >
                 <a
-                  href={purchases.find((p) => p.id === expandedPdf)?.pdf_url}
+                  href={enrichedPurchases.find((p) => p.id === expandedPdf)?.pdf_url}
                   download
                   title="Descargar PDF"
                 >
@@ -107,7 +107,7 @@ export default function MyCoursesPanel({ purchases = [], courses = [], onView })
             </div>
           </div>
           <iframe
-            src={purchases.find((p) => p.id === expandedPdf)?.pdf_url}
+            src={enrichedPurchases.find((p) => p.id === expandedPdf)?.pdf_url}
             className="flex-1 w-full"
             title="PDF Viewer"
           />
