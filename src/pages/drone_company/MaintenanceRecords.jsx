@@ -32,29 +32,30 @@ export default function MaintenanceRecords() {
   });
   const queryClient = useQueryClient();
 
-  // Fetch company
-  const { data: company } = useQuery({
-    queryKey: ["company-profile"],
+  // Fetch user
+  const getUser = async () => {
+    const user = await base44.auth.me();
+    return user;
+  };
+
+  // Fetch drones (from current user)
+  const { data: drones = [] } = useQuery({
+    queryKey: ["drones-maintenance"],
     queryFn: async () => {
-      const user = await base44.auth.me();
-      if (!user?.email) return null;
-      const results = await base44.entities.Company.filter({ created_by: user.email });
-      return results[0] || null;
+      const user = await getUser();
+      if (!user?.email) return [];
+      return base44.entities.Drone.filter({ created_by: user.email });
     },
   });
 
   // Fetch maintenance logs
   const { data: logs = [] } = useQuery({
-    queryKey: ["maintenance-logs", company?.id],
-    queryFn: () => base44.entities.DroneMaintenanceLog.filter({ company_id: company.id }, "-date"),
-    enabled: !!company?.id,
-  });
-
-  // Fetch drones
-  const { data: drones = [] } = useQuery({
-    queryKey: ["drones", company?.id],
-    queryFn: () => base44.entities.Drone.filter({ company_id: company.id }),
-    enabled: !!company?.id,
+    queryKey: ["maintenance-logs"],
+    queryFn: async () => {
+      const user = await getUser();
+      if (!user?.email) return [];
+      return base44.entities.DroneMaintenanceLog.filter({ created_by: user.email }, "-date");
+    },
   });
 
   const createMutation = useMutation({
