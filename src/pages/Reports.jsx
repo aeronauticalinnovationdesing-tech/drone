@@ -553,22 +553,23 @@ FINANZAS:
   };
 
   // ── RENDER ──
-  return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <FileText className="w-6 h-6 text-primary" />
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Informes</h1>
-            <p className="text-sm text-muted-foreground">{activeProfile?.label} · {format(new Date(), "MMMM yyyy", { locale: es })}</p>
-          </div>
-        </div>
-        <Button onClick={generatePDF} disabled={generating} size="lg" className="gap-2">
-          {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-          {generating ? "Generando PDF..." : "Exportar Informe Completo"}
-        </Button>
-      </div>
+   return (
+     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+       {/* Header */}
+       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+         <div className="flex items-center gap-3">
+           <FileText className="w-6 h-6 text-primary flex-shrink-0" />
+           <div className="min-w-0">
+             <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Informes</h1>
+             <p className="text-xs sm:text-sm text-muted-foreground truncate">{activeProfile?.label} · {format(new Date(), "MMMM yyyy", { locale: es })}</p>
+           </div>
+         </div>
+         <Button onClick={generatePDF} disabled={generating} className="gap-2 w-full sm:w-auto">
+           {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+           <span className="hidden sm:inline">{generating ? "Generando PDF..." : "Exportar Informe Completo"}</span>
+           <span className="sm:hidden">{generating ? "Generando..." : "Exportar"}</span>
+         </Button>
+       </div>
 
 
 
