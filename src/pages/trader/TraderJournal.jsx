@@ -265,6 +265,11 @@ export default function TraderJournal() {
           <ProfessionalCharts />
         </TabsContent>
 
+        {/* PATTERNS TAB */}
+        <TabsContent value="patterns" className="mt-4">
+          <TechnicalPatterns />
+        </TabsContent>
+
         {/* JOURNAL TAB */}
         <TabsContent value="journal" className="space-y-4 mt-4">
           {/* Filters */}
