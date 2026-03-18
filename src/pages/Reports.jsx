@@ -433,7 +433,7 @@ Proyectos activos: ${projects.filter(p => p.status === "active").map(p => p.name
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Task Status Pie */}
-        <div className="bg-card rounded-2xl border border-border p-6">
+        <div ref={pieChartRef} className="bg-card rounded-2xl border border-border p-6">
           <h3 className="font-semibold mb-4">Estado de Tareas</h3>
           {taskStatusData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
@@ -450,7 +450,7 @@ Proyectos activos: ${projects.filter(p => p.status === "active").map(p => p.name
         </div>
 
         {/* Expenses by Category */}
-        <div className="bg-card rounded-2xl border border-border p-6">
+        <div ref={barChartRef} className="bg-card rounded-2xl border border-border p-6">
           <h3 className="font-semibold mb-4">Gastos por Categoría</h3>
           {expenseData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
