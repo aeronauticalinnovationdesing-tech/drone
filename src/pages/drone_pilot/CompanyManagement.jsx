@@ -419,19 +419,10 @@ export default function CompanyManagement() {
                   <Input type="email" value={form.sms_manager_email} onChange={e => setForm({ ...form, sms_manager_email: e.target.value })} />
                 </div>
               </div>
-              {pilots.length > 0 && (
-                <div className="mt-3">
-                  <label className="text-sm font-medium">Jefe de Pilotos</label>
-                  <Select value={form.chief_pilot_id || ""} onValueChange={v => setForm({ ...form, chief_pilot_id: v })}>
-                    <SelectTrigger><SelectValue placeholder="Seleccionar piloto..." /></SelectTrigger>
-                    <SelectContent>
-                      {pilots.filter(p => ["jefe_pilotos", "piloto_avanzado", "instructor"].includes(p.role)).map(p => (
-                        <SelectItem key={p.id} value={p.id}>{p.full_name} - {p.role}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+              <div className="mt-3">
+                <label className="text-sm font-medium">Jefe de Pilotos</label>
+                <Input value={form.chief_pilot_name || ""} onChange={e => setForm({ ...form, chief_pilot_name: e.target.value })} placeholder="Nombre completo" />
+              </div>
             </div>
 
             {/* Vuelos Especiales */}
