@@ -20,8 +20,19 @@ const emptyForm = {
   address: "", city: "", phone: "", email: "",
   sms_manager_name: "", sms_manager_email: "",
   operations_manual_version: "", insurance_policy_number: "", insurance_expiry: "",
-  status: "activa"
+  status: "activa",
+  special_flights: []
 };
+
+const specialFlightsOptions = [
+  { value: "vuelo_nocturno", label: "Vuelo nocturno" },
+  { value: "vuelo_zona_urbana", label: "Vuelo en zona urbana" },
+  { value: "vuelo_autonomo", label: "Vuelo autónomo" },
+  { value: "demostraciones_comerciales", label: "Vuelo para demostraciones comerciales de capacidad tecnológica de UAS" },
+  { value: "competencias_deportivas", label: "Vuelos en competencias y actividades deportivas y recreativas al aire libre" },
+  { value: "ua_cautiva", label: "Vuelos de UA cautiva" },
+  { value: "espacios_cerrados", label: "Vuelos en espacios cerrados o confinados" },
+];
 
 function ExpiryBadge({ date, label }) {
   if (!date) return null;
