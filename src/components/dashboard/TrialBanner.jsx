@@ -54,14 +54,26 @@ export default function TrialBanner({ profile }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [checkoutData, setCheckoutData] = useState(null);
 
-  // Sub global del perfil (solo 1, creado por admin)
-  const { data: subs = [] } = useQuery({
-    queryKey: ["subscription", profile],
-    queryFn: () => base44.entities.Subscription.filter({ profile }),
+  // Buscar suscripción del usuario + global como fallback para precio
+  const { data: userSubs = [] } = useQuery({
+    queryKey: ["subscription", profile, user?.email],
+    queryFn: () => {
+      if (!user?.email) return [];
+      return base44.entities.Subscription.filter({ profile, created_by: user.email });
+    },
+    enabled: !!profile && !!user?.email,
+  });
+
+  // Precio global (creado por admin)
+  const { data: globalSubs = [] } = useQuery({
+    queryKey: ["subscription-global", profile],
+    queryFn: () => base44.asServiceRole.entities.Subscription.filter({ profile }),
     enabled: !!profile,
   });
 
-  const sub = subs[0] || null;
+  const userSub = userSubs[0] || null;
+  const globalSub = globalSubs[0] || null;
+  const sub = userSub || globalSub || null;
   const trialHours = sub?.trial_hours ?? 48;
 
   // trial_start_date se guarda en el usuario, no en Subscription
