@@ -80,7 +80,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center">
-                        <span className="text-xl">⚔️</span>
+                        <span className="text-xl">🪖</span>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent side="right">
