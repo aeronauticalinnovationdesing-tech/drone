@@ -38,9 +38,8 @@ export const PROFILES = [
     color: 'from-sky-500 to-blue-700',
     accent: '#0ea5e9',
     nav: [
-      { icon: LayoutDashboard, label: 'Dashboard', path: '/Dashboard' },
-      { icon: Building2, label: 'Empresa Operadora', path: '/CompanyManagement' },
-      { icon: BookMarked, label: 'Bitácora RAC 100', path: '/FlightLogBook' },
+       { icon: LayoutDashboard, label: 'Dashboard', path: '/Dashboard' },
+       { icon: BookMarked, label: 'Bitácora RAC 100', path: '/FlightLogBook' },
       { icon: Map, label: 'Misiones', path: '/Projects' },
       { icon: UsersIcon, label: 'Pilotos', path: '/PilotManagement' },
       { icon: FileCode, label: 'Flota de Drones', path: '/DroneRegistry' },
