@@ -53,13 +53,24 @@ export default function DronePilotDashboard() {
       <TrialBanner profile="drone_pilot" />
       <PriceManager />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Wind} label="Vuelos Totales" value={totalFlights} subtitle="en bitácora" />
-        <StatCard icon={CheckCircle} label="Completados" value={completedFlights} subtitle="vuelos exitosos" />
-        <StatCard icon={Clock} label="Pendientes" value={pendingFlights} subtitle="en cola" />
-        <StatCard icon={Map} label="Misiones Activas" value={activeMissions} subtitle={`${totalHours.toFixed(1)}h registradas`} />
-      </div>
+      {/* Stats - solo si hay datos */}
+      {(tasks.length > 0 || projects.length > 0) && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard icon={Wind} label="Vuelos Totales" value={totalFlights} subtitle="en bitácora" />
+          <StatCard icon={CheckCircle} label="Completados" value={completedFlights} subtitle="vuelos exitosos" />
+          <StatCard icon={Clock} label="Pendientes" value={pendingFlights} subtitle="en cola" />
+          <StatCard icon={Map} label="Misiones Activas" value={activeMissions} subtitle={`${totalHours.toFixed(1)}h registradas`} />
+        </div>
+      )}
+
+      {/* Empty state */}
+      {tasks.length === 0 && projects.length === 0 && (
+        <div className="text-center py-16 bg-card rounded-2xl border border-border">
+          <Plane className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <p className="text-lg font-semibold mb-1">¡Bienvenido a tu Centro de Vuelo!</p>
+          <p className="text-muted-foreground text-sm">Registra tu primer vuelo o misión para ver métricas aquí.</p>
+        </div>
+      )}
 
       {/* Charts + upcoming */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
