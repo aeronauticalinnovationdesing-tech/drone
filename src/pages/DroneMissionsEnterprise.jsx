@@ -50,9 +50,9 @@ export default function DroneMissionsEnterprise() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Project.create({ ...data, company_id: company.id }),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["missions-enterprise"] }); closeForm(); },
-  });
+     mutationFn: (data) => base44.entities.Project.create({ ...data, company_id: company?.id }),
+     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["missions-enterprise", company?.id] }); closeForm(); },
+   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Project.update(id, data),
