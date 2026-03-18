@@ -19,6 +19,7 @@ import ForexFactoryWidget from "@/components/trader/ForexFactoryWidget";
 import StrategyAnalyzer from "@/components/trader/StrategyAnalyzer";
 import AccountTypeBadge, { ACCOUNT_CONFIG } from "@/components/trader/AccountTypeBadge";
 import ProfessionalCharts from "@/components/trader/ProfessionalCharts";
+import TechnicalPatterns from "@/components/trader/TechnicalPatterns";
 import FeatureGate from "@/components/subscription/FeatureGate";
 
 const PAIRS_FOREX = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "USD/CAD", "NZD/USD", "GBP/JPY", "EUR/JPY"];
