@@ -115,6 +115,8 @@ export const ProfileProvider = ({ children }) => {
   };
 
   const selectProfile = async (profileId) => {
+    // Limpiar todo el cache al cambiar de perfil para evitar contaminación de datos entre apps
+    queryClientInstance.clear();
     setActiveProfileId(profileId);
     try {
       await base44.auth.updateMe({ active_profile: profileId });
