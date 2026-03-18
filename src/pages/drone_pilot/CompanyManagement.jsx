@@ -361,8 +361,20 @@ export default function CompanyManagement() {
                 </div>
               </div>
               <div className="mt-3">
-                <label className="text-sm font-medium">Versión Manual de Operaciones</label>
-                <Input value={form.operations_manual_version} onChange={e => setForm({ ...form, operations_manual_version: e.target.value })} placeholder="v2.1" />
+                <label className="text-sm font-medium">Tipo de Operación UAS Categoría Específica</label>
+                <Select value={form.operation_category_type || ""} onValueChange={v => setForm({ ...form, operation_category_type: v })}>
+                  <SelectTrigger><SelectValue placeholder="Seleccionar tipo de operación..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="simple_captura">Simple captura de imágenes o datos</SelectItem>
+                    <SelectItem value="vigilancia_seguridad">Captura de imágenes o datos con fines de vigilancia o seguridad privada</SelectItem>
+                    <SelectItem value="medios_comunicacion">Captura de imágenes o datos para medios de comunicación masiva</SelectItem>
+                    <SelectItem value="aspersion">Aspersión</SelectItem>
+                    <SelectItem value="dispersion">Dispersión</SelectItem>
+                    <SelectItem value="enjambre">Enjambre</SelectItem>
+                    <SelectItem value="transporte_carga">Transporte de Carga (Drone Delivery)</SelectItem>
+                    <SelectItem value="actividades_publicas">Actividades misionales de entidades públicas</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
