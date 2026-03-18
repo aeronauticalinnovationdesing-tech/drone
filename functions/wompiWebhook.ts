@@ -54,13 +54,18 @@ Deno.serve(async (req) => {
 
     // Buscar suscripción del usuario específico por email y profile
     const base44 = createClientFromRequest(req);
+    
+    console.log(`[wompiWebhook] Processing approved transaction for profile: ${profile}, email: ${customerEmail}`);
+    
     const subs = await base44.asServiceRole.entities.Subscription.filter({ 
       profile,
       created_by: customerEmail 
     });
     
+    console.log(`[wompiWebhook] Found ${subs.length} subscriptions for profile ${profile} and email ${customerEmail}`);
+    
     if (subs.length === 0) {
-      console.error(`No subscription found for profile ${profile} and email ${customerEmail}`);
+      console.error(`[wompiWebhook] No subscription found for profile ${profile} and email ${customerEmail}`);
       return Response.json({ ok: true });
     }
 
@@ -77,7 +82,7 @@ Deno.serve(async (req) => {
       last_renewal_date: now.toISOString(),
     });
 
-    console.log(`✓ Subscription activated for profile ${profile} (${customerEmail})`);
+    console.log(`✓ Subscription ${sub.id} activated for profile ${profile} (${customerEmail}), paid_until: ${paidUntil.toISOString()}`);
     return Response.json({ ok: true });
 
   } catch (error) {
