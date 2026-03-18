@@ -36,15 +36,16 @@ export default function EliteHumanGoals() {
   const [filterStatus, setFilterStatus] = useState("active");
   const queryClient = useQueryClient();
   const user = useCurrentUser();
+  const { activeProfileId } = useProfile();
 
   const { data: goals = [] } = useQuery({
-    queryKey: ["tasks", user?.email],
-    queryFn: () => base44.entities.Task.filter({ created_by: user.email }, "-created_date"),
-    enabled: !!user,
+    queryKey: ["tasks", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Task.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
+    enabled: !!user && !!activeProfileId,
   });
 
   const createMutation = useMutation({
-    mutationFn: (d) => base44.entities.Task.create(d),
+    mutationFn: (d) => base44.entities.Task.create({ ...d, profile_id: activeProfileId }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["tasks"] }); closeForm(); },
   });
   const updateMutation = useMutation({

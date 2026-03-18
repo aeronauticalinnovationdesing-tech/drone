@@ -26,20 +26,21 @@ export default function StartupProjects() {
   const [filterStatus, setFilterStatus] = useState("all");
   const queryClient = useQueryClient();
   const user = useCurrentUser();
+  const { activeProfileId } = useProfile();
 
   const { data: projects = [] } = useQuery({
-    queryKey: ["projects", user?.email],
-    queryFn: () => base44.entities.Project.filter({ created_by: user.email }, "-created_date"),
-    enabled: !!user,
+    queryKey: ["projects", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Project.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
+    enabled: !!user && !!activeProfileId,
   });
   const { data: tasks = [] } = useQuery({
-    queryKey: ["tasks", user?.email],
-    queryFn: () => base44.entities.Task.filter({ created_by: user.email }),
-    enabled: !!user,
+    queryKey: ["tasks", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Task.filter({ created_by: user.email, profile_id: activeProfileId }),
+    enabled: !!user && !!activeProfileId,
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Project.create(data),
+    mutationFn: (data) => base44.entities.Project.create({ ...data, profile_id: activeProfileId }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["projects"] }),
   });
 

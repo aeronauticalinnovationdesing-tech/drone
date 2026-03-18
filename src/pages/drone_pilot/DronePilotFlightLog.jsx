@@ -42,21 +42,22 @@ export default function DronePilotFlightLog() {
   const [filterStatus, setFilterStatus] = useState("all");
   const queryClient = useQueryClient();
   const user = useCurrentUser();
+  const { activeProfileId } = useProfile();
 
   const { data: flights = [] } = useQuery({
-    queryKey: ["tasks", user?.email],
-    queryFn: () => base44.entities.Task.filter({ created_by: user.email }, "-created_date"),
-    enabled: !!user,
+    queryKey: ["tasks", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Task.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
+    enabled: !!user && !!activeProfileId,
   });
 
   const { data: missions = [] } = useQuery({
-    queryKey: ["projects", user?.email],
-    queryFn: () => base44.entities.Project.filter({ created_by: user.email }, "-created_date"),
-    enabled: !!user,
+    queryKey: ["projects", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Project.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
+    enabled: !!user && !!activeProfileId,
   });
 
   const createMissionMutation = useMutation({
-    mutationFn: (d) => base44.entities.Project.create(d),
+    mutationFn: (d) => base44.entities.Project.create({ ...d, profile_id: activeProfileId }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["projects"] }),
   });
 
