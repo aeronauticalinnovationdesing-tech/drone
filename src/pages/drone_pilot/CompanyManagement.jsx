@@ -24,7 +24,8 @@ const emptyForm = {
   status: "activa",
   special_flights: [],
   tech_equipment: [],
-  other_equipment: ""
+  other_equipment: "",
+  drone_references: []
 };
 
 const specialFlightsOptions = [
