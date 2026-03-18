@@ -18,14 +18,26 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
     queryFn: () => base44.auth.me(),
   });
 
-  // Verificar si la prueba ha expirado
-  const { data: subs = [] } = useQuery({
-    queryKey: ["subscription", activeProfile?.id],
+  // Verificar si la prueba ha expirado y si tiene suscripción activa
+  const { data: userSubs = [] } = useQuery({
+    queryKey: ["subscription", activeProfile?.id, user?.email],
+    queryFn: () => {
+      if (!user?.email || !activeProfile?.id) return [];
+      return base44.entities.Subscription.filter({ profile: activeProfile.id, created_by: user.email });
+    },
+    enabled: !!activeProfile?.id && !!user?.email,
+  });
+
+  const { data: globalSubs = [] } = useQuery({
+    queryKey: ["subscription-global", activeProfile?.id],
     queryFn: () => activeProfile?.id ? base44.entities.Subscription.filter({ profile: activeProfile.id }) : Promise.resolve([]),
     enabled: !!activeProfile?.id,
   });
 
-  const sub = subs[0] || null;
+  const userSub = userSubs[0] || null;
+  const globalSub = globalSubs[0] || null;
+  const sub = userSub || globalSub || null;
+  
   const trialHours = sub?.trial_hours ?? 48;
   const trialKey = `trial_start_${activeProfile?.id}`;
   const trialStartDate = user?.[trialKey];
@@ -35,6 +47,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
     return Date.now() > trialEnd;
   })();
 
+  const isPaidSubscribed = userSub?.is_active === true;
   const isRestricted = isTrialExpired && user?.role !== "admin";
 
   useEffect(() => {
