@@ -42,6 +42,7 @@ import ComplianceCenter from './pages/drone_company/ComplianceCenter';
 
 import TraderJournal from './pages/trader/TraderJournal';
 import AdvancedTools from './pages/trader/AdvancedTools';
+import AgentsManagement from './pages/AgentsManagement';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
