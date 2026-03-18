@@ -52,13 +52,13 @@ export default function CompanyManagementEnterprise() {
 
   const { data: pilots = [] } = useQuery({
     queryKey: ["pilots-enterprise", company?.id],
-    queryFn: () => base44.entities.Pilot.filter({ company_id: company?.id }, "-created_date"),
-    enabled: !!company?.id,
+    queryFn: () => base44.entities.Pilot.filter({ company_id: company?.id, created_by: user?.email }, "-created_date"),
+    enabled: !!company?.id && !!user?.email,
   });
 
   const { data: drones = [] } = useQuery({
     queryKey: ["drones-enterprise", company?.id],
-    queryFn: () => base44.entities.Drone.filter({ created_by: user?.email }, "-created_date"),
+    queryFn: () => base44.entities.Drone.filter({ created_by: user?.email }, "-created_date").then(all => all.filter(d => d.created_by === user?.email)),
     enabled: !!company?.id && !!user?.email,
   });
 
