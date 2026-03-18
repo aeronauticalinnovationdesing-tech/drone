@@ -454,6 +454,38 @@ export default function CompanyManagement() {
               </div>
             </div>
 
+            {/* Equipos Tecnológicos */}
+            <div>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Equipos Tecnológicos</h3>
+              <div className="space-y-2 bg-muted/30 p-3 rounded-lg mb-3">
+                {techEquipmentOptions.map(option => (
+                  <label key={option.value} className="flex items-start gap-3 cursor-pointer">
+                    <Checkbox 
+                      checked={(Array.isArray(form.tech_equipment) ? form.tech_equipment : []).includes(option.value)}
+                      onCheckedChange={(checked) => {
+                        const current = Array.isArray(form.tech_equipment) ? form.tech_equipment : [];
+                        const updated = checked 
+                          ? [...current, option.value]
+                          : current.filter(v => v !== option.value);
+                        setForm({ ...form, tech_equipment: updated });
+                      }}
+                      className="mt-1"
+                    />
+                    <span className="text-sm leading-relaxed">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+              <div>
+                <label className="text-sm font-medium">Otros Equipos</label>
+                <Input 
+                  value={form.other_equipment || ""} 
+                  onChange={e => setForm({ ...form, other_equipment: e.target.value })}
+                  placeholder="Especificar otros equipos..."
+                  className="mt-1"
+                />
+              </div>
+            </div>
+
             <DialogFooter>
               <Button type="button" variant="outline" onClick={closeForm}>Cancelar</Button>
               <Button type="submit" className="bg-sky-600 hover:bg-sky-700">
