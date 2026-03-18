@@ -275,7 +275,7 @@ export default function ProfessionalCharts() {
 
   return (
     <div className="w-full space-y-4">
-      {/* Controles */}
+      {/* Controles principales */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         <Select value={pair} onValueChange={setPair}>
           <SelectTrigger>
@@ -334,6 +334,70 @@ export default function ProfessionalCharts() {
           RSI
         </Button>
       </div>
+
+      {/* Controles de análisis técnico */}
+      <div className="flex flex-wrap gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => addLine("Soporte", "#3b82f6", false)}
+          className="gap-1"
+        >
+          <LineChart className="w-3 h-3" /> Soporte
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => addLine("Resistencia", "#ef4444", false)}
+          className="gap-1"
+        >
+          <LineChart className="w-3 h-3" /> Resistencia
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => addLine("Nivel", "#8b5cf6", true)}
+          className="gap-1"
+        >
+          <LineChart className="w-3 h-3" /> Nivel
+        </Button>
+        {lines.length > 0 && (
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => setLines([])}
+            className="gap-1"
+          >
+            <Trash2 className="w-3 h-3" /> Limpiar líneas
+          </Button>
+        )}
+      </div>
+
+      {/* Líneas agregadas */}
+      {lines.length > 0 && (
+        <Card className="p-3 bg-muted/50 space-y-2">
+          {lines.map((line) => (
+            <div key={line.id} className="flex items-center justify-between text-sm p-2 bg-background rounded border border-border">
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded"
+                  style={{ backgroundColor: line.color }}
+                />
+                <span className="font-semibold">{line.label}</span>
+                <span className="text-muted-foreground">${line.price.toFixed(4)}</span>
+              </div>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6"
+                onClick={() => removeLine(line.id)}
+              >
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            </div>
+          ))}
+        </Card>
+      )}
 
       {/* Precio actual */}
       <div className="grid grid-cols-3 gap-3">
