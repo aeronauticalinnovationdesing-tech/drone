@@ -21,7 +21,7 @@ export default function AppLayout() {
             onClick={() => setMobileOpen(true)}
             className="text-muted-foreground hover:text-foreground"
           >
-            <span className="text-lg">⚔️</span>
+            <Menu className="w-5 h-5" />
           </button>
           <span className="text-base font-bold tracking-tight">VEXNY</span>
         </header>
