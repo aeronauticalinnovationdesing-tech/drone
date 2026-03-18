@@ -1,11 +1,13 @@
 import { useProfile } from "@/lib/ProfileContext";
 import StartupProjects from "./startup/StartupProjects.jsx";
 import DroneMissions from "./drone_pilot/DroneMissions.jsx";
+import DroneMissionsEnterprise from "./DroneMissionsEnterprise.jsx";
 import EliteHumanProjects from "./elite_human/EliteHumanProjects.jsx";
 
 const PAGE_MAP = {
   trader: StartupProjects,
   drone_pilot: DroneMissions,
+  drone_company: DroneMissionsEnterprise,
   startup: StartupProjects,
   elite_human: EliteHumanProjects,
 };
