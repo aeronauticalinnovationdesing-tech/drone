@@ -11,6 +11,7 @@ import SubscriptionsTable from "@/components/dashboard/SubscriptionsTable";
 import SubscriptionDebugger from "@/components/dashboard/SubscriptionDebugger";
 import PaymentVerifier from "@/components/dashboard/PaymentVerifier";
 import CompanySubscriptionsManager from "@/components/admin/CompanySubscriptionsManager";
+import CourseAccessManager from "@/components/admin/CourseAccessManager";
 
 export default function Admin() {
   const user = useCurrentUser();
