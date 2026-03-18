@@ -84,6 +84,9 @@ export default function Courses() {
 
   const handleView = (course) => setViewingPdf(course);
 
+  // Determinar qué tab mostrar por defecto
+  const defaultTab = isAdmin && purchases.length > 0 ? "explore" : !isAdmin && purchases.length > 0 ? "comprados" : "explore";
+
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       {/* Header */}
@@ -99,7 +102,7 @@ export default function Courses() {
         </div>
         {isAdmin && (
           <Button onClick={() => setShowUpload(true)} className="gap-2">
-            <Plus className="w-4 h-4" /> Subir curso
+            <Plus className="w-4 h-4" /> Nuevo curso
           </Button>
         )}
       </div>
