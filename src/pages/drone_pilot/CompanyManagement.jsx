@@ -490,6 +490,18 @@ export default function CompanyManagement() {
               </div>
             </div>
 
+            {/* Notas */}
+            <div>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Observaciones</h3>
+              <textarea 
+                value={form.notes || ""} 
+                onChange={e => setForm({ ...form, notes: e.target.value })}
+                placeholder="Comentarios adicionales sobre la solicitud..."
+                className="w-full border border-input rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                rows="4"
+              />
+            </div>
+
             {/* Referencias de Drones */}
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Referencias de Drones</h3>
