@@ -21,8 +21,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Desactivar renovación automática
+    // Cancelar la suscripción (desactivar y deshabilitar renovación)
     await base44.entities.Subscription.update(subscription.id, {
+      is_active: false,
       auto_renew: false,
     });
 
