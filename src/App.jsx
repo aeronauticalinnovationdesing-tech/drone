@@ -30,7 +30,13 @@ import CompanyManagement from './pages/drone_pilot/CompanyManagement';
 import FlightLogBook from './pages/drone_pilot/FlightLogBook';
 import CompanySubscription from './pages/drone_pilot/CompanySubscription';
 import DronePilotSubscription from './pages/drone_pilot/DronePilotSubscription';
-import CompanySubscription as CompanySubscriptionEnterprise from './pages/drone_company/CompanySubscription';
+import PilotManagementEnterprise from './pages/drone_company/PilotManagement';
+import DroneRegistryEnterprise from './pages/drone_company/DroneRegistry';
+import FlightLogBookEnterprise from './pages/drone_company/FlightLogBook';
+import SMSReportingEnterprise from './pages/drone_company/SMSReporting';
+import MaintenanceManagementEnterprise from './pages/drone_company/MaintenanceManagement';
+import AirspaceMapEnterprise from './pages/drone_company/AirspaceMap';
+import CompanySubscriptionEnterprise from './pages/drone_company/CompanySubscription';
 import TraderJournal from './pages/trader/TraderJournal';
 import AdvancedTools from './pages/trader/AdvancedTools';
 
