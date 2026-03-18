@@ -3,9 +3,24 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { cn } from '@/lib/utils';
 
 // Renderizador SVG de velas japonesas
-function CandleStickRenderer({ data, width, height, margin = { top: 20, right: 30, left: 60, bottom: 20 } }) {
+function CandleStickRenderer({ data, margin = { top: 20, right: 30, left: 60, bottom: 20 } }) {
   if (!data || data.length === 0) return null;
 
+  const containerRef = React.useRef(null);
+  const [dimensions, setDimensions] = React.useState({ width: 800, height: 400 });
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(() => {
+      const rect = containerRef.current.getBoundingClientRect();
+      setDimensions({ width: Math.max(rect.width, 400), height: 400 });
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const width = dimensions.width;
+  const height = dimensions.height;
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -25,7 +40,7 @@ function CandleStickRenderer({ data, width, height, margin = { top: 20, right: 3
   };
 
   return (
-    <svg width={width} height={height} className="w-full h-full">
+    <svg ref={containerRef} width={width} height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" className="w-full" style={{ maxHeight: '500px' }}>
       {/* Grid */}
       <defs>
         <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
@@ -145,15 +160,15 @@ export default function CandlestickChart({ data = [], title = '', symbol = '' })
   }
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4 space-y-3 w-full">
+    <div className="bg-card rounded-xl border border-border p-6 space-y-4 w-full">
       <div>
-        <h3 className="font-semibold text-base">{title || symbol}</h3>
+        <h3 className="font-semibold text-lg">{title || symbol}</h3>
         <p className="text-xs text-muted-foreground">Velas diarias en tiempo real</p>
       </div>
 
-      {/* SVG Candlestick */}
-      <div className="w-full h-96 flex-1">
-        <CandleStickRenderer data={data} width={800} height={400} />
+      {/* SVG Candlestick - Responsive */}
+      <div className="w-full overflow-x-auto" style={{ minHeight: '450px' }}>
+        <CandleStickRenderer data={data} />
       </div>
 
       {/* Info adicional */}
