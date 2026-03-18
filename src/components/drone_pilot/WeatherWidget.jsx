@@ -54,19 +54,21 @@ export default function WeatherWidget({ onWeatherData, compact = false }) {
 
       // Clima actual con Open-Meteo (completamente gratis)
       const weatherRes = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=relativehumidity_2m,visibility,windspeed_10m,temperature_2m&current=temperature_2m,relativehumidity_2m,windspeed_10m,weathercode,visibility&timezone=auto&forecast_days=1`
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relativehumidity_2m,windspeed_10m,weathercode,visibility&timezone=auto&forecast_days=1`
       );
       const weatherData = await weatherRes.json();
       const current = weatherData.current;
 
+      if (!current) throw new Error("No current weather data");
+
       const result = {
         city: `${name}, ${country}`,
         latitude, longitude,
-        temperature_2m: current.temperature_2m,
-        windspeed_10m: current.windspeed_10m,
-        relativehumidity_2m: current.relativehumidity_2m,
-        weathercode: current.weathercode,
-        visibility: current.visibility || 10000,
+        temperature_2m: current.temperature_2m ?? 0,
+        windspeed_10m: current.windspeed_10m ?? 0,
+        relativehumidity_2m: current.relativehumidity_2m ?? 0,
+        weathercode: current.weathercode ?? 0,
+        visibility: current.visibility != null ? current.visibility * 1000 : 10000,
         time: current.time,
       };
 
