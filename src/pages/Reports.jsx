@@ -51,6 +51,8 @@ const pdfSection = (doc, title, color, margin, y, pageH) => {
 
 function GenericReport() {
   const [generating, setGenerating] = useState(false);
+  const user = useCurrentUser();
+  const { activeProfileId, activeProfile } = useProfile();
 
   // Refs para todas las gráficas
   const refPieTask = useRef(null);
