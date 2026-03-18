@@ -53,6 +53,7 @@ export default function TrialBanner({ profile }) {
   const [paying, setPaying] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [checkoutData, setCheckoutData] = useState(null);
+  const [canceling, setCanceling] = useState(false);
 
   // Buscar suscripción del usuario + global como fallback para precio
   const { data: userSubs = [] } = useQuery({
