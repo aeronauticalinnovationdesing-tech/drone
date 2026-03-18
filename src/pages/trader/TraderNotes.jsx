@@ -50,7 +50,7 @@ export default function TraderNotes() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Note.create(data),
+    mutationFn: (data) => base44.entities.Note.create({ ...data, profile_id: activeProfileId }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["notes"] }); resetForm(); },
   });
   const updateMutation = useMutation({

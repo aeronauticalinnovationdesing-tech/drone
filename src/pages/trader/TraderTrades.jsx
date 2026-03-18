@@ -85,7 +85,7 @@ export default function TraderTrades() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    const data = { ...form, amount: Number(form.amount), tags: [pair, setup] };
+    const data = { ...form, amount: Number(form.amount), tags: [pair, setup], profile_id: activeProfileId };
     if (editTx) updateMutation.mutate({ id: editTx.id, data });
     else createMutation.mutate(data);
   };

@@ -58,7 +58,7 @@ export default function GenericNotes() {
     enabled: !!user && !!activeProfileId,
   });
 
-  const createMutation = useMutation({ mutationFn: (data) => base44.entities.Note.create(data), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["notes"] }); resetForm(); } });
+  const createMutation = useMutation({ mutationFn: (data) => base44.entities.Note.create({ ...data, profile_id: activeProfileId }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["notes"] }); resetForm(); } });
   const updateMutation = useMutation({ mutationFn: ({ id, data }) => base44.entities.Note.update(id, data), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["notes"] }); resetForm(); } });
   const deleteMutation = useMutation({ mutationFn: (id) => base44.entities.Note.delete(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes"] }) });
 
