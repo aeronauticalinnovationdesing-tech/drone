@@ -39,7 +39,18 @@ const PAIRS = [
 const generateMockData = (pair, days = 100) => {
   const candles = [];
   let time = Math.floor(Date.now() / 1000) - days * 24 * 60 * 60;
-  let close = pair.includes("BTC") ? 45000 : pair.includes("EUR") ? 1.1 : 150;
+  
+  let close;
+  if (pair === "BTCUSD") close = 45000;
+  else if (pair === "ETHUSD") close = 2800;
+  else if (pair === "EURUSD") close = 1.1;
+  else if (pair === "USDJPY") close = 150;
+  else if (pair === "ES") close = 5800;
+  else if (pair === "NQ") close = 21000;
+  else if (pair === "YM") close = 42000;
+  else if (pair === "CL") close = 75;
+  else if (pair === "GC") close = 2100;
+  else close = 150;
 
   for (let i = 0; i < days; i++) {
     const open = close;
