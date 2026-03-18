@@ -85,11 +85,20 @@ export default function DronePilotReport() {
 
 
   // ── Data queries ──
-  const { data: pilots = [] } = useQuery({
-    queryKey: ["pilots", user?.email],
-    queryFn: () => base44.entities.Pilot.filter({ created_by: user.email }),
-    enabled: !!user,
-  });
+   const { data: company = null } = useQuery({
+     queryKey: ["company-profile", user?.email],
+     queryFn: async () => {
+       if (!user?.email) return null;
+       const results = await base44.entities.Company.filter({ created_by: user.email });
+       return results[0] || null;
+     },
+     enabled: !!user,
+   });
+   const { data: pilots = [] } = useQuery({
+     queryKey: ["pilots", user?.email],
+     queryFn: () => base44.entities.Pilot.filter({ created_by: user.email }),
+     enabled: !!user,
+   });
   const { data: drones = [] } = useQuery({
     queryKey: ["drones", user?.email],
     queryFn: () => base44.entities.Drone.filter({ created_by: user.email }),
