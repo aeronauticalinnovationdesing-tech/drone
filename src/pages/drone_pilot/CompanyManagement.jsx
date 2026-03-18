@@ -34,6 +34,17 @@ const specialFlightsOptions = [
   { value: "espacios_cerrados", label: "Vuelos en espacios cerrados o confinados" },
 ];
 
+const techEquipmentOptions = [
+  { value: "camaras", label: "Cámaras" },
+  { value: "gancho_carga", label: "Gancho de carga" },
+  { value: "luces_busqueda", label: "Luces de búsqueda" },
+  { value: "radar", label: "Radar" },
+  { value: "paracaidas", label: "Paracaídas" },
+  { value: "detectores", label: "Detectores" },
+  { value: "speaker_megafono", label: "Speaker o megáfono" },
+  { value: "antenas_drtk", label: "Antenas (D-RTK)" },
+];
+
 function ExpiryBadge({ date, label }) {
   if (!date) return null;
   const days = differenceInDays(new Date(date), new Date());
