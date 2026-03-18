@@ -248,6 +248,7 @@ export default function Subscription() {
   };
 
   const getSubForProfile = (profileId) =>
+    allSubs.find((s) => s.profile === profileId && s.id) || 
     allSubs.find((s) => s.profile === profileId) || null;
 
   return (
