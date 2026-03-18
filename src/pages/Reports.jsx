@@ -13,12 +13,29 @@ import { jsPDF } from "jspdf";
 
 const COLORS = ["hsl(38, 92%, 50%)", "hsl(160, 60%, 45%)", "hsl(220, 70%, 50%)", "hsl(280, 65%, 60%)", "hsl(340, 75%, 55%)"];
 
+const formatCOP = (n) =>
+  new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(n || 0);
+
 export default function Reports() {
   const [generating, setGenerating] = useState(false);
+  const user = useCurrentUser();
+  const { activeProfileId, activeProfile } = useProfile();
 
-  const { data: projects = [] } = useQuery({ queryKey: ["projects"], queryFn: () => base44.entities.Project.list() });
-  const { data: tasks = [] } = useQuery({ queryKey: ["tasks"], queryFn: () => base44.entities.Task.list() });
-  const { data: transactions = [] } = useQuery({ queryKey: ["transactions"], queryFn: () => base44.entities.Transaction.list() });
+  const { data: projects = [] } = useQuery({
+    queryKey: ["projects", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Project.filter({ created_by: user.email, profile_id: activeProfileId }),
+    enabled: !!user && !!activeProfileId,
+  });
+  const { data: tasks = [] } = useQuery({
+    queryKey: ["tasks", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Task.filter({ created_by: user.email, profile_id: activeProfileId }),
+    enabled: !!user && !!activeProfileId,
+  });
+  const { data: transactions = [] } = useQuery({
+    queryKey: ["transactions", user?.email, activeProfileId],
+    queryFn: () => base44.entities.Transaction.filter({ created_by: user.email, profile_id: activeProfileId }),
+    enabled: !!user && !!activeProfileId,
+  });
 
   const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + (t.amount || 0), 0);
