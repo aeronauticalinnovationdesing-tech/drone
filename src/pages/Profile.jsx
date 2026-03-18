@@ -42,16 +42,15 @@ export default function Profile() {
   const [editName, setEditName] = useState(user?.full_name || "");
 
   const { data: allSubs = [] } = useQuery({
-    queryKey: ["all-subscriptions"],
-    queryFn: () => base44.entities.Subscription.list(),
+    queryKey: ["all-subscriptions", user?.email],
+    queryFn: () => {
+      if (!user?.email) return [];
+      return base44.entities.Subscription.filter({ created_by: user.email });
+    },
+    enabled: !!user?.email,
   });
 
-  const getUserSub = () => {
-    if (!user?.email) return null;
-    return allSubs.find((s) => s.created_by === user.email) || null;
-  };
-
-  const sub = getUserSub();
+  const sub = allSubs[0] || null;
   const profile = sub ? PROFILES.find((p) => p.id === sub.profile) : null;
   const paidCountdown = useCountdown(sub?.paid_until || null);
   const isPaid = sub?.is_active;
