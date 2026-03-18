@@ -490,6 +490,70 @@ export default function CompanyManagement() {
               </div>
             </div>
 
+            {/* Referencias de Drones */}
+            <div>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Referencias de Drones</h3>
+              <div className="space-y-3">
+                <div className="grid grid-cols-3 gap-2">
+                  <Input 
+                    placeholder="Ej: DJI Phantom 4 Pro"
+                    value={droneInput}
+                    onChange={e => setDroneInput(e.target.value)}
+                    className="col-span-2"
+                  />
+                  <Input 
+                    type="number"
+                    placeholder="Cantidad"
+                    min="1"
+                    value={quantityInput}
+                    onChange={e => setQuantityInput(e.target.value)}
+                  />
+                </div>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    if (droneInput && quantityInput) {
+                      const current = Array.isArray(form.drone_references) ? form.drone_references : [];
+                      setForm({ 
+                        ...form, 
+                        drone_references: [...current, { model: droneInput, quantity: parseInt(quantityInput) }]
+                      });
+                      setDroneInput("");
+                      setQuantityInput("");
+                    }
+                  }}
+                >
+                  <Plus className="w-4 h-4" /> Agregar Drone
+                </Button>
+                {Array.isArray(form.drone_references) && form.drone_references.length > 0 && (
+                  <div className="bg-muted/30 rounded-lg p-3 space-y-2">
+                    {form.drone_references.map((drone, idx) => (
+                      <div key={idx} className="flex items-center justify-between bg-background rounded p-2 text-sm">
+                        <span className="font-medium">{drone.model}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground">Cantidad: {drone.quantity}</span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              const updated = form.drone_references.filter((_, i) => i !== idx);
+                              setForm({ ...form, drone_references: updated });
+                            }}
+                            className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                          >
+                            ×
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
             <DialogFooter>
               <Button type="button" variant="outline" onClick={closeForm}>Cancelar</Button>
               <Button type="submit" className="bg-sky-600 hover:bg-sky-700">
