@@ -198,15 +198,15 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
         {!collapsed ?
       <div className="space-y-1">
             <Link
-          to="/Profile"
-          className={cn(
+            to="/DronePilotProfile"
+            className={cn(
             "flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-colors",
-            location.pathname === "/Profile" ?
+            location.pathname === "/DronePilotProfile" ?
             "bg-primary text-primary-foreground" :
             "text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent"
-          )}
-          title="Mi perfil">
-          
+            )}
+            title="Mi perfil de piloto">
+
               <User className="w-4 h-4 flex-shrink-0" />
               <span>Mi Perfil</span>
             </Link>
