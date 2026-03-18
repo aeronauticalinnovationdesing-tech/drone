@@ -105,6 +105,29 @@ export default function CourseUploadForm({ open, onClose, onSaved }) {
             </Select>
           </div>
           <div className="space-y-1">
+            <Label>Disponible para (dejar vacío = todos)</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {PROFILES.map(p => (
+                <button
+                  key={p.value}
+                  type="button"
+                  onClick={() => toggleProfile(p.value)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-colors ${
+                    form.target_profiles.includes(p.value)
+                      ? "border-primary bg-primary/10 text-primary font-medium"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                >
+                  {form.target_profiles.includes(p.value) && <Check className="w-3 h-3" />}
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            {form.target_profiles.length === 0 && (
+              <p className="text-xs text-muted-foreground">Visible para todos los perfiles</p>
+            )}
+          </div>
+          <div className="space-y-1">
             <Label>PDF del curso *</Label>
             <div className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 transition-colors" onClick={() => document.getElementById('pdf-upload').click()}>
               <Upload className="w-6 h-6 mx-auto text-muted-foreground mb-1" />
