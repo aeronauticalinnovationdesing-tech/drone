@@ -10,6 +10,7 @@ import PriceManager from "@/components/dashboard/PriceManager";
 import SubscriptionsTable from "@/components/dashboard/SubscriptionsTable";
 import SubscriptionDebugger from "@/components/dashboard/SubscriptionDebugger";
 import PaymentVerifier from "@/components/dashboard/PaymentVerifier";
+import CompanySubscriptionsManager from "@/components/admin/CompanySubscriptionsManager";
 
 export default function Admin() {
   const user = useCurrentUser();
