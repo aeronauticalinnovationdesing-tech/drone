@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import RefreshableContent from "@/components/layout/RefreshableContent";
+import { useRefresh } from "@/components/hooks/useRefresh";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +29,10 @@ export default function StartupProjects() {
   const queryClient = useQueryClient();
   const user = useCurrentUser();
   const { activeProfileId } = useProfile();
+  const handleRefresh = useRefresh([
+    ["projects", user?.email, activeProfileId],
+    ["tasks", user?.email, activeProfileId],
+  ]);
 
   const { data: projects = [] } = useQuery({
     queryKey: ["projects", user?.email, activeProfileId],
@@ -60,7 +66,8 @@ export default function StartupProjects() {
   });
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+    <RefreshableContent onRefresh={handleRefresh}>
+      <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <FolderKanban className="w-6 h-6 text-violet-500" />
@@ -147,5 +154,6 @@ export default function StartupProjects() {
 
       <ProjectForm open={showForm} onOpenChange={setShowForm} onSave={(data) => createMutation.mutate(data)} project={null} />
     </div>
+    </RefreshableContent>
   );
 }

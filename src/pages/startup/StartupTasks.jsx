@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import RefreshableContent from "@/components/layout/RefreshableContent";
+import { useRefresh } from "@/components/hooks/useRefresh";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -17,6 +19,10 @@ export default function StartupTasks() {
   const queryClient = useQueryClient();
   const user = useCurrentUser();
   const { activeProfileId } = useProfile();
+  const handleRefresh = useRefresh([
+    ["tasks", user?.email, activeProfileId],
+    ["projects", user?.email, activeProfileId],
+  ]);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks", user?.email, activeProfileId],
@@ -56,7 +62,8 @@ export default function StartupTasks() {
   });
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+    <RefreshableContent onRefresh={handleRefresh}>
+      <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <CheckSquare className="w-6 h-6 text-violet-500" />
@@ -109,5 +116,6 @@ export default function StartupTasks() {
 
       <TaskForm open={showForm} onOpenChange={setShowForm} onSave={handleSave} task={editTask} projects={projects} />
     </div>
+    </RefreshableContent>
   );
 }

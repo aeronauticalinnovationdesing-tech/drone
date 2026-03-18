@@ -1,6 +1,8 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import RefreshableContent from "@/components/layout/RefreshableContent";
+import { useRefresh } from "@/components/hooks/useRefresh";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { TrendingUp, TrendingDown, DollarSign, BarChart2, BookOpen, Bot, StickyNote, ArrowRight, Brain, Target, Zap } from "lucide-react";
 import TrialBanner from "@/components/dashboard/TrialBanner";
@@ -19,6 +21,13 @@ import { es } from "date-fns/locale";
 
 export default function TraderDashboard() {
   const user = useCurrentUser();
+  const handleRefresh = useRefresh([
+    ["transactions", user?.email, "trader"],
+    ["tasks", user?.email, "trader"],
+    ["trades", user?.email],
+    ["bankAccounts", user?.email, "trader"],
+    ["notes", user?.email, "trader"],
+  ]);
 
   const { data: transactions = [] } = useQuery({
     queryKey: ["transactions", user?.email, "trader"],
@@ -75,7 +84,8 @@ export default function TraderDashboard() {
   const useNewTrades = tradesNew.length > 0;
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
+    <RefreshableContent onRefresh={handleRefresh}>
+      <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
       <div>
         <div className="flex items-center gap-3 mb-1">
           <TrendingUp className="w-6 h-6 text-emerald-500" />
@@ -196,5 +206,6 @@ export default function TraderDashboard() {
         )}
       </div>
     </div>
+    </RefreshableContent>
   );
 }
