@@ -50,9 +50,15 @@ const pdfSection = (doc, title, color, margin, y, pageH) => {
 };
 
 export default function Reports() {
-  const [generating, setGenerating] = useState(false);
   const user = useCurrentUser();
   const { activeProfileId, activeProfile } = useProfile();
+
+  // Perfil dron: renderizar informe especializado
+  if (activeProfileId === "drone_pilot") {
+    return <DronePilotReport />;
+  }
+
+  const [generating, setGenerating] = useState(false);
 
   // Refs para todas las gráficas
   const refPieTask = useRef(null);
