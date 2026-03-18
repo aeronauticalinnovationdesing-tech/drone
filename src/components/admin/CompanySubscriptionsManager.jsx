@@ -157,6 +157,17 @@ export default function CompanySubscriptionsManager() {
                 </div>
               </div>
               <div className="flex gap-2">
+                {!sub.is_active && (
+                  <Button 
+                    size="icon" 
+                    onClick={() => activateMutation.mutate(sub.id)}
+                    disabled={activatingId === sub.id}
+                    className="bg-emerald-600 hover:bg-emerald-700"
+                    title="Activar suscripción manualmente"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                  </Button>
+                )}
                 <Button variant="ghost" size="icon" onClick={() => openEdit(sub)}>
                   <Pencil className="w-4 h-4" />
                 </Button>
