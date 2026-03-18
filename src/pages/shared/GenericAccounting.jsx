@@ -52,16 +52,20 @@ export default function GenericAccounting() {
      return null;
    }
 
-   const { data: transactions = [] } = useQuery({
+   const { data: rawTransactions = [] } = useQuery({
      queryKey: ["transactions", user?.email, activeProfileId],
      queryFn: () => base44.entities.Transaction.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
      enabled: !!user && !!activeProfileId,
    });
-   const { data: accounts = [] } = useQuery({
+   const { data: rawAccounts = [] } = useQuery({
      queryKey: ["accounts", user?.email, activeProfileId],
      queryFn: () => base44.entities.BankAccount.filter({ created_by: user.email, profile_id: activeProfileId }),
      enabled: !!user && !!activeProfileId,
    });
+
+   // Filtro defensivo: solo mostrar registros que pertenezcan estrictamente a este perfil
+   const transactions = rawTransactions.filter(t => t.profile_id === activeProfileId);
+   const accounts = rawAccounts.filter(a => a.profile_id === activeProfileId);
 
   const createTx = useMutation({ mutationFn: (d) => base44.entities.Transaction.create(d), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["transactions", user?.email, activeProfileId] }); setShowTx(false); } });
   const deleteTx = useMutation({ mutationFn: (id) => base44.entities.Transaction.delete(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["transactions", user?.email, activeProfileId] }) });
