@@ -52,7 +52,12 @@ export default function Profile() {
     enabled: !!user?.email,
   });
 
-  const sub = userSubs.length > 0 ? userSubs[0] : null;
+  const { data: globalSubs = [] } = useQuery({
+    queryKey: ["global-subscriptions"],
+    queryFn: () => base44.asServiceRole.entities.Subscription.list(),
+  });
+
+  const sub = userSubs.length > 0 ? userSubs[0] : globalSubs.length > 0 ? globalSubs[0] : null;
   const profile = sub ? PROFILES.find((p) => p.id === sub.profile) : null;
   const paidCountdown = useCountdown(sub?.paid_until || null);
   const isPaid = sub?.is_active === true;
