@@ -7,26 +7,55 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PROFILES } from "@/lib/ProfileContext";
 
-function ProfilePriceRow({ profile, sub, onSave }) {
+function InlineEdit({ value, onSave, suffix = "", type = "number" }) {
   const [editing, setEditing] = useState(false);
   const [input, setInput] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const handleEdit = () => {
-    setInput(String(sub?.monthly_price_cop ?? ""));
-    setEditing(true);
-  };
-
+  const handleEdit = () => { setInput(String(value ?? "")); setEditing(true); };
   const handleSave = async () => {
-    const price = parseFloat(input);
-    if (isNaN(price) || price < 0) return;
-    setIsSaving(true);
-    await onSave(profile.id, sub, price);
-    setInput("");
+    const v = type === "number" ? parseFloat(input) : input;
+    if (type === "number" && (isNaN(v) || v < 0)) return;
+    setSaving(true);
+    await onSave(v);
     setEditing(false);
-    setIsSaving(false);
+    setSaving(false);
   };
 
+  if (editing) return (
+    <div className="flex items-center gap-1.5">
+      <Input
+        className="w-24 h-8 text-sm"
+        type={type}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        autoFocus
+        disabled={saving}
+        onKeyDown={(e) => e.key === "Enter" && !saving && handleSave()}
+      />
+      {suffix && <span className="text-xs text-muted-foreground">{suffix}</span>}
+      <Button size="icon" className="h-8 w-8" onClick={handleSave} disabled={saving}>
+        <Save className="w-3.5 h-3.5" />
+      </Button>
+      <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditing(false)} disabled={saving}>
+        <X className="w-3.5 h-3.5" />
+      </Button>
+    </div>
+  );
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm font-bold">
+        {value != null && value !== "" ? `${value}${suffix}` : <span className="text-muted-foreground font-normal">—</span>}
+      </span>
+      <button onClick={handleEdit} className="text-muted-foreground hover:text-foreground transition-colors">
+        <Edit3 className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+}
+
+function ProfilePriceRow({ profile, sub, onSavePrice, onSaveHours }) {
   const Icon = profile.icon;
 
   return (
@@ -39,41 +68,25 @@ function ProfilePriceRow({ profile, sub, onSave }) {
       </div>
       <span className="text-sm font-medium flex-1">{profile.label}</span>
 
-      {editing ? (
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-muted-foreground">COP $</span>
-          <Input
-            className="w-28 h-8 text-sm"
-            type="number"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            autoFocus
-            disabled={isSaving}
-            onKeyDown={(e) => e.key === "Enter" && !isSaving && handleSave()}
-          />
-          <Button size="icon" className="h-8 w-8" onClick={handleSave} disabled={isSaving}>
-            <Save className="w-3.5 h-3.5" />
-          </Button>
-          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditing(false)} disabled={isSaving}>
-            <X className="w-3.5 h-3.5" />
-          </Button>
-        </div>
-      ) : (
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-bold">
-            {sub?.monthly_price_cop > 0
-              ? `$${Number(sub.monthly_price_cop).toLocaleString("es-CO")} COP`
-              : <span className="text-muted-foreground font-normal">Sin precio</span>}
-          </span>
-          <button
-            onClick={handleEdit}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            title="Editar precio"
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
+      {/* Trial hours */}
+      <div className="flex items-center gap-1.5 mr-4">
+        <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+        <InlineEdit
+          value={sub?.trial_hours ?? 48}
+          onSave={(v) => onSaveHours(profile.id, sub, v)}
+          suffix="h prueba"
+        />
+      </div>
+
+      {/* Price */}
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs text-muted-foreground">COP $</span>
+        <InlineEdit
+          value={sub?.monthly_price_cop > 0 ? Number(sub.monthly_price_cop) : null}
+          onSave={(v) => onSavePrice(profile.id, sub, v)}
+          suffix=""
+        />
+      </div>
     </div>
   );
 }
