@@ -187,9 +187,18 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
           collapsed && "justify-center"
         )}
         title="Cambiar perfil">
-        
           <RefreshCw className="w-4 h-4 flex-shrink-0" />
           {!collapsed && <span>Cambiar perfil</span>}
+        </button>
+        <button
+        onClick={() => base44.auth.logout()}
+        className={cn(
+          "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-red-400/80 hover:text-red-400 hover:bg-red-500/10 transition-colors",
+          collapsed && "justify-center"
+        )}
+        title="Cerrar sesión">
+          <LogOut className="w-4 h-4 flex-shrink-0" />
+          {!collapsed && <span>Cerrar sesión</span>}
         </button>
       </div>
 
