@@ -6,8 +6,6 @@ import { useProfile } from "@/lib/ProfileContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AlertTriangle, CreditCard, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import WompiWidget from "@/components/courses/WompiWidget";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 // Rutas siempre permitidas aunque la prueba haya vencido
 const ALLOWED_PATHS = ["/Subscription", "/Profile", "/DronePilotSubscription", "/CompanySubscription", "/CompanySubscriptionEnterprise"];
@@ -53,8 +51,6 @@ export default function SubscriptionGate({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [paying, setPaying] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [checkoutData, setCheckoutData] = useState(null);
 
   const { isBlocked, sub, loadingSub } = useTrialStatus(activeProfileId, user);
 
@@ -82,12 +78,19 @@ export default function SubscriptionGate({ children }) {
       const amountInCents = Math.round(sub.monthly_price_cop * 100);
       const res = await base44.functions.invoke("wompiSignature", { reference, amountInCents, currency: "COP" });
       const { signature, publicKey } = res.data;
-      setCheckoutData({ reference, amountInCents, signature, publicKey, email: user.email, redirectUrl: `${window.location.origin}/Dashboard` });
-      setDialogOpen(true);
+      const redirectUrl = `${window.location.origin}/Subscription`;
+      const params = new URLSearchParams({
+        "public-key": publicKey,
+        currency: "COP",
+        "amount-in-cents": String(amountInCents),
+        reference,
+        "signature:integrity": signature,
+        "redirect-url": redirectUrl,
+      });
+      window.location.href = `https://checkout.wompi.co/p/?${params.toString()}`;
     } catch (err) {
       console.error(err);
       alert("Error al iniciar el pago. Intenta de nuevo.");
-    } finally {
       setPaying(false);
     }
   };
@@ -148,32 +151,6 @@ export default function SubscriptionGate({ children }) {
         )}
       </div>
 
-      {/* Checkout Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Activar suscripción</DialogTitle>
-            <DialogDescription>
-              {profileName} • ${Number(sub?.monthly_price_cop || 0).toLocaleString("es-CO")} COP/mes
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            {checkoutData && (
-              <WompiWidget
-                publicKey={checkoutData.publicKey}
-                reference={checkoutData.reference}
-                amountInCents={checkoutData.amountInCents}
-                signature={checkoutData.signature}
-                customerEmail={checkoutData.email}
-                profile={activeProfileId}
-                onSuccess={(success) => {
-                  if (success) setDialogOpen(false);
-                }}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
