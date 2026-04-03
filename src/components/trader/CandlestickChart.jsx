@@ -4,8 +4,6 @@ import { cn } from '@/lib/utils';
 
 // Renderizador SVG de velas japonesas
 function CandleStickRenderer({ data, margin = { top: 20, right: 30, left: 60, bottom: 20 } }) {
-  if (!data || data.length === 0) return null;
-
   const containerRef = React.useRef(null);
   const [dimensions, setDimensions] = React.useState({ width: 800, height: 400 });
 
@@ -18,6 +16,8 @@ function CandleStickRenderer({ data, margin = { top: 20, right: 30, left: 60, bo
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
+
+  if (!data || data.length === 0) return null;
 
   const width = dimensions.width;
   const height = dimensions.height;

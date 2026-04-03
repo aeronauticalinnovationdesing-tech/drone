@@ -48,10 +48,46 @@ Deno.serve(async (req) => {
       // Continuar de todas formas
     }
 
+    // Si el pago está aprobado, activar la suscripción inmediatamente
+    if (transactionStatus === 'APPROVED') {
+      const subs = await base44.asServiceRole.entities.Subscription.filter({
+        profile,
+        created_by: user.email
+      });
+
+      const now = new Date();
+      const paidUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+      if (subs.length > 0) {
+        await base44.asServiceRole.entities.Subscription.update(subs[0].id, {
+          is_active: true,
+          paid_until: paidUntil.toISOString(),
+          auto_renew: true,
+          last_renewal_date: now.toISOString(),
+        });
+        console.log(`✓ Subscription activated via callback for ${user.email} (${profile})`);
+      } else {
+        // Crear suscripción si no existe
+        const globalSubs = await base44.asServiceRole.entities.Subscription.filter({ profile });
+        if (globalSubs.length > 0) {
+          await base44.asServiceRole.entities.Subscription.create({
+            profile,
+            monthly_price_cop: globalSubs[0].monthly_price_cop,
+            is_active: true,
+            paid_until: paidUntil.toISOString(),
+            auto_renew: true,
+            last_renewal_date: now.toISOString(),
+          });
+          console.log(`✓ New subscription created via callback for ${user.email} (${profile})`);
+        }
+      }
+    }
+
     return Response.json({ 
       success: true, 
       status: transactionStatus,
-      message: transactionStatus === 'APPROVED' ? 'Pago procesado' : 'Pago en proceso'
+      activated: transactionStatus === 'APPROVED',
+      message: transactionStatus === 'APPROVED' ? 'Pago procesado y suscripción activada' : 'Pago en proceso'
     });
 
   } catch (error) {

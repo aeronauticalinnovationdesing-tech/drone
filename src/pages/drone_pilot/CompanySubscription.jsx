@@ -8,9 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  CreditCard, Users, Building2, AlertTriangle, CheckCircle, Clock, Plus, Trash2, Mail
+  CreditCard, Users, Building2, AlertTriangle, CheckCircle, Clock, Plus, Mail
 } from "lucide-react";
-import { format, differenceInHours } from "date-fns";
 
 function useCountdown(endDateISO) {
   const [remaining, setRemaining] = useState(null);
@@ -41,20 +40,17 @@ export default function CompanySubscription() {
   const [inviteRole, setInviteRole] = useState("piloto");
   const [paying, setPaying] = useState(false);
 
-  // Obtener empresa del usuario actual
   const { data: company } = useQuery({
     queryKey: ["company", user?.email],
     queryFn: () => {
       if (!user?.email) return null;
-      // Buscar empresa donde el usuario es admin o jefe de pilotos
-      return base44.entities.Company.filter({}).then(companies => 
+      return base44.entities.Company.filter({}).then(companies =>
         companies.find(c => c.sms_manager_email === user.email) || null
       );
     },
     enabled: !!user?.email,
   });
 
-  // Obtener suscripción de la empresa
   const { data: subscription } = useQuery({
     queryKey: ["company-subscription", company?.id],
     queryFn: () => {
@@ -64,7 +60,6 @@ export default function CompanySubscription() {
     enabled: !!company?.id,
   });
 
-  // Obtener pilotos asignados
   const { data: pilots = [] } = useQuery({
     queryKey: ["company-pilots", company?.id],
     queryFn: () => {
@@ -74,26 +69,10 @@ export default function CompanySubscription() {
     enabled: !!company?.id,
   });
 
-  // Obtener usuarios de la empresa
-  const { data: companyUsers = [] } = useQuery({
-    queryKey: ["company-users", company?.id],
-    queryFn: () => {
-      if (!company?.id) return [];
-      return base44.entities.User.list();
-    },
-    enabled: !!company?.id,
-  });
-
   const inviteMutation = useMutation({
     mutationFn: async (email) => {
-      // Invitar usuario como piloto de la empresa
       const role = inviteRole === "jefe_pilotos" ? "admin" : "user";
       await base44.users.inviteUser(email, role);
-      
-      // Si es piloto, se puede crear automáticamente
-      if (inviteRole === "piloto") {
-        // Preparar para que el usuario cree su perfil de piloto
-      }
       return true;
     },
     onSuccess: () => {
@@ -103,31 +82,25 @@ export default function CompanySubscription() {
     },
   });
 
+  // Always call hooks before any conditional return
+  const countdown = useCountdown(subscription?.paid_until);
+  const isPaid = subscription?.is_active && countdown && !countdown.expired;
+  const isPastDue = subscription?.is_active && countdown?.expired;
+
   const handlePay = async () => {
     if (!subscription) return;
     setPaying(true);
     try {
       const reference = `VEXNY-COMP-${company.id}-${Date.now()}`;
       const amountInCents = (subscription.monthly_price_cop || 99900) * 100;
-
-      const res = await base44.functions.invoke("wompiSignature", {
-        reference,
-        amountInCents,
-        currency: "COP",
-      });
-
+      const res = await base44.functions.invoke("wompiSignature", { reference, amountInCents, currency: "COP" });
       const { signature, publicKey } = res.data;
-      const redirectUrl = `${window.location.origin}/CompanySubscription`;
-
       const params = new URLSearchParams({
-        "public-key": publicKey,
-        currency: "COP",
-        "amount-in-cents": String(amountInCents),
-        reference,
+        "public-key": publicKey, currency: "COP",
+        "amount-in-cents": String(amountInCents), reference,
         "signature:integrity": signature,
-        "redirect-url": redirectUrl,
+        "redirect-url": `${window.location.origin}/CompanySubscription`,
       });
-
       window.location.href = `https://checkout.wompi.co/p/?${params.toString()}`;
     } catch (err) {
       console.error(err);
@@ -150,13 +123,8 @@ export default function CompanySubscription() {
     );
   }
 
-  const countdown = useCountdown(subscription?.paid_until);
-  const isPaid = subscription?.is_active && countdown && !countdown.expired;
-  const isPastDue = subscription?.is_active && countdown?.expired;
-
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -167,14 +135,11 @@ export default function CompanySubscription() {
         </div>
       </div>
 
-      {/* Subscription Status */}
       {subscription ? (
         <div className={`rounded-2xl border p-6 ${
-          isPaid 
-            ? "border-emerald-500/30 bg-emerald-500/5" 
-            : isPastDue
-            ? "border-destructive/30 bg-destructive/5"
-            : "border-border bg-card"
+          isPaid ? "border-emerald-500/30 bg-emerald-500/5"
+          : isPastDue ? "border-destructive/30 bg-destructive/5"
+          : "border-border bg-card"
         }`}>
           <div className="flex items-start justify-between gap-4 mb-4">
             <div>
@@ -186,16 +151,8 @@ export default function CompanySubscription() {
                 Hasta {subscription.max_pilots} pilotos · Hasta {subscription.max_drones} drones
               </p>
             </div>
-            {isPaid && (
-              <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/20">
-                <CheckCircle className="w-3 h-3 mr-1" /> Activo
-              </Badge>
-            )}
-            {isPastDue && (
-              <Badge variant="destructive">
-                <AlertTriangle className="w-3 h-3 mr-1" /> Vencida
-              </Badge>
-            )}
+            {isPaid && <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/20"><CheckCircle className="w-3 h-3 mr-1" /> Activo</Badge>}
+            {isPastDue && <Badge variant="destructive"><AlertTriangle className="w-3 h-3 mr-1" /> Vencida</Badge>}
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
@@ -215,7 +172,7 @@ export default function CompanySubscription() {
             </div>
           </div>
 
-          {isPaid || isPastDue ? null : (
+          {!isPaid && !isPastDue && (
             <Button onClick={handlePay} disabled={paying} className="gap-2 w-full">
               {paying ? <Clock className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
               {paying ? "Procesando..." : "Suscribirse Ahora"}
@@ -228,7 +185,6 @@ export default function CompanySubscription() {
         </div>
       )}
 
-      {/* Team Members */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold flex items-center gap-2">
@@ -268,7 +224,6 @@ export default function CompanySubscription() {
         )}
       </div>
 
-      {/* Invite Dialog */}
       <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
         <DialogContent>
           <DialogHeader>
@@ -280,13 +235,7 @@ export default function CompanySubscription() {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium">Email</label>
-              <Input
-                type="email"
-                value={inviteEmail}
-                onChange={e => setInviteEmail(e.target.value)}
-                placeholder="usuario@empresa.com"
-                className="mt-1"
-              />
+              <Input type="email" value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="usuario@empresa.com" className="mt-1" />
             </div>
             <div>
               <label className="text-sm font-medium">Rol</label>

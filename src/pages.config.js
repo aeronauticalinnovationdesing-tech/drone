@@ -71,13 +71,6 @@ import EliteHumanDashboard from './pages/EliteHumanDashboard';
 import StartupDashboard from './pages/StartupDashboard';
 import TraderDashboard from './pages/TraderDashboard';
 import AirspaceMap from './pages/AirspaceMap';
-import CompanySubscription from './pages/CompanySubscription';
-import DroneRegistry from './pages/DroneRegistry';
-import FlightLogBook from './pages/FlightLogBook';
-import MaintenanceManagement from './pages/MaintenanceManagement';
-import PilotManagement from './pages/PilotManagement';
-import SMSReporting from './pages/SMSReporting';
-import AirspaceMap from './pages/AirspaceMap';
 import CompanyManagement from './pages/CompanyManagement';
 import CompanySubscription from './pages/CompanySubscription';
 import DroneMissions from './pages/DroneMissions';
@@ -126,13 +119,6 @@ export const PAGES = {
     "EliteHumanDashboard": EliteHumanDashboard,
     "StartupDashboard": StartupDashboard,
     "TraderDashboard": TraderDashboard,
-    "AirspaceMap": AirspaceMap,
-    "CompanySubscription": CompanySubscription,
-    "DroneRegistry": DroneRegistry,
-    "FlightLogBook": FlightLogBook,
-    "MaintenanceManagement": MaintenanceManagement,
-    "PilotManagement": PilotManagement,
-    "SMSReporting": SMSReporting,
     "AirspaceMap": AirspaceMap,
     "CompanyManagement": CompanyManagement,
     "CompanySubscription": CompanySubscription,

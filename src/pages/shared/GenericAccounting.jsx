@@ -47,11 +47,6 @@ export default function GenericAccounting() {
    const queryClient = useQueryClient();
    const user = useCurrentUser();
 
-   if (!activeProfileId) {
-     navigate("/");
-     return null;
-   }
-
    const { data: rawTransactions = [] } = useQuery({
      queryKey: ["transactions", user?.email, activeProfileId],
      queryFn: () => base44.entities.Transaction.filter({ created_by: user.email, profile_id: activeProfileId }, "-created_date"),
@@ -71,6 +66,11 @@ export default function GenericAccounting() {
   const deleteTx = useMutation({ mutationFn: (id) => base44.entities.Transaction.delete(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["transactions", user?.email, activeProfileId] }) });
   const createAcc = useMutation({ mutationFn: (d) => base44.entities.BankAccount.create(d), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["accounts", user?.email, activeProfileId] }); setShowAccount(false); } });
   const deleteAcc = useMutation({ mutationFn: (id) => base44.entities.BankAccount.delete(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["accounts", user?.email, activeProfileId] }) });
+
+  if (!activeProfileId) {
+    navigate("/");
+    return null;
+  }
 
   const totalAccountBalance = accounts.reduce((s, a) => s + (a.balance || 0), 0);
   const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + (t.amount || 0), 0);
