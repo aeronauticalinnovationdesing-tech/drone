@@ -29,7 +29,7 @@ import MaintenanceManagementEnterprise from './pages/drone_company/MaintenanceMa
 import AirspaceMapEnterprise from './pages/drone_company/AirspaceMap';
 import CompanySubscriptionEnterprise from './pages/drone_company/CompanySubscription';
 import ComplianceCenter from './pages/drone_company/ComplianceCenter';
-import CompanyManagement from './pages/drone_company/CompanyManagement';
+import CompanyManagement from './pages/CompanyManagementEnterprise';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();

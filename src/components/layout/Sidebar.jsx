@@ -181,16 +181,6 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
           </Link>
       }
         <button
-        onClick={() => selectProfile(null)}
-        className={cn(
-          "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent transition-colors",
-          collapsed && "justify-center"
-        )}
-        title="Cambiar perfil">
-          <RefreshCw className="w-4 h-4 flex-shrink-0" />
-          {!collapsed && <span>Cambiar perfil</span>}
-        </button>
-        <button
         onClick={() => base44.auth.logout()}
         className={cn(
           "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-red-400/80 hover:text-red-400 hover:bg-red-500/10 transition-colors",
@@ -207,14 +197,14 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
         {!collapsed ?
       <div className="space-y-1">
             <Link
-            to="/DronePilotProfile"
+            to="/Profile"
             className={cn(
             "flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-colors",
-            location.pathname === "/DronePilotProfile" ?
+            location.pathname === "/Profile" ?
             "bg-primary text-primary-foreground" :
             "text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent"
             )}
-            title="Mi perfil de piloto">
+            title="Mi perfil">
 
               <User className="w-4 h-4 flex-shrink-0" />
               <span>Mi Perfil</span>
