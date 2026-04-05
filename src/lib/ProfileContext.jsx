@@ -2,57 +2,12 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { queryClientInstance } from '@/lib/query-client';
 import {
-  TrendingUp, Plane, Rocket, Zap,
-  LayoutDashboard, FolderKanban, CheckSquare, StickyNote,
-  Wallet, Calendar, Bot, FileText, BookOpen,
-  BarChart2, BookMarked, Wind, Map, Target, Users, DollarSign, Lightbulb, Activity, CreditCard,
-  Users as UsersIcon, AlertCircle, FileCode, Wrench, Building2, Brain, Newspaper
+  LayoutDashboard, Building2, BookMarked, Map, Users as UsersIcon, 
+  FileCode, AlertCircle, Wrench, FileText, Calendar, Bot, 
+  BookOpen, CreditCard
 } from 'lucide-react';
 
 export const PROFILES = [
-  {
-    id: 'trader',
-    label: 'Trader',
-    description: 'Registra trades, analiza rendimiento y gestiona tu portafolio',
-    icon: TrendingUp,
-    color: 'from-green-500 to-emerald-700',
-    accent: '#10b981',
-    nav: [
-      { icon: LayoutDashboard, label: 'Dashboard', path: '/Dashboard' },
-      { icon: BarChart2, label: 'Journal Pro', path: '/TraderJournal' },
-      { icon: Wallet, label: 'Capital & P&L', path: '/Accounting' },
-      { icon: Brain, label: 'Análisis IA', path: '/TraderJournal' },
-      { icon: FileText, label: 'Informes', path: '/Reports' },
-      { icon: StickyNote, label: 'Notas', path: '/Notes' },
-      { icon: Calendar, label: 'Calendario', path: '/Calendar' },
-      { icon: Bot, label: 'Asesor Trader IA', path: '/Secretary' },
-      { icon: BookOpen, label: 'Cursos', path: '/Courses' },
-      { icon: CreditCard, label: 'Suscripciones', path: '/Subscription' },
-    ]
-  },
-  {
-    id: 'drone_pilot',
-    label: 'Piloto de Dron',
-    description: 'Gestiona tu bitácora de vuelo, misiones y mantenimiento',
-    icon: Plane,
-    color: 'from-sky-500 to-blue-700',
-    accent: '#0ea5e9',
-    nav: [
-       { icon: LayoutDashboard, label: 'Dashboard', path: '/Dashboard' },
-       { icon: BookMarked, label: 'Bitácora RAC 100', path: '/FlightLogBook' },
-      { icon: Map, label: 'Misiones', path: '/Projects' },
-      { icon: UsersIcon, label: 'Pilotos', path: '/PilotManagement' },
-      { icon: FileCode, label: 'Flota de Drones', path: '/DroneRegistry' },
-      { icon: AlertCircle, label: 'Reportes SMS', path: '/SMSReporting' },
-      { icon: Wrench, label: 'Pólizas', path: '/MaintenanceManagement' },
-      { icon: Map, label: 'Espacio Aéreo', path: '/AirspaceMap' },
-      { icon: Calendar, label: 'Calendario', path: '/Calendar' },
-      { icon: FileText, label: 'Informes', path: '/Reports' },
-      { icon: Bot, label: 'Secretaria IA', path: '/Secretary' },
-      { icon: BookOpen, label: 'Cursos', path: '/Courses' },
-      { icon: CreditCard, label: 'Suscripciones', path: '/Subscription' },
-    ]
-  },
   {
     id: 'drone_company',
     label: 'Empresa de Dron',
@@ -77,53 +32,14 @@ export const PROFILES = [
        { icon: BookOpen, label: 'Cursos', path: '/Courses' },
        { icon: CreditCard, label: 'Suscripciones', path: '/Subscription' },
      ]
-  },
-  {
-    id: 'startup',
-    label: 'Startup',
-    description: 'Gestiona proyectos, equipo, finanzas y el crecimiento de tu empresa',
-    icon: Rocket,
-    color: 'from-violet-500 to-purple-700',
-    accent: '#8b5cf6',
-    nav: [
-      { icon: LayoutDashboard, label: 'Dashboard', path: '/Dashboard' },
-      { icon: FolderKanban, label: 'Proyectos', path: '/Projects' },
-      { icon: CheckSquare, label: 'Tareas', path: '/Tasks' },
-      { icon: Users, label: 'Contabilidad', path: '/Accounting' },
-      { icon: DollarSign, label: 'Finanzas', path: '/Accounting' },
-      { icon: Calendar, label: 'Calendario', path: '/Calendar' },
-      { icon: Bot, label: 'Secretaria IA', path: '/Secretary' },
-      { icon: FileText, label: 'Informes', path: '/Reports' },
-      { icon: BookOpen, label: 'Cursos', path: '/Courses' },
-      { icon: CreditCard, label: 'Suscripciones', path: '/Subscription' },
-    ]
-  },
-  {
-    id: 'elite_human',
-    label: 'Humano de Elite',
-    description: 'Optimiza tu vida, hábitos, metas y desarrollo personal',
-    icon: Zap,
-    color: 'from-amber-500 to-orange-600',
-    accent: '#f59e0b',
-    nav: [
-      { icon: LayoutDashboard, label: 'Dashboard', path: '/Dashboard' },
-      { icon: Target, label: 'Metas y Tareas', path: '/Tasks' },
-      { icon: Activity, label: 'Proyectos Vitales', path: '/Projects' },
-      { icon: StickyNote, label: 'Diario / Notas', path: '/Notes' },
-      { icon: Wallet, label: 'Finanzas', path: '/Accounting' },
-      { icon: Calendar, label: 'Calendario', path: '/Calendar' },
-      { icon: Lightbulb, label: 'Aprendizaje', path: '/Courses' },
-      { icon: Bot, label: 'Secretaria IA', path: '/Secretary' },
-      { icon: FileText, label: 'Informes', path: '/Reports' },
-      { icon: CreditCard, label: 'Suscripciones', path: '/Subscription' },
-    ]
-  },
+  }
 ];
 
 const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
-  const [activeProfileId, setActiveProfileId] = useState(null);
+  // Forzamos el ID a drone_company desde el inicio
+  const [activeProfileId, setActiveProfileId] = useState('drone_company');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -133,23 +49,25 @@ export const ProfileProvider = ({ children }) => {
   const loadProfile = async () => {
     try {
       const user = await base44.auth.me();
-      if (user?.active_profile) {
-        setActiveProfileId(user.active_profile);
-      }
-    } catch (_) {}
+      // Mantenemos drone_company como perfil activo forzado
+      setActiveProfileId('drone_company');
+    } catch (_) {
+      // Incluso en error o sin auth, mantenemos la interfaz de empresa
+      setActiveProfileId('drone_company');
+    }
     setLoading(false);
   };
 
   const selectProfile = async (profileId) => {
-    // Limpiar todo el cache al cambiar de perfil para evitar contaminación de datos entre apps
+    // Solo permitimos drone_company
     queryClientInstance.clear();
-    setActiveProfileId(profileId);
+    setActiveProfileId('drone_company');
     try {
-      await base44.auth.updateMe({ active_profile: profileId });
+      await base44.auth.updateMe({ active_profile: 'drone_company' });
     } catch (_) {}
   };
 
-  const activeProfile = PROFILES.find(p => p.id === activeProfileId) || null;
+  const activeProfile = PROFILES[0]; // Siempre es la primera (empresa)
 
   return (
     <ProfileContext.Provider value={{ activeProfile, activeProfileId, selectProfile, loading, profiles: PROFILES }}>
